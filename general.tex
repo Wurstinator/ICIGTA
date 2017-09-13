@@ -1,0 +1,81 @@
+\documentclass{article}
+
+\usepackage{amsmath, amssymb}
+
+\begin{document}
+
+\section{Structures}
+\subsection{Words}
+\begin{itemize}
+	\item alphabet $\Sigma$
+	\item $\Sigma^*$, $\Sigma^\omega$
+	\item $\omega$-word $(\alpha : \mathbb{N} \rightarrow \Sigma) \in \Sigma^\omega$
+	\item $\text{Occ}(\alpha) = \{ \alpha(n) \mid n \in \mathbb{N} \}$
+	\item $\text{Inf}(\alpha) = \bigcap\limits_{i \in \mathbb{N}} \{ \alpha(n) \mid n > i \}$
+\end{itemize}
+
+\subsection{Finite Ranked Trees}
+\begin{itemize}
+	\item ranked alphabet $\Sigma_0, \dots, \Sigma_m$
+	\item trees $T_\Sigma$
+	\item trees (inductive definition) \\
+		$a \in \Sigma_i$, $t_1, \dots, t_i \in T_\Sigma$ $\Rightarrow$ $a(t_1, \dots, t_i) \in T_\Sigma$
+	\item trees (labeled definition) \\
+		\begin{itemize}
+			\item tree $t = (\text{dom}_t, \text{val}_t)$
+			\item $\text{dom}_t \subseteq (\mathbb{N}_{> 0}^*$
+			\item $\text{val}_t : \text{dom}_t \rightarrow \Sigma$
+			\item if $\text{val}_t(w) \in \Sigma_i$, then $wi \in \text{dom}_t$ and $w(i+1) \notin \text{dom}_t$
+			\item if $w = uv \in \text{dom}_t$, then $u \in \text{dom}_t$
+			\item if $w(i+1) \in \text{dom}_t$, then $wi \in \text{dom}_t$
+		\end{itemize}
+\end{itemize}
+
+\subsection{Finite Unranked Trees}
+\begin{itemize}
+	\item alphabet $\Sigma$
+	\item trees $T_\Sigma$
+	\item trees (inductive definition) \\
+		\begin{itemize}
+			\item $h \in (T_\Sigma)^*$ is a \textbf{hedge}
+			\item $a \in \Sigma$, $h$ hedge $\Rightarrow$ $a(h) \in T_\Sigma$
+		\end{itemize}
+	\item trees (labeled definition) \\
+		\begin{itemize}
+			\item tree $t = (\text{dom}_t, \text{val}_t)$
+			\item $\text{dom}_t \subseteq (\mathbb{N}_{> 0}^*$
+			\item $\text{val}_t : \text{dom}_t \rightarrow \Sigma$
+			\item if $w = uv \in \text{dom}_t$, then $u \in \text{dom}_t$
+			\item if $w(i+1) \in \text{dom}_t$, then $wi \in \text{dom}_t$
+		\end{itemize}
+\end{itemize}
+
+\subsection{Infinite Trees}
+\begin{itemize}
+	\item alphabet $\Sigma$
+	\item trees $T_\Sigma$
+	\item tree $t : \{0, 1\}^* \rightarrow \Sigma$
+	\item path $\pi \in \{0, 1\}^\omega$
+	\item $(t|_\pi : n \mapsto t(\pi(n))) \in \Sigma^\omega$
+\end{itemize}
+
+\subsection{Games}
+\begin{itemize}
+	\item arena / game graph $G = (V_0, V_1, E, c)$
+	\begin{itemize}
+		\item $V_0, V_1$ player vertices, $V = V_0, V_1$
+		\item $E \subseteq V \times V$
+		\item colors $C$ finite
+		\item colors $c : V \rightarrow C$
+	\end{itemize}
+	\item winning condition $\text{Win} \subseteq C^\omega$
+	\item game $\mathcal{G} = (G, \text{Win})$
+	\item play $\alpha \in V^\omega$
+	\item winner of $\alpha = \begin{cases}0 & \text{if } c(\alpha) \in \text{Win} \\ 1 & \text{else}\end{cases}$
+\end{itemize}
+
+\section{Automata}
+
+
+
+\end{document}
