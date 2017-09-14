@@ -1,6 +1,8 @@
 \documentclass{article}
 
 \usepackage{amsmath, amssymb}
+\usepackage[utf8]{inputenc}
+\usepackage{geometry}
 
 \begin{document}
 
@@ -18,9 +20,9 @@
 \begin{itemize}
 	\item ranked alphabet $\Sigma_0, \dots, \Sigma_m$
 	\item trees $T_\Sigma$
-	\item trees (inductive definition) \\
+	\item trees (inductive definition) 
 		$a \in \Sigma_i$, $t_1, \dots, t_i \in T_\Sigma$ $\Rightarrow$ $a(t_1, \dots, t_i) \in T_\Sigma$
-	\item trees (labeled definition) \\
+	\item trees (labeled definition) 
 		\begin{itemize}
 			\item tree $t = (\text{dom}_t, \text{val}_t)$
 			\item $\text{dom}_t \subseteq (\mathbb{N}_{> 0}^*$
@@ -35,12 +37,12 @@
 \begin{itemize}
 	\item alphabet $\Sigma$
 	\item trees $T_\Sigma$
-	\item trees (inductive definition) \\
+	\item trees (inductive definition) 
 		\begin{itemize}
 			\item $h \in (T_\Sigma)^*$ is a \textbf{hedge}
 			\item $a \in \Sigma$, $h$ hedge $\Rightarrow$ $a(h) \in T_\Sigma$
 		\end{itemize}
-	\item trees (labeled definition) \\
+	\item trees (labeled definition) 
 		\begin{itemize}
 			\item tree $t = (\text{dom}_t, \text{val}_t)$
 			\item $\text{dom}_t \subseteq (\mathbb{N}_{> 0}^*$
@@ -56,10 +58,10 @@
 	\item trees $T_\Sigma$
 	\item tree $t : \{0, 1\}^* \rightarrow \Sigma$
 	\item path $\pi \in \{0, 1\}^\omega$
-	\item $(t|_\pi : n \mapsto t(\pi(n))) \in \Sigma^\omega$
+	\item $t|_\pi \in \Sigma^\omega : n \mapsto t(\pi(n))$
 \end{itemize}
 
-\subsection{Games}
+\subsection{Game Arenas}
 \begin{itemize}
 	\item arena / game graph $G = (V_0, V_1, E, c)$
 	\begin{itemize}
@@ -74,8 +76,98 @@
 	\item winner of $\alpha = \begin{cases}0 & \text{if } c(\alpha) \in \text{Win} \\ 1 & \text{else}\end{cases}$
 \end{itemize}
 
-\section{Automata}
+\section{Acceptance Conditions}
+$Q$ set of states/colors \\
+$\rho \in Q^\omega$
+
+\begin{description}
+	\item[E] $F \subseteq Q$. $\rho$ accepted iff $F \cap \text{Occ}(\rho) \neq \emptyset$
+	\item[A] $F \subseteq Q$. $\rho$ accepted iff $\text{Occ}(\rho) \subseteq F$
+	\item[Staiger-Wagner] $\mathcal{F} \subseteq 2^Q$. $\rho$ accepted iff $\text{Occ}(\rho) \in \mathcal{F}$
+	\item[B\"uchi] $F \subseteq Q$. $\rho$ accepted iff $F \cap \text{Inf}(\rho) \neq \emptyset$
+	\item[Generalized B\"uchi] $F_1, \dots, F_k \subseteq Q$. $\rho$ accepted iff for all $1 \leq i \leq k$: $F_i \cap \text{Inf}(\rho) \neq \emptyset$
+	\item[coB\"uchi] $F \subseteq Q$. $\rho$ accepted iff $\text{Inf}(\rho) \subseteq F$
+	\item[Rabin] $\Omega \subseteq 2^Q \times 2^Q$. $\rho$ accepted iff there is $(E, F) \in \Omega$ s.t. $\text{Inf}(\rho) \cap E = \emptyset$ and $\text{Inf} \cap F \neq \emptyset$
+	\begin{itemize}
+		\item Rabin Chain: $\Omega = \{(E_i, F_i) \mid 1 \leq i \leq k\}$ with $E_k \subseteq F_k \subseteq E_{k-1} \subseteq \dots \subseteq E_1 \subseteq F_1$
+	\end{itemize}
+	\item[Streett] $\Omega \subseteq 2^Q \times 2^Q$. $\rho$ accepted iff for all $(E, F) \in \Omega$: $\text{Inf}(\rho) \cap E \neq \emptyset$ or $\text{Inf} \cap F = \emptyset$
+	\item[Parity] $c : Q \rightarrow C$. $\rho$ accepted iff $\max \text{Inf}(c(\rho))$ is even
+	\item[Muller] $\mathcal{F} \subseteq 2^Q$. $\rho$ accepted iff $\text{Occ}(\rho) \in \mathcal{F}$
+\end{description}
 
 
+\section{Word Automata}
+$(Q, \Sigma, q_0, \Delta, \text{Acc})$
+
+\begin{description}
+	\item[Deterministic] $\delta : Q \times \Sigma \rightarrow Q$
+	\item[Non-Deterministic] $\Delta \subseteq Q \times \Sigma \times Q$
+	\item[Alternating] $\delta : Q \times \Sigma \rightarrow B_+(Q)$ where $B_+(Q)$ are boolean formulas over $Q \cup \{0, 1\}$ without negation
+\end{description}
+
+\subsection{Deterministic Word Automata}
+\begin{itemize}
+	\item DBA
+	\item weak DBA
+	\item coDBA
+	\item E-automaton
+	\item A-automaton
+	\item Staiger-Wagner automaton
+	\item DMA
+	\item DRA
+	\item DPA
+\end{itemize}
+
+\subsection{Nondeterministic \& Alternating Word Automata}
+\begin{itemize}
+	\item NBA
+	\item ABA
+\end{itemize}
+
+\section{Finite Tree Automata}
+\subsection{Ranked Top-Down Automata}
+$(Q, \Sigma, \Delta, F)$ where $\Delta \subseteq \bigcup\limits_{i=0}^m Q^i \times \Sigma_i \times Q$ or deterministic $\delta$
+
+\begin{itemize}
+	\item DTA
+	\item NTA
+\end{itemize}
+
+\subsection{Ranked Bottom-Up Automata}
+$(Q, \Sigma, Q_0, \Delta)$ where $Q_0 \subseteq Q$ initial states, $\Delta \subseteq \bigcup\limits_{i=0}^m Q \times \Sigma_i \times Q^i$ or deterministic $\delta$
+
+\begin{itemize}
+	\item $\downarrow$DTA
+	\item $\downarrow$NTA
+\end{itemize}
+
+\subsection{Unranked Bottom-Up Automata}
+$(Q, \Sigma, \Delta, F)$ where $\Delta \subseteq \text{Reg}(Q) \times \Sigma \times Q$
+
+\begin{description}
+	\item[Normalized] For all $(L_1, a_1, q_1), (L_2, a_2, q_2)$: If $a_1 = a_2$ and $q_1 = q_2$, then $L_1 = L_2$
+	\item[Deterministic] For all $(L_1, a_1, q_1), (L_2, a_2, q_2)$: $L_1 \cap L_2 = \emptyset$ or $a_1 \neq a_2$ or $q_1 = q_2$ 
+\end{description}
+
+\begin{itemize}
+	\item DUTA
+	\item NUTA
+\end{itemize}
+
+\subsection{Ranked Tree Walking Automata}
+$\text{Types} = \{\text{root}, 1, \dots, m\}$ \\
+$\text{Dir} = \{\uparrow, 0, 1, \dots m\}$ \\
+$\text{type}_t(u) = \begin{cases}\text{root} & \text{if } u = \epsilon \\ i & \text{if } u = vi\end{cases}$ \vspace{10pt}
+\\ 
+$(Q, \Sigma, q_0, \Delta, F)$ where $\Delta \subseteq Q \times \text{Types} \times \Sigma \times Q \times \text{Dir}$ \\
+$(\text{current state}, \text{current type}, \text{current symbol}, \text{new state}, \text{movement}) \in \Delta$
+
+\begin{itemize}
+	\item TWA
+\end{itemize}
+
+\section{Infinite Tree Automata}
+a
 
 \end{document}
