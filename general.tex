@@ -76,6 +76,8 @@
 	\item winner of $\alpha = \begin{cases}0 & \text{if } c(\alpha) \in \text{Win} \\ 1 & \text{else}\end{cases}$
 \end{itemize}
 
+
+\newpage
 \section{Acceptance Conditions}
 $Q$ set of states/colors \\
 $\rho \in Q^\omega$
@@ -84,6 +86,7 @@ $\rho \in Q^\omega$
 	\item[E] $F \subseteq Q$. $\rho$ accepted iff $F \cap \text{Occ}(\rho) \neq \emptyset$
 	\item[A] $F \subseteq Q$. $\rho$ accepted iff $\text{Occ}(\rho) \subseteq F$
 	\item[Staiger-Wagner] $\mathcal{F} \subseteq 2^Q$. $\rho$ accepted iff $\text{Occ}(\rho) \in \mathcal{F}$
+	\item[weak Parity] $c : Q \rightarrow C$. $\rho$ accepted iff $\max \text{Occ}(c(\rho))$ is even
 	\item[B\"uchi] $F \subseteq Q$. $\rho$ accepted iff $F \cap \text{Inf}(\rho) \neq \emptyset$
 	\item[Generalized B\"uchi] $F_1, \dots, F_k \subseteq Q$. $\rho$ accepted iff for all $1 \leq i \leq k$: $F_i \cap \text{Inf}(\rho) \neq \emptyset$
 	\item[coB\"uchi] $F \subseteq Q$. $\rho$ accepted iff $\text{Inf}(\rho) \subseteq F$
@@ -97,8 +100,12 @@ $\rho \in Q^\omega$
 \end{description}
 
 
+
+\newpage
 \section{Word Automata}
 $(Q, \Sigma, q_0, \Delta, \text{Acc})$
+
+$L(A) = $ accepted words
 
 \begin{description}
 	\item[Deterministic] $\delta : Q \times \Sigma \rightarrow Q$
@@ -125,6 +132,9 @@ $(Q, \Sigma, q_0, \Delta, \text{Acc})$
 	\item ABA
 \end{itemize}
 
+
+
+\newpage
 \section{Finite Tree Automata}
 \subsection{Ranked Top-Down Automata}
 $(Q, \Sigma, \Delta, F)$ where $\Delta \subseteq \bigcup\limits_{i=0}^m Q^i \times \Sigma_i \times Q$ or deterministic $\delta$
@@ -167,7 +177,136 @@ $(\text{current state}, \text{current type}, \text{current symbol}, \text{new st
 	\item TWA
 \end{itemize}
 
+
+
+
+\newpage
 \section{Infinite Tree Automata}
-a
+$(Q, \Sigma, q_0, \Delta, \text{Acc})$ \\
+$\Delta \subseteq Q \times \Sigma \times Q \times Q$ \\
+$\text{Acc} \subseteq Q^\omega$
+
+Run $\rho : \{0,1\}^* \rightarrow Q$ accepting iff $\rho \vert_\pi \in \text{Acc}$ for all paths $\pi$
+
+$T(A)$ = accepted trees
+
+\subsection{Nondeterministic}
+\begin{itemize}
+	\item BTA
+	\item MTA
+	\item PTA
+\end{itemize}
+
+\subsection{Deterministic}
+$| \{ (q, a, q_1, q_2) \mid q_1, q_2 \} | = 1$ for all $q, a$
+
+\begin{itemize}
+	\item DTBA
+\end{itemize}
+
+\subsection{Regular Tree Automata}
+$(Q_\mathcal{B}, \{0, 1\}, q_0^\mathcal{B}, \delta_\mathcal{B}, f_\mathcal{B})$ reads $\{0,1\}$-words \\
+$\delta_\mathcal{B} : Q \times \{0, 1\} \rightarrow Q$ \\
+$f_\mathcal{B} : Q_\mathcal{B} \rightarrow \Sigma$ \\
+
+Defines tree $t_\mathcal{B} : u \mapsto f_\mathcal{B}(\delta^*_\mathcal{B}(u))$
+
+
+
+\newpage
+\section{Infinite Games}
+\begin{itemize}
+	\item Reachability (E-condition)
+	\item Safety (A-condition)
+	\item Staiger-Wagner
+	\item weak Parity (assuming $C \subset \mathbb{N}$)
+	\item Büchi
+	\item Parity (assuming $C \subset \mathbb{N}$)
+	\item Muller
+	\item Rabin
+	\item Streett 
+\end{itemize}
+
+\subsection{Strategy Automata}
+$(M, C, m_0, \sigma^u, \sigma^n)$ strategy for player 0 \\
+Memory states $M$ \\
+Input colors $C$ \\
+Transition / memory update function $\sigma^u : M \times C \rightarrow M$ \\
+Next move function $\sigma^n : M \times V_0 \rightarrow V$
+
+Strategy $\sigma_\mathcal{A}(v_0 \dots v_n) = \sigma^n((\sigma^u)^*(v_0 \dots v_{n-1}), v_n)$
+
+
+\newpage
+\section{Logics}
+\subsection{LTL}
+$\varphi ::= p_i \mid \neg \varphi \mid \varphi \lor \varphi \mid X \varphi \mid F \varphi \mid G \varphi \mid \varphi U \varphi$
+\\
+$(\alpha, i) \models \varphi$
+
+\begin{itemize}
+	\item $\omega$-languages
+	\item Game winning conditions
+\end{itemize}
+
+\subsection{FO}
+$\varphi ::= t_1 = t_2 \mid R\overline{t} \mid \neg \varphi \mid \varphi \lor \varphi \mid \exists x \varphi \mid \forall x \varphi$
+
+\begin{itemize}
+	\item Finite tree languages
+\end{itemize}
+
+\subsection{MSO}
+$\varphi ::= \text{FO} + (\exists X \mid \forall X)$ \\
+set quantification
+
+\begin{itemize}
+	\item Finite tree languages
+	\item S1S, S2S
+\end{itemize}
+
+\subsection{wMSO}
+MSO with only finite set quanitification
+
+\begin{itemize}
+	\item $\omega$-tree languages
+\end{itemize}
+
+\subsection{S1S}
+MSO over $(\mathbb{N}, +1, <, 0)$
+
+\begin{itemize}
+	\item $\omega$-languages
+	\item Game winning conditions
+\end{itemize}
+
+\subsubsection*{S1S\textsubscript{0}}
+S1S - element variables + $(X \subseteq Y \mid \text{Sing}(X) \mid \text{Succ}(X))$
+
+\subsection{S2S}
+MSO over $\underline{T}_2 = (\{0, 1\}^*, \varepsilon, S_0, S_1)$
+
+\begin{itemize}
+	\item $\omega$-tree languages
+\end{itemize}
+
+\subsubsection*{S2S\textsubscript{0}}
+S2S - element variables + $(X \subseteq Y \mid \text{Sing}(X) \mid \text{Succ}_0(X) \mid \text{Succ}_1(X))$
 
 \end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
