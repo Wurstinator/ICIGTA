@@ -33,6 +33,17 @@
 		\end{itemize}
 \end{itemize}
 
+\subsection{Finite Special Trees}
+\begin{itemize}
+	\item $S_\Sigma = \{ t \in T_{\Sigma \cup \{\circ\}} \mid \circ \text{ occurs exaxctly once in } t \}$
+	\item Notation, $s \in S_\Sigma$, $t \in T_\Sigma$, $u \in \text{dom}(s)$:
+	\begin{itemize}
+		\item $s \cdot t$: replace $\circ$ in $s$ by $t$
+		\item $s|_u$: subtree of $s$ with root $u$
+		\item $s[\circ/u]$: replace $u$ and its subtree by $\circ$
+	\end{itemize}
+\end{itemize}
+
 \subsection{Finite Unranked Trees}
 \begin{itemize}
 	\item alphabet $\Sigma$
@@ -58,7 +69,7 @@
 	\item trees $T_\Sigma$
 	\item tree $t : \{0, 1\}^* \rightarrow \Sigma$
 	\item path $\pi \in \{0, 1\}^\omega$
-	\item $t|_\pi \in \Sigma^\omega : n \mapsto t(\pi(n))$
+	\item $t|_\pi \in \Sigma^\omega : n \mapsto t(\pi(0) \cdots \pi(n))$
 \end{itemize}
 
 \subsection{Game Arenas}
@@ -186,7 +197,25 @@ $(\text{current state}, \text{current type}, \text{current symbol}, \text{new st
 
 \subsubsection*{BTT}
 $(Q, \Sigma, \Gamma, \Delta, F)$ \\
-TODO %TODO
+$\Sigma, \Gamma$ input / output alphabet \\
+$\Delta$: tree transition \& $\varepsilon$ transition \\
+$F \subseteq Q$ 
+
+Tree with variables $X$ at leafs: $T_\Sigma(X)$ \\
+
+Tree transitions: $f(q_1(x_1), \dots, q_n(x_n)) \rightarrow q(u)$ \\
+for some $f \in \Sigma_n$, $q, q_1, \dots, q_n \in Q$, $x_1, \dots, x_n \in X$, $u \in T_\Gamma(\{x_1, \dots, x_n\})$
+
+$\varepsilon$ transitions: $q(x) \rightarrow q'(u)$ \\
+for some $q, q' \in Q$, $x \in X$, $u \in T_\Gamma(\{x_1\})$ \\
+
+Configurations are trees over $\Sigma \cup \Gamma \cup Q$. \\
+BTTs define relations $R(\mathcal{A}) = \{ (t, t') \mid \exists q \in F: t \rightarrow_\mathcal{A}^* q(t')\}$.
+
+Transition relation: $s \cdot f(q_1(t_1), \dots, q_n(t_n)) \rightarrow_\mathcal{A} s \cdot q(u[x_1 \leftarrow t_1, \dots, x_n \leftarrow t_n])$
+
+\subsubsection*{TDT}
+Similar properties as BTT but incomparable class of relations
 
 
 
