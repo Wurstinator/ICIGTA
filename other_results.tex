@@ -1,0 +1,69 @@
+\documentclass{article}
+
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage[utf8]{inputenc}
+\usepackage{geometry}
+
+\newtheorem{theorem}{Theorem}[section]
+
+\begin{document}
+
+\section{Infinite Words}
+
+\begin{theorem}
+	Every non-empty $\omega$-regular language contains an ultimately periodic word.
+\end{theorem}
+%TODO F4
+
+
+\begin{theorem}
+	For a Kripke structure $\mathcal{K}$ with initial state $s$ and $\varphi \in \text{LTL}$, the model checking problem $L(\mathcal{K}, s) \subseteq L(\varphi)?$ is PSPACE-complete.
+\end{theorem}
+\begin{proof}
+	\textbf{PSPACE} Compute the intersection automaton for $L(\mathcal{K}, s) \cap L(\neg \varphi)$ and test it for emptiness.
+	
+	\textbf{PSPACE-hard} Encode a poly.-length Turing tape as a Kripke structure and its correct behavior in LTL.
+\end{proof}
+
+\begin{theorem}[Büchi]
+	The MSO theory of $(\mathbb{N}, +1, <, 0)$ is decidable.
+\end{theorem}
+\begin{proof}
+	Corresponds to S1S formula. Can be checked with NBA emptiness test.
+\end{proof}
+
+\begin{theorem}
+	The FO theory of $(\mathbb{R}, +, <, 0)$ is decidable.
+\end{theorem}
+\begin{proof}
+	Encode real numbers $x$ by triples of sets $(X_s, X_i, X_f)$ with the number's sign ($X_s = \emptyset$ or $\{0\}$), the positive decimal digits in binary encoding, and the positive fractional digits in binary encoding. Then an FO sentence can be transformed to an equi-satisfiable MSO sentence over $(\mathbb{N}, +1, <, 0)$.
+\end{proof}
+
+\begin{theorem}
+	Subset-construction does not suffice to determinize NBAs.
+\end{theorem}
+%TODO F12
+
+\begin{theorem}
+	For every $n$, there is $L_n \subseteq \Sigma^\omega$ s.t. there is an NBA that recognizes $L_n$ with $n+2$ states, but every det. Rabin automaton that recognizes $L_n$ has at least $n!$ states.
+\end{theorem}
+%TODO F14
+
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
