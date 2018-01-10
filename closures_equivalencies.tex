@@ -99,7 +99,7 @@
   \node [draw, fit={(icoBA)}] (c3) {};
   
   \node (iSW) [below right=of c2] {Staiger-Wagner};
-  \node (iweakBA) [below=5pt of iSW] {weak BA};
+  \node (iweakBA) [below=5pt of iSW] {det. weak BA};
   \node [draw, fit={(iSW) (iweakBA)}] (c4) {};
   
   \node (iLTL) [right=of c3] {LTL};
@@ -119,6 +119,8 @@
    \draw [-{>[length=3mm,width=3mm]}, line width=1pt] (c4) -- (c3);
    \draw [-{>[length=3mm,width=3mm]}, line width=1pt] (c6) -- (c4);
    \draw [-{>[length=3mm,width=3mm]}, line width=1pt] (c7) -- (c4);
+   \draw [-, line width=1pt] (c2) -- node [midway,above] {complement} (c3);
+   \draw [-, line width=1pt] (c6) -- node [midway,above] {complement} (c7);
 \end{tikzpicture}
 
 \subsection{Class Inclusions}
@@ -136,20 +138,27 @@
     	\textbf{Proof}: NBA closed under complement.
     \item LTL $\subseteq$ NBA \\
     	\textbf{Proof}: \ref{} %TODO 6
+    \item LTL $\subseteq$ ABA \\
+    	\textbf{Proof}: \ref{} %TODO 21-22
 \end{itemize}
 
 \subsection{Class Exclusions}
 \begin{itemize}
 	\item E aut. $\not\subseteq$ A aut. \\
-		\textbf{Example}: $(a+b)^* a (a+b)^\omega$
+		\textbf{Example}: $(a+b)^* a (a+b)^\omega$ \\
+    	\textbf{Proof}: \ref{} %TODO
 	\item A aut. $\not\subseteq$ E aut. \\
-		\textbf{Example}: $\{a^\omega\}$
+		\textbf{Example}: $\{a^\omega\}$ \\
+    	\textbf{Proof}: \ref{} %TODO
 	\item DBA $\not\subseteq$ coBA \\
-		\textbf{Example}: $(a^*b)^\omega$
+		\textbf{Example}: $(a^*b)^\omega$ \\
+    	\textbf{Proof}: \ref{} %TODO
 	\item coBA $\not\subseteq$ DBA \\
-		\textbf{Example}: $(a+b)^* a^\omega$
+		\textbf{Example}: $(a+b)^* a^\omega$ \\
+    	\textbf{Proof}: \ref{} %TODO
 	\item LTL $\not\subseteq$ NBA \\
-		\textbf{Example}: $((a+b) a)^\omega$
+		\textbf{Example}: $((a+b) a)^\omega$ \\
+    	\textbf{Proof}: \ref{} %TODO
 \end{itemize}
 
 \subsection{Class Equalities}
@@ -171,11 +180,17 @@
     	\textbf{Proof}: \ref{} %TODO F12
    	\item (det.) Muller $\Rightarrow$ (det.) Parity \\
    		\textbf{Proof}: \ref{} %TODO F14
+   	\item ABA $\Rightarrow$ NBA \\
+   		\textbf{Proof}: \ref{} %TODO F23
 \end{itemize}
 
 \subsubsection{LTL}
 LTL $\Leftrightarrow$ Non-counting \\
 No proof. Remarks in F8.
+
+\subsubsection{SW}
+Staiger-Wagner $\Leftrightarrow$ det. weak BA \\
+\textbf{Proof}: \ref{} %TODO F18
 
 \subsection{Closures}
 \subsubsection{NBA}
@@ -193,21 +208,48 @@ No proof. Remarks in F8.
 	\item Not closed under complement (inf. many $a$ $\leftrightarrow$ fin. many $a$)
 \end{itemize}
 
+\subsubsection{SW}
+\begin{itemize}
+	\item Closed under union \\
+    	\textbf{Proof}: \ref{} %TODO F18
+    \item Closed under intersection \\
+    	\textbf{Proof}: \ref{} %TODO F18
+    \item Closed under complement \\
+    	\textbf{Proof}: \ref{} %TODO F18
+\end{itemize}
+
 \subsection{Characterizations}
 \begin{itemize}
 	\item Parity conditions are directly convertible to Rabin chain conditions and vice-versa. \\
 		\textbf{Proof}: Assign priorities in ascending order; $E_k \rightarrow 0$, $F_k \setminus E_k \rightarrow 1$, $E_{k-1} \setminus F_k \rightarrow 2$ \dots
 	\item $U$ is $\omega$-regular iff $U$ is a Boolean combination of DBA-languages \\
-		\textbf{Proof}: NBAs are closed under Boolean operations.
+		\textbf{Proof}: NBAs are closed under Boolean operations. %TODO other direction
 	\item $U$ is DBA-recog. iff $U = \text{lim}(L)$ for some regular $L \subseteq \Sigma^*$. \\
 		\textbf{Proof}: \ref{} %TODO F2
+	\item $U$ is E-recog. iff $U = L \cdot \Sigma^*$ for some regular $L \subseteq \Sigma^*$. \\
+		\textbf{Proof}: \ref{} %TODO F16
+	\item Landweber's theorem \\
+		\textbf{Proof}: \ref{} %TODO F16-F18
+	\item DBA $\cap$ coBA $\Rightarrow$ SW \\
+		\textbf{Proof}: \ref{} %TODO F18
+\end{itemize}
+
+\subsection{Duality}
+\begin{itemize}
+	\item $U$ is A-recog. iff $\Sigma^\omega \setminus U$ is E-recog. \\
+		\textbf{Proof}: \ref{} %TODO F16
+	\item $U$ is coBA-recog. iff $\Sigma^\omega \setminus U$ is DBA-recog. \\
+		\textbf{Proof}: \ref{} %TODO F16
 \end{itemize}
 
 \subsection{Problems / Complexity}
-\subsubsection{NBA}
 \begin{itemize}
-	\item Emptiness problem decidable in poly. time \\
+	\item Emptiness problem for NBAs is decidable in poly. time. \\
     	\textbf{Proof}: \ref{} %TODO F4
+    \item Emptiness problem for ABAs is PSPACE-complete. \\
+    	No proof. Remarks in F23.
+    \item Membership problem for ABAs is decidable in poly. time. \\
+    	%TODO F23;  infinite games?
 \end{itemize}
 
 

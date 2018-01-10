@@ -1,0 +1,48 @@
+\documentclass{article}
+
+\usepackage{amsmath, amssymb}
+\usepackage[utf8]{inputenc}
+\usepackage{geometry}
+
+\begin{document}
+
+\subsection*{Cantor Space}
+$(\mathbb{B}^\omega, d)$ with $d(\alpha, \beta) = \begin{cases} 0 & \text{if } \alpha = \beta \\ 2^{-(\min_n \alpha(n) \neq \beta(n))} & \text{else}  \end{cases}$
+
+$\frac{1}{2n}$-neighborhood of $\alpha$: $\alpha[0, n] \cdot \mathbb{B}^\omega$
+
+\subsection*{Cantor Topology}
+Open Sets: $\mathcal{O} = \{W \cdot \mathbb{B}^\omega \mid W \subseteq B^*\}$
+
+\subsection*{Borel Hierarchy}
+$\Sigma_1 = \mathcal{O}$ \\
+$\Pi_1 = \mathbb{B}^\omega \setminus \mathcal{O}$ \\
+$\Sigma_{n+1} = \{ \bigcup_{i \in \mathbb{N}} L_i \mid L_i \in \Pi_n \}$ \\
+$\Pi_{n+1} = \{ \bigcap_{i \in \mathbb{N}} L_i \mid L_i \in \Sigma_n \}$
+
+\subsection*{Relation to Automata}
+\begin{itemize}
+	\item regular $\Sigma_1$ = E-recognizable
+	\item regular $\Pi_1$ = A-recognizable
+	\item regular $\Sigma_2$ = co-Büchi-recognizable
+	\item regular $\Pi_2$ = DBA-recognizable
+\end{itemize}
+
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
