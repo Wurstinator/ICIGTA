@@ -340,17 +340,46 @@ MSO over $\underline{T}_2 = (\{0, 1\}^*, \varepsilon, S_0, S_1)$
 \subsubsection*{S2S\textsubscript{0}}
 S2S - element variables + $(X \subseteq Y \mid \text{Sing}(X) \mid \text{Succ}_0(X) \mid \text{Succ}_1(X))$
 
+
+\newpage
+\section{Grammars}
+\subsection{DTD}
+Document Type Definitions $D = (\Sigma, P, S)$ with $P \subseteq \Sigma \times \text{Reg}(\Sigma)$. \\
+$T(D)$ is the set of derivation trees starting from $S$ with rules in $P$.
+
+\subsection{EDTD}
+$E = (\Sigma, P, S)$ with $P \subseteq \Sigma' \times \text{Reg}(\Sigma')$ and $\Sigma' = \{a^{(n)} \mid a \in \Sigma, n \in \mathbb{N}\}$. \\
+$T(E)$ is the set of derivation trees starting from $S$ with rules in $P$, and replacing every $a^{(n)}$ by $a$. \\
+
+\textit{single-type EDTD}: no two $a^{(i)}$ and $a^{(j)}$ with $i \neq j$ occur in the same regular expression of a rule. \\
+
+\textit{deterministic EDTD}: every regular expression in a rule can be transformed to a DFA in polynomial time.
+
+\subsection{Regular Tree Grammar}
+$G = (N, \Sigma, S, P)$ with
+\begin{itemize}
+	\item $N \cap \Sigma = \emptyset$
+	\item $S \in N$
+	\item $P \subseteq N \times T_\Gamma$
+	\item $\Gamma_i = \begin{cases} \Sigma_i & \text{if } i > 0 \\ \Sigma_i \cup N & \text{else} \end{cases}$
+\end{itemize}
+
+\subsection{Regular Tree Expressions}
+Inductive definition:
+\begin{itemize}
+	\item Every $t \in T_{\Sigma \cup C}$ is a regular expression.
+	\item If $r$ and $s$ are regular expressions, then $r + s$ is a regular expression. (union)
+	\item If $r$ and $s$ are regular expressions and $c \in C$, then $r \cdot^c s$ is a regular expression. (replace $c$-leafs in $T(r)$ by trees in $T(s)$)
+	\item If $r$ is a regular expression and $c \in C$, then $r^{*_c}$ is a regular expression. (iteration)
+\end{itemize}
+
+
+
+
+
+
+
 \end{document}
-
-
-
-
-
-
-
-
-
-
 
 
 

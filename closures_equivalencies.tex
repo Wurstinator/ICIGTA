@@ -38,6 +38,7 @@
 	\item $\downarrow$NTA
 	\item DUTA
 	\item NUTA
+	\item deterministic DTD
 	\item DTD
 	\item deterministic EDTD
 	\item single-type EDTD
@@ -261,16 +262,17 @@ Staiger-Wagner $\Leftrightarrow$ det. weak BA \\
   \node (iDTA) [below=5pt of ireg] {DTA};
   \node (iNTA) [below=5pt of iDTA] {NTA};
   \node (idNTA) [below=5pt of iNTA] {$\downarrow$NTA};
-  \node (iRegGram) [below=5pt of idNTA] {Regular tree grammar};
-  \node (iMSO) [below=5pt of iRegGram] {MSO};
+  \node (iMSO) [below=5pt of idNTA] {MSO};
   \node (iRegex) [below=5pt of iMSO] {Regular expression};
-  \node [draw, fit={(ireg) (iDTA) (iNTA) (idNTA) (iRegGram) (iMSO) (iRegex)}] (c1) {};
+  \node (iRegGram) [below=5pt of iRegex] {Regular tree grammar};
+  \node [draw, fit={(ireg) (iDTA) (iNTA) (idNTA) (iMSO) (iRegex) (iRegGram)}] (c1) {};
   
-  \node (iregu) [right=of c1] {\underline{regular unranked}};
+  \node (iregu) [right=3cm of ireg] {\underline{regular unranked}};
   \node (iDUTA) [below=5pt of iregu] {DUTA};
   \node (iNUTA) [below=5pt of iDUTA] {NUTA};
   \node (iMSOu) [below=5pt of iNUTA] {MSO};
-  \node [draw, fit={(iregu) (iDUTA) (iNUTA) (iMSOu)}] (c2) {};
+  \node (iuRegGram) [below=5pt of iMSOu] {Unranked regular tree grammar};
+  \node [draw, fit={(iregu) (iDUTA) (iNUTA) (iMSOu) (iuRegGram)}] (c2) {};
   
   \node (idDTA) [below right=1cm and -1.2cm of c1] {$\downarrow$DTA};
   \node [draw, fit={(idDTA)}] (c3) {};
@@ -279,7 +281,8 @@ Staiger-Wagner $\Leftrightarrow$ det. weak BA \\
   \node [draw, fit={(iFO)}] (c8) {};
   
   \node (iEDTD) [below=of c2] {EDTD};
-  \node [draw, fit={(iEDTD)}] (c4) {};
+  \node (iNUTAsF) [below=5pt of iEDTD] {NUTA w/ unique root};
+  \node [draw, fit={(iEDTD) (iNUTAsF)}] (c4) {};
   
   \node (istEDTD) [below=of c4] {single-type EDTD};
   \node [draw, fit={(istEDTD)}] (c5) {};
@@ -289,6 +292,9 @@ Staiger-Wagner $\Leftrightarrow$ det. weak BA \\
   
   \node (iDTD) [below=of c6] {DTD};
   \node [draw, fit={(iDTD)}] (c7) {};
+  
+  \node (idDTD) [below=of c7] {deterministic DTD};
+  \node [draw, fit={(idDTD)}] (c11) {};
   
   \node (iTWA) [left= of c1] {TWA};
   \node [draw, fit={(iTWA)}] (c9) {};
@@ -303,37 +309,65 @@ Staiger-Wagner $\Leftrightarrow$ det. weak BA \\
   \draw [-{>[length=3mm,width=3mm]}, line width=1pt] (c5) -- (c4);
   \draw [-{>[length=3mm,width=3mm]}, line width=1pt] (c6) -- (c5);
   \draw [-{>[length=3mm,width=3mm]}, line width=1pt] (c7) -- (c6);
+  \draw [-{>[length=3mm,width=3mm]}, line width=1pt] (c11) -- (c7);
   \draw [{<[length=3mm,width=3mm]}-{>[length=3mm,width=3mm]}, line width=1pt] (c9) -- node [midway,above] {\Large ?} (c1);
   \draw [-{>[length=3mm,width=3mm]}, line width=1pt] (c10) -- (c9);
 \end{tikzpicture}
 
 \subsection{Class Inclusions}
-TODO
+\begin{itemize}
+	\item Regular Ranked $\subseteq$ Regular Unranked \\
+		\textbf{Proof}: %TODO F5-6
+	\item det. DTD $\subseteq$ DTD $\subseteq$ det. EDTD $\subseteq$ single-type EDTD $\subseteq$ EDTD \\
+		trivial
+	\item EDTD $\subseteq$ Regular tree grammar \\
+		\textbf{Proof}: $N = \Sigma'$, $P_\text{gram} = P \cup \{ a^{(n)} \rightarrow a \mid a, n\}$
+\end{itemize}
 
 \subsection{Class Exclusions}
 \begin{itemize}
 	\item $\downarrow$DTA $\not\subseteq$ NTA \\
 		\textbf{Example}: $T = \{ f(a, b), f(b, a) \}$ \\
 		\textbf{Proof}: \ref{} %TODO F2
+	\item DTD $\not\subseteq$ single-type EDTD \\
+		\textbf{Example}: $T = \{ t \in T_{\{a,b\}} \mid \text{there is a path in } t \text{ on which } a \text{ occurs exactly twice}$
+	\item NUTA w/ unique root $\not\subseteq$ NUTA \\
+		\textbf{Example}: $T = \{a, b\}$
+	\item FO $\not\subseteq$ MSO \\
+		\textbf{Example}: $T = $ positive boolean terms that evaluate to true %F9
 \end{itemize}
 
 \subsection{Class Equalities}
-\subsection{Regular Ranked}
+\subsubsection{Regular Ranked}
 \begin{itemize}
 	\item NTA $\Rightarrow$ DTA \\
 		\textbf{Proof}: Subset construction.
 	\item NTA $\Leftrightarrow$ $\downarrow$NTA \\
 		\textbf{Proof}: \ref{} %TODO F2
+	\item $\downarrow$NTA $\Leftrightarrow$ Regular Tree Grammar \\
+		\textbf{Proof}: \ref{} %TODO F8
+	\item MSO $\Leftrightarrow$ NTA \\
+		\textbf{Proof}: \ref{} %TODO F9
+	\item Reg. exp. $\Leftrightarrow$ NTA \\
+		\textbf{Proof}: \ref{} %TODO F9
 \end{itemize}
 
-\subsection{Regular Unranked}
+\subsubsection{Regular Unranked}
 \begin{itemize}
 	\item NUTA $\Rightarrow$ DUTA \\
 		\textbf{Proof}: %TODO F5
+	\item MSO $\Leftrightarrow$ NUTA \\
+		\textbf{Proof}: %TODO F9
+\end{itemize}
+
+\subsubsection{EDTD}
+\begin{itemize}
+	\item NUTA with unique root $\Leftrightarrow$ EDTD (in poly. time) \\
+		\textbf{Proof}: %TODO F7
 \end{itemize}
 
 \subsection{Closures}
-\subsection{Regular Ranked}
+\subsubsection{Regular Ranked}
 \begin{itemize}
 	\item Regular (ranked) trees are closed under complement. \\
 		\textbf{Proof}: \ref{} %TODO F2
@@ -341,22 +375,41 @@ TODO
 		\textbf{Proof}: \ref{} %TODO F2
 	\item Regular (ranked) trees are closed under intersection. \\
 		\textbf{Proof}: \ref{} %TODO F2
+\end{itemize}
+
+\subsubsection{Regular Unranked}
+\begin{itemize}
 	\item Regular unranked trees are closed under complement, union, and intersection. \\
 		\textbf{Proof}: via FCNS 
 \end{itemize}
 
+
 \subsection{Problems / Complexity}
+\subsubsection{Regular Ranked}
 \begin{itemize}
+	\item Membership problem for NTAs is decidable.
 	\item Reachable states of NTAs can be computed in linear time in $|\mathcal{A}|$.
 		%TODO F4
 	\item Emptiness of an NTA can be decided in linear time in $|\mathcal{A}|$. \\
 		\textbf{Algorithm}: $T(\mathcal{A}) = \emptyset$ iff $\text{Reachable}(\mathcal{A}) \cap F = \emptyset$
 	\item Given a DTA $\mathcal{A}$, $\sim_{T(\mathcal{A})}$ can be computed in time $\text{poly}(|Q^m \times \Sigma \times Q|)$ where $m$ is the maximal arity in $\Sigma$. \\
 		\textbf{Algorithm}: %TODO F4
+\end{itemize}
+
+\subsubsection{Regular Unranked}
+\begin{itemize}
 	\item Emptiness / membership / inclusion for NUTAs is decidable in polynomial / polynomial / exponential time. \\
 		\textbf{Algorithm}: %TODO F6
 	\item Inclusion for complete DUTAs is decidable in polynomial time. \\
 		\textbf{Algorithm}: %TODO F6
+\end{itemize}
+
+\subsubsection{Grammars}
+\begin{itemize}
+	\item Emptiness / membership for EDTDs is decidable in polynomial time. \\
+		\textbf{Proof}: EDTD can be converted to NUTA in polynomial time.
+	\item Inclusion for deterministic EDTDs is decidable in polynomial time. \\
+		\textbf{Proof}: %TODO F8
 \end{itemize}
 
 \newpage
