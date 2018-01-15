@@ -326,6 +326,12 @@ TODO
 		\textbf{Proof}: \ref{} %TODO F2
 \end{itemize}
 
+\subsection{Regular Unranked}
+\begin{itemize}
+	\item NUTA $\Rightarrow$ DUTA \\
+		\textbf{Proof}: %TODO F5
+\end{itemize}
+
 \subsection{Closures}
 \subsection{Regular Ranked}
 \begin{itemize}
@@ -335,8 +341,23 @@ TODO
 		\textbf{Proof}: \ref{} %TODO F2
 	\item Regular (ranked) trees are closed under intersection. \\
 		\textbf{Proof}: \ref{} %TODO F2
+	\item Regular unranked trees are closed under complement, union, and intersection. \\
+		\textbf{Proof}: via FCNS 
 \end{itemize}
 
+\subsection{Problems / Complexity}
+\begin{itemize}
+	\item Reachable states of NTAs can be computed in linear time in $|\mathcal{A}|$.
+		%TODO F4
+	\item Emptiness of an NTA can be decided in linear time in $|\mathcal{A}|$. \\
+		\textbf{Algorithm}: $T(\mathcal{A}) = \emptyset$ iff $\text{Reachable}(\mathcal{A}) \cap F = \emptyset$
+	\item Given a DTA $\mathcal{A}$, $\sim_{T(\mathcal{A})}$ can be computed in time $\text{poly}(|Q^m \times \Sigma \times Q|)$ where $m$ is the maximal arity in $\Sigma$. \\
+		\textbf{Algorithm}: %TODO F4
+	\item Emptiness / membership / inclusion for NUTAs is decidable in polynomial / polynomial / exponential time. \\
+		\textbf{Algorithm}: %TODO F6
+	\item Inclusion for complete DUTAs is decidable in polynomial time. \\
+		\textbf{Algorithm}: %TODO F6
+\end{itemize}
 
 \newpage
 

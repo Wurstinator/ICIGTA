@@ -5,6 +5,7 @@
 \usepackage{geometry}
 
 \newtheorem{theorem}{Theorem}[section]
+\newtheorem{definition}{Definition}
 
 \begin{document}
 
@@ -64,7 +65,32 @@
 	Given an ABA $\mathcal{A}$, the dual $\tilde{\mathcal{A}}$ is an alternating co-Büchi automaton which accepts $\overline{L(\mathcal{A})}$, with $\tilde{F} = Q \setminus F$ and $\tilde{\delta}$ exchanging true/false and $\land$/$\lor$.
 \end{theorem}
 %TODO F22
+ 
 
+\section{Finite Trees}
+\begin{theorem}[Pumping Principle]
+	Let $T \subseteq T_\Sigma$ be a regular ranked tree language. There is a $n \in \mathbb{N}$ such that for all trees $t \in T$, all $m > n$, and all paths $\pi_1 \dots \pi_m$, there are $1 \leq i < j \leq m$ such that for all $k \in \mathbb{N}$:
+	$$t[\circ / u] \cdot (t[\circ/v]|_u)^k \cdot t|_v \in T$$
+	where $u = \pi_1 \dots \pi_i$ and $v = \pi_1 \dots \pi_j$.
+\end{theorem}
+%TODO F3
+
+\begin{definition}
+	Let $T \subseteq T_\Sigma$. The \textbf{Myhill-Nerode equivalence} is $\sim_T \subseteq T_\Sigma \times T_\Sigma$ with 
+	$$t_1 \sim_T t_2 \Leftrightarrow \forall s \in S_\Sigma: s \cdot t_1 \in T \leftrightarrow s \cdot t_2 \in T$$
+	
+	The index of $T$ is $\text{Index}(\sim_T) := |T/\sim_T|$.
+\end{definition}
+
+\begin{theorem}
+	Let $T \subseteq T_\Sigma$. $T$ is regular iff $\text{Index}(\sim_T)$ is finite. If $T$ is regular, $\mathcal{A}_T$ is the minimal DTA.
+\end{theorem}
+%TODO F3
+
+\begin{theorem}
+	The emptiness problem for NTAs can be reduced to \textsf{HORN-SAT} in linear time.
+\end{theorem}
+%TODO F4
 
 \end{document}
 
