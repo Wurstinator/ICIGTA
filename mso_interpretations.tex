@@ -1,0 +1,76 @@
+\documentclass{article}
+
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage[utf8]{inputenc}
+\usepackage{geometry}
+\newtheorem{theorem}{Theorem}
+\newtheorem{definition}{Definition}
+
+\begin{document}
+
+\section{MSO interpretations}
+\begin{definition}
+	Let $\mathfrak{A}$ be a structure. An \textbf{MSO interpretation} is $\mathcal{I} = (\varphi_\text{dom}(x), (\varphi_{R_i}(x_1, \dots, x_{k_i}))_{1 \leq i \leq n})$. 
+
+	$\mathcal{I}$ defines the structure $\mathcal{I}(\mathfrak{A}) = ( D^{\mathcal{I}(\mathfrak{A})}, (R_i^{\mathcal{I}(\mathfrak{A})})_{1 \leq i \leq n})$, where $D^{\mathcal{I}(\mathfrak{A})} = \{ a \in A \mid \mathfrak{A} \models \varphi_\text{dom}(a) \}$ and $R_i^{\mathcal{I}(\mathfrak{A})} = \{(x_1, \dots, x_{k_i} \mid \mathfrak{A} \models \varphi_{R_i}(x_1, \dots, x_{k_i})\}$.
+\end{definition}
+
+\begin{definition}
+	Let $\mathfrak{A}$ be a structure. We define $\text{MTh}_2(\mathfrak{A}) = \{ \varphi \in \text{MSO} \mid \mathfrak{A} \models \varphi \}$ as the monadic second-order theory of $\mathfrak{A}$.
+\end{definition}
+
+\begin{theorem}
+\label{thm:transf_dec}
+	Let $\mathfrak{A}$ be a structure and let $\mathcal{I}$ be an MSO interpretation of $\mathfrak{A}$. If $\text{MTh}_2(\mathfrak{A})$ is decidable, then $\text{MTh}_2(\mathcal{I}(\mathfrak{A}))$ is decidable.
+\end{theorem}
+%TODO IG F19-20
+
+\section{Transferring (Un)Decidability}
+\begin{theorem}
+	$\text{MTh}_2(\underline{T_2})$ is decidable.
+\end{theorem}
+\textbf{Proof}: see S2S to PTA transformation
+
+\begin{theorem}
+	$\text{MTh}_2((\mathbb{Q}, \leq))$ is decidable.
+\end{theorem}
+%TODO F19
+
+\begin{theorem}
+	Let $G_2 = (\mathbb{N} \times \mathbb{N}, (0, 0), s_h, s_v)$ with $s_h(x, y) = (x+1, y)$ and $s_v(x, y) = (x, y+1)$. Then $\text{MTh}_2(G_2)$ is undecidable.
+\end{theorem}
+%TODO F20
+
+\begin{theorem}
+	Let $(\underline{T_2}, \text{el})$ be the extension of $\underline{T_2}$ with $\text{el} = \{(u, v) \in \{0,1\}^* \times \{0,1\}^* \mid |u| = |v|\}$. Then $\text{MTh}_2((\underline{T_2}, \text{el}))$ is undecidable.
+\end{theorem}
+\begin{proof}
+	We provide an interpretation $\mathcal{I} = (\varphi_\text{dom}(x), \varphi_\text{(0,0)}(x), \varphi_{s_h}(x, y), \varphi_{s_v}(x, y))$ for $(\underline{T_2}, \text{el})$ such that $\mathcal{I}((\underline{T_2}, \text{el})) = G_2$. Then the statement follows from theorem \ref{thm:transf_dec}.
+	
+	$$\varphi_\text{dom}(x) = \exists y (y \sqsubseteq x \land \forall z (z \sqsubseteq x \rightarrow (y \sqsubseteq z \leftrightarrow (\exists u \, z = S_1 u))) \;\hat{=}\; 0^*1^*$$
+	
+	$$\varphi_\text{(0,0)}(x) = (x = \varepsilon)$$
+	
+	$$\varphi_{s_h}(x, y) = \text{el}(x, y) \land y < x \land \forall z (\text{el}(x, z) \land z < x \land y < z \rightarrow \neg \varphi_\text{dom}(z)) $$
+	
+	$$\varphi_{s_v}(x, y)) = (y = S_1 x)$$
+\end{proof}
+
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

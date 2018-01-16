@@ -441,7 +441,8 @@ Staiger-Wagner $\Leftrightarrow$ det. weak BA \\
   \node (iMTA) [below=5pt of ireg] {Muller aut.};
   \node (iPTA) [below=5pt of iMTA] {Parity aut.};
   \node (iMSO) [below=5pt of iPTA] {MSO (S2S / S2S\textsubscript{0})};
-  \node [draw, fit={(ireg) (iMTA) (iPTA) (iMSO)}] (c1) {};
+  \node (iTAreg) [below=5pt of iMSO] {Tree aut. with regular acceptance};
+  \node [draw, fit={(ireg) (iMTA) (iPTA) (iMSO) (iTAreg)}] (c1) {};
   
   \node (iBTA) [below=of c1] {Büchi aut.};
   \node [draw, fit={(iBTA)}] (c2) {};
@@ -457,14 +458,72 @@ Staiger-Wagner $\Leftrightarrow$ det. weak BA \\
   \draw [-{>[length=3mm,width=3mm]}, line width=1pt] (c4) -- (c2);
 \end{tikzpicture}
 
-\subsection{Class Differences}
-TODO
+\subsection{Class Exclusions}
+\begin{itemize}
+	\item BTA $\not\subseteq$ Regular tree \\
+		\textbf{Example}: $T_\text{fin} = \{ t \in T_{\{a,b\}} \mid \text{every infinite path has only fin. many } b \}$ \\
+		\textbf{Proof}: %TODO F14
+	\item DMTA $\not\subseteq$ BTA \\
+		\textbf{Example}: $T_\text{fin}^\complement = \{ t \in T_{\{a,b\}} \mid \text{there is a path with inf. many } b \}$ \\
+		\textbf{Proof}: BTA-recognizable (see below) but not a path tree language.
+	\item WMSO $\not\subseteq BTA$ \\
+		\textbf{Example}: $\{ t \in T_{\{a,b\}} \mid \text{every infinite path has infinitely many } b \}$ \\
+		\textbf{Proof}: %TODO F19
+\end{itemize}
 
 \subsection{Class Equalities}
-TODO
+\subsubsection{Regular Trees}
+\begin{itemize}
+	\item PTA, MTA $\Rightarrow$ TA with regular acceptance \\
+		\textbf{Proof}: By definition and PA/MA regularity.
+	\item TA with reg. acc. $\Rightarrow$ PTA \\
+		\textbf{Proof}: TA $\mathcal{A}$, DPA $\mathcal{A}'$ over alphabet $Q$ that defines Acc. Define PTA with state space $Q \times P$. \\
+		$(q, a, q_1, q_2) \in \Delta \Rightarrow ((q,p), a, (q_1, \delta(p, q)), (q_2, \delta(p, q))) \in \Delta'$
+	\item PTA $\Leftrightarrow$ MSO (S2S)
+		\textbf{Proof}: \ref{} %TODO F18
+\end{itemize}
 
 \subsection{Closures}
-TODO
+\subsubsection{Regular Trees}
+\begin{itemize}
+	\item The class of regular tree languages is closed under union and intersection. \\
+		\textbf{Proof}: \ref{} %TODO F15
+	\item The class of regular tree languages is closed under projection. \\
+		\textbf{Proof}: \ref{} %TODO F15
+	\item PTAs are closed under complement ($2^{\mathcal{O}(kn \cdot \log(kn))}$ states for $|Q| = n$, $|\text{img}(c)| = k$)
+		\textbf{Proof}: \ref{} %TODO F16-17
+\end{itemize}
+
+\subsubsection{BTA}
+\begin{itemize}
+	\item BTAs are not closed under complement. \\
+		\textbf{Proof}: $T_\text{fin}^\complement = \{ t \in T_{\{a,b\}} \mid \text{there is a path with inf. many } b \}$ \\
+		$T_\text{fin}^\complement$ is BTA-recognizable but its complement is not. %TODO F14
+\end{itemize}
+
+\subsubsection{DMTA}
+\begin{itemize}
+	\item DMTAs are not closed under union or complement. % no proof
+	\item DMTAs are closed under intersection. \\
+		\textbf{Proof}: product automaton
+\end{itemize}
+
+\subsection{Characterizations}
+\begin{itemize}
+	\item $T \subseteq T_\Sigma$ is DMTA-recognizable iff $T$ is a path tree language. \\
+		$T : 2^{(\{0,1\} \times \Sigma)^\omega} \rightarrow 2^{T_\Sigma}, L \mapsto \{ t \in T_\Sigma \mid \forall \pi \in \{0,1\}^\omega: \pi^\smallfrown (t|_\pi) \in L \}$ \\
+		\textbf{Proof}: %ex 9
+	\item $T \subseteq T_\Sigma$ is WMSO-definable iff $T$ and $T^\complement$ are BTA-recognizable. % no proof
+\end{itemize}
+
+\subsection{Problems}
+\subsubsection{Regular Trees}
+\begin{itemize}
+	\item The membership problem for regular tree languages is decidable. \\
+		\textbf{Proof}: via membership game as in complementation
+	\item The emptiness problem for regular tree languages is decidable. \\
+		\textbf{Proof}: \ref{} %TODO F17
+\end{itemize}
 
 
 \end{document}

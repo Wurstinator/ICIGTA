@@ -124,6 +124,27 @@
 \end{theorem}
 %TODO F13
 
+
+\section{Infinite Trees}
+\begin{theorem}[BTA Pumping]
+	For $t \in T_\Sigma, x \in \{0,1\}^*, y \in \{0,1\}^+$, let 
+	$$t^*_{[x,y]} : \{0,1\}^* \rightarrow \Sigma, z \mapsto \begin{cases} t(z) & \text{if } xy \not\sqsubseteq z \\ xz' & \text{if } \exists n>0: z = xy^nz' \text{ with } y \not\sqsubseteq z' \end{cases}.$$
+	Let $\mathcal{A}$ be a BTA, $t \in T(\mathcal{A})$, $\rho$ an accepting run of $\mathcal{A}$ on $t$, and $x, y, y' \in \{0,1\}^*$ s.t. $\rho(x) = \rho(xy)$, $y' \sqsubset y$, and $\rho(xy') \in F$. Then $t^*_{[x,y]} \in T(\mathcal{A})$.
+\end{theorem}
+%TODO F14
+
+\begin{theorem}
+	Every non-empty regular tree language contains a regular tree.
+\end{theorem}
+%TODO F18
+
+\begin{theorem}[Rabin's Tree Theorem]
+	The MSO theory of $\underline{T_2}$ is decidable for formulas $\varphi(X_1, \dots, X_n)$ and a model $X_1, \dots X_n \subseteq \{0,1\}^*$ is computable.
+\end{theorem}
+\begin{proof}
+	Transform $\varphi$ into an equivalent PTA. A model can be found by solving the emptiness game.
+\end{proof}
+
 \end{document}
 
 
