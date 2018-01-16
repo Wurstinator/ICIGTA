@@ -214,7 +214,11 @@ for some $q, q' \in Q$, $x \in X$, $u \in T_\Gamma(\{x_1\})$ \\
 Configurations are trees over $\Sigma \cup \Gamma \cup Q$. \\
 BTTs define relations $R(\mathcal{A}) = \{ (t, t') \mid \exists q \in F: t \rightarrow_\mathcal{A}^* q(t')\}$.
 
-Transition relation: $s \cdot f(q_1(t_1), \dots, q_n(t_n)) \rightarrow_\mathcal{A} s \cdot q(u[x_1 \leftarrow t_1, \dots, x_n \leftarrow t_n])$
+Transition relation: $s \cdot f(q_1(t_1), \dots, q_n(t_n)) \rightarrow_\mathcal{A} s \cdot q(u[x_1 \leftarrow t_1, \dots, x_n \leftarrow t_n])$ \\
+
+Deterministic BTT: no $\varepsilon$-rules and no rules share the same left side.
+
+Linear BTT: In every transition, each variable occurs at most once.
 
 \subsubsection*{TDT}
 Similar properties as BTT but incomparable class of relations
@@ -373,7 +377,35 @@ Inductive definition:
 	\item If $r$ is a regular expression and $c \in C$, then $r^{*_c}$ is a regular expression. (iteration)
 \end{itemize}
 
+\subsection{XPath}
+\begin{itemize}
+	\item cxp ::= path $|$ /path
+	\item path ::= step $|$ path/path
+	\item step ::= label $|$ axis::label $|$ label[pred] $|$ axis::label[pred]
+	\item label = $\Sigma \cup \{*\}$
+	\item pred ::= cxp $|$ not pred $|$ pred and pred $|$ pred or pred
+\end{itemize}
 
+(default axis: "child")
+
+axes =
+\begin{itemize}
+	\item self $:= \{ (x,x) \mid x \in \text{dom}_t\}$
+	\item firstchild $:= \{ (x, x1) \mid x, x1 \in \text{dom}_t \}$
+	\item nextsibling $:= \{ (xi, x(i+1)) \mid xi, x(i+1) \in \text{dom}_t \}$
+	\item child $:= \text{firstchild} \cdot \text{nextsibling}^*$
+	\item descendant $:= \text{child}^+$
+	\item descendant-or-self $:= \text{child}^*$
+	\item following-sibling $:= \text{nextsibling}^+$
+	\item following $:= \text{ancestor-or-self} \cdot \text{following-sibling} \cdot \text{descendant-or-self}$
+	\item parent $:= \text{child}^{-1}$
+	\item ancestor $:= \text{descendant}^{-1}$
+	\item ancestor-or-self $:= \text{descendant-or-self}^{-1}$
+	\item preceding-sibling $:= \text{following-sibling}^{-1}$
+	\item preceding $:= \text{following}^{-1}$
+\end{itemize}
+
+A predicate pred is true iff there is any node satisfying it.
 
 
 

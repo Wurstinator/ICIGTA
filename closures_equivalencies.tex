@@ -296,7 +296,7 @@ Staiger-Wagner $\Leftrightarrow$ det. weak BA \\
   \node (idDTD) [below=of c7] {deterministic DTD};
   \node [draw, fit={(idDTD)}] (c11) {};
   
-  \node (iTWA) [left= of c1] {TWA};
+  \node (iTWA) [below left= of c1] {TWA};
   \node [draw, fit={(iTWA)}] (c9) {};
   
   \node (iDTWA) [below=of c9] {DTWA};
@@ -310,7 +310,7 @@ Staiger-Wagner $\Leftrightarrow$ det. weak BA \\
   \draw [-{>[length=3mm,width=3mm]}, line width=1pt] (c6) -- (c5);
   \draw [-{>[length=3mm,width=3mm]}, line width=1pt] (c7) -- (c6);
   \draw [-{>[length=3mm,width=3mm]}, line width=1pt] (c11) -- (c7);
-  \draw [{<[length=3mm,width=3mm]}-{>[length=3mm,width=3mm]}, line width=1pt] (c9) -- node [midway,above] {\Large ?} (c1);
+  \draw [-{>[length=3mm,width=3mm]}, line width=1pt] (c9) -- (c1);
   \draw [-{>[length=3mm,width=3mm]}, line width=1pt] (c10) -- (c9);
 \end{tikzpicture}
 
@@ -322,6 +322,8 @@ Staiger-Wagner $\Leftrightarrow$ det. weak BA \\
 		trivial
 	\item EDTD $\subseteq$ Regular tree grammar \\
 		\textbf{Proof}: $N = \Sigma'$, $P_\text{gram} = P \cup \{ a^{(n)} \rightarrow a \mid a, n\}$
+	\item TWA $\subseteq$ NTA \\
+		\textbf{Proof}: \ref{} %TODO F10
 \end{itemize}
 
 \subsection{Class Exclusions}
@@ -335,6 +337,14 @@ Staiger-Wagner $\Leftrightarrow$ det. weak BA \\
 		\textbf{Example}: $T = \{a, b\}$
 	\item FO $\not\subseteq$ MSO \\
 		\textbf{Example}: $T = $ positive boolean terms that evaluate to true %F9
+	\item DTWA $\not\subseteq$ TWA \\
+		\textbf{Example}: $T_{N \backslash D}$ \\
+			$\Sigma_0 = \{a, b\}$, $\Sigma_2 = \{f\}$ \\
+			$t \in T_{N \backslash D}$ iff $|t|_a = 3 \land \text{lca}(u, v) \sqsubseteq \text{lca}(v, w)$
+		\textbf{Proof}: \ref{} %TODO F10-11
+	\item TWA $\not\subseteq$ NTA \\
+		\textbf{Example}: all paths in the skeleton have even length \\
+		\textbf{Proof}: \ref{} %TODO F11
 \end{itemize}
 
 \subsection{Class Equalities}
@@ -381,6 +391,17 @@ Staiger-Wagner $\Leftrightarrow$ det. weak BA \\
 \begin{itemize}
 	\item Regular unranked trees are closed under complement, union, and intersection. \\
 		\textbf{Proof}: via FCNS 
+\end{itemize}
+
+\subsubsection{TWA}
+\begin{itemize}
+	\item TWAs are closed under union. \\
+		\textbf{Proof}: %TODO F10
+	\item TWAs and DTWAs are closed under intersection. \\
+		\textbf{Proof}: %TODO F10
+	\item Open Problem: Are TWAs closed under complement?
+	\item DTWAs are closed under complement. \\
+		\textbf{Proof}: %TODO F11-12
 \end{itemize}
 
 
