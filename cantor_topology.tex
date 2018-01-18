@@ -1,32 +1,142 @@
 \documentclass{article}
 
-\usepackage{amsmath, amssymb}
+\usepackage{amsmath, amssymb, amsthm}
 \usepackage[utf8]{inputenc}
 \usepackage{geometry}
+\newtheorem{theorem}{Theorem}
+\newtheorem{definition}{Definition}
 
 \begin{document}
 
-\subsection*{Cantor Space}
-$(\mathbb{B}^\omega, d)$ with $d(\alpha, \beta) = \begin{cases} 0 & \text{if } \alpha = \beta \\ 2^{-(\min_n \alpha(n) \neq \beta(n))} & \text{else}  \end{cases}$
+\section{Cantor Space \& Borel Hierarchy}
+\begin{definition}
+	The \textbf{Cantor space} is the pair $(\mathbb{B}^\omega, d)$ with $d(\alpha, \beta) = \begin{cases} 0 & \text{if } \alpha = \beta \\ 2^{-(\min_n \alpha(n) \neq \beta(n))} & \text{else}  \end{cases}$. 
+	
+	Note: The $\frac{1}{2n}$-neighborhood of $\alpha$ is $\alpha[0, n] \cdot \mathbb{B}^\omega$.
+\end{definition}
 
-$\frac{1}{2n}$-neighborhood of $\alpha$: $\alpha[0, n] \cdot \mathbb{B}^\omega$
+\begin{definition}
+	From the Cantor space we define the \textbf{Cantor topology} with open sets $\mathcal{O} = \{W \cdot \mathbb{B}^\omega \mid W \subseteq \mathbb{B}^*\}$.
+\end{definition}
 
-\subsection*{Cantor Topology}
-Open Sets: $\mathcal{O} = \{W \cdot \mathbb{B}^\omega \mid W \subseteq B^*\}$
+\begin{definition}
+	The \textbf{Borel hierarchy} is a collection $\{ \Sigma_1, \Pi_1, \Sigma_2, \Pi_2, \dots \}$ defined as \\
+	$\Sigma_1 = \mathcal{O}$ \\
+	$\Pi_1 = \mathbb{B}^\omega \setminus \mathcal{O}$ \\
+	$\Sigma_{n+1} = \{ \bigcup_{i \in \mathbb{N}} L_i \mid L_i \in \Pi_n \}$ \\
+	$\Pi_{n+1} = \{ \bigcap_{i \in \mathbb{N}} L_i \mid L_i \in \Sigma_n \}$
+\end{definition}
 
-\subsection*{Borel Hierarchy}
-$\Sigma_1 = \mathcal{O}$ \\
-$\Pi_1 = \mathbb{B}^\omega \setminus \mathcal{O}$ \\
-$\Sigma_{n+1} = \{ \bigcup_{i \in \mathbb{N}} L_i \mid L_i \in \Pi_n \}$ \\
-$\Pi_{n+1} = \{ \bigcap_{i \in \mathbb{N}} L_i \mid L_i \in \Sigma_n \}$
+\begin{theorem}
+\begin{enumerate}
+	\item Every class $\Sigma_n$ or $\Pi_n$ of the Borel hierarchy is closed under finite union and intersection. 
+	\item For every $L \subseteq \mathbb{B}^\omega$, we have $L \in \Sigma_n$ iff $L^\complement \in \Pi_n$.
+\end{enumerate}
+\end{theorem}
+\begin{proof}
+	\begin{enumerate}
+		\item It suffices to show the closure for $\Sigma_n$. Then it follows for $\Pi_n$ from (2). For example, let $L, K \in \Pi_n$, so $L^\complement, K^\complement \in \Sigma_n$, so $L^\complement \cup K^\complement = (L \cap K)^\complement \in \Sigma_n$ and therefore $L \cap K \in \Pi_n$.
+		
+			For $n = 0$, this is clear from the definition of $\mathcal{O}$. Let $W_1, W_2 \subseteq \mathbb{B}^*$. Then $W_1 \cdot \mathbb{B}^\omega \cup W_2 \cdot \mathbb{B}^\omega = (W_1 \cup W_2) \cdot \mathbb{B}^\omega$ and $W_1 \cdot \mathbb{B}^\omega \cap W_2 \cdot \mathbb{B}^\omega = (W_1 \cdot \mathbb{B}^* \cap W_2 \cdot \mathbb{B}^*) \cdot \mathbb{B}^\omega$.
+			
+			Using an induction argument, consider $L, K \in \Sigma_{n+1}$, so $L = \bigcup\limits_{i \in \mathbb{N}} L_i$ and $K = \bigcup\limits_{i \in \mathbb{N}} K_i$ for $(L_i)_i, (K_i)_i \in \Pi_n$. By induction, $L_i \cup K_i \in \Pi_n$ for all $i$, and thus $L \cup K = \bigcup\limits_{i \in \mathbb{N}} (L_i \cup K_i) \in \Sigma_{n+1}$. For intersection we have $L \cap K = \bigcup\limits_{i,j \in \mathbb{N}} L_i \cap K_j \in \Sigma_{n+1}$.
+			
+		\item De Morgan law %TODO F24
+	\end{enumerate}
+\end{proof}
 
-\subsection*{Relation to Automata}
+\begin{definition}
+	Let $f : \mathbb{B}^\omega \rightarrow \mathbb{B}^\omega$. $f$ is \textbf{continuous} if for all open sets $O \in \mathcal{O}$: $f^{-1}(O) \in \mathcal{O}$. 
+	
+	For $L, K \subseteq \mathbb{B}^\omega$, we write $K \leq L$ if there is a continuous function $f$ with $f^{-1}(L) = K$.
+\end{definition}
+
+\begin{theorem}
+	Let $f : \mathbb{B}^\omega \rightarrow \mathbb{B}^\omega$. The following three statements are equivalent:
+	\begin{enumerate}
+		\item $f$ is continuous.
+		\item $\forall \alpha \in \mathbb{B}^\omega. \forall n \in \mathbb{N}. \exists m \in \mathbb{N}. \forall \beta \in \mathbb{B}^\omega : d(\alpha, \beta) < \frac{1}{2^m} \Rightarrow d(f(\alpha), f(\beta)) \leq \frac{1}{2^n}$
+		\item $\forall n \in \mathbb{N}. \exists m \in \mathbb{N}. \forall \alpha, \beta \in \mathbb{B}^\omega : d(\alpha, \beta) < \frac{1}{2^m} \Rightarrow d(f(\alpha), f(\beta)) \leq \frac{1}{2^n}$
+	\end{enumerate}
+\end{theorem}
+\begin{proof}
+	$\boldsymbol{(1) \Rightarrow (3)}$ %TODO
+	
+	$\boldsymbol{(3) \Rightarrow (2)}$: Trivial, since $m$ does not depend on $\alpha$ in general.
+	
+	$\boldsymbol{(2) \Rightarrow (1)}$: Let $L = W \cdot \mathbb{B}^\omega \in \mathcal{O}$. Let $U = \{ u \in \mathbb{B}^* \mid f(u \cdot \mathbb{B}^\omega) \subseteq L \}$. We claim that $f^{-1}(L) = U \cdot \mathbb{B}^\omega$.
+	
+	Let $\alpha \in U \cdot \mathbb{B}^\omega$, so $\alpha = u \cdot \beta$ for some $u \in U$. By definition of $U$, $f(u \cdot \beta) = f(\alpha) \in L$. Therefore, $\alpha \in f^{-1}(L)$.
+	
+	Let $\alpha \in f^{-1}(L)$, so $f(\alpha) = w \alpha'$ for some $w \in W$. Using the assumption, there is an $m \in \mathbb{N}$ such that for all $\beta \in \mathbb{B}^\omega$ with $d(\alpha, \beta) \leq 2^{-m}$, we have $d(f(\alpha), f(\beta)) \leq 2^{-|w|}$, meaning that $w \sqsubseteq f(\beta)$, so $f(\beta) \in L$. \\
+	For all $\beta \in \mathcal{B}^\omega$, we have $f(\alpha[0,m] \cdot \beta) \in L$ by the previous result. This means $\alpha[0,m] \in U$ (by definition of $U$) and therefore $\alpha \in U \cdot \mathcal{B}^\omega$.
+\end{proof}
+
+\begin{theorem}
+	If $K \leq L$ and $L \in \Sigma_n$, then $K \in \Sigma_n$. The same is true for $\Pi_n$.
+\end{theorem}
+\begin{proof}
+	Let $f$ be a continuous function with $f^{-1}(L) = K$. For $n = 0$, $L \in \mathcal{O}$, so $K \in \mathcal{O}$.
+	
+	Otherwise, assume the claim is ture for $n$ and let $L \in \Sigma_{n+1}$, so $L = \bigcup\limits_{i \in \mathbb{N}} L_i$ for $L_i \in \Pi_n$. Let $K_i = f^{-1}(L_i)$, so we have $K_i \leq L_i$. By induction this gives us $K_i \in \Pi_n$ for all $i$ and therefore $\bigcup\limits_{i \in \mathbb{N}} K_i \in \Sigma_{n+1}$. It remains to be shown that $K = \bigcup\limits_{i \in \mathbb{N}} K_i$. %TODO
+\end{proof}
+
+\begin{definition}
+	Let $L \subseteq \mathbb{B}^\omega$. $L$ is \textbf{complete} for $\Sigma_n$ if $\forall K \in \Sigma_n: K \leq L$. 
+\end{definition}
+
+
+\subsection{Relation to Automata}
 \begin{itemize}
 	\item regular $\Sigma_1$ = E-recognizable
 	\item regular $\Pi_1$ = A-recognizable
 	\item regular $\Sigma_2$ = co-Büchi-recognizable
 	\item regular $\Pi_2$ = DBA-recognizable
+	\item boolean combination of $\Pi_2$ = NBA-recognizable
 \end{itemize}
+
+
+\section{Gale-Stewart \& Wadge}
+\begin{definition}
+	Let $L \subseteq \mathbb{B}^\omega$. The \textbf{Gale-Stewart game} $\Gamma(L)$ is defined as follows: Starting with player 0, two players alternatingly pick bits 0 or 1, resulting in a play $\alpha \in \mathbb{B}^\omega$. Player 0 wins iff $\alpha \in L$.
+\end{definition}
+
+\begin{definition}
+	Let $K, L \subseteq \mathbb{B}^\omega$. The \textbf{Wadge game} $W(K, L)$ is defined as follows: Starting with player 0, two players alternatingly pick bits 0 or 1, where player 1 also has the option to skip a turn, resulting in a pair $(\alpha, \beta)$ with $\alpha \in \mathbb{B}^\omega$ and $\beta \in \mathbb{B}^* \cup \mathbb{B}^\omega$.
+	
+	Player 1 wins the play $(\alpha, \beta)$ iff $\beta \in \mathbb{B}^\omega$ and $\alpha \in K \leftrightarrow \beta \in L$.  
+\end{definition}
+
+\begin{theorem}[Gale-Stewart]
+	For $L \in \Sigma_1 \cup \Pi_1$, $\Gamma(L)$ is determined.
+\end{theorem}
+\begin{theorem}
+	If $L \in \Sigma_1$, then $L = W \cdot \mathbb{B}^\omega$. A winning strategy for player 0 (if it exists) is the attractor strategy for $W$.
+	
+	If $L = (W \cdot \mathbb{B}^\omega)^\complement \in \Pi_1$, then player 1 can play the attractor strategy for $W$.
+\end{theorem}
+
+\begin{theorem}[Martin]
+	For every set $L$ in the Borel hierarchy, $\Gamma(L)$ is determined.
+\end{theorem} 
+% no proof
+
+\begin{theorem}
+	Let $K, L \subseteq \mathbb{B}^\omega$. Player 1 wins $W(K, L)$ iff $K \leq L$.
+\end{theorem}
+\begin{proof}
+	$\boldsymbol{\Rightarrow}$ Let $\sigma : (\mathbb{B}^* \times \mathbb{B}^*) \rightarrow \{0, 1, \varepsilon\}$ be a winning strategy for player 1 in $W(K, L)$. Let $\tau(\alpha)$ be a strategy for player 0 in which they play $\alpha(i)$ in turn $i$, and for all $\alpha \in \mathbb{B}^\omega$ let $f(\alpha)$ be the play of player 1 if both players play according to $\tau(\alpha)$ and $\sigma$ respectively. We claim that $f$ is continuous. %TODO
+	
+	$\boldsymbol{\Leftarrow}$ Let $f : \mathbb{B}^\omega \rightarrow \mathbb{B}^\omega$ be continuous. %TODO
+\end{proof}
+
+\paragraph{Example} Let $L = (0^*1)^\omega$. We claim that $L$ is $\Pi_2$-complete. Let $K = \bigcap\limits_{i \in \mathbb{N}} K_i \in \Pi_2$ for $K_i \in \mathcal{O}$, so $K_i = W_i \cdot \mathbb{B}^\omega$. We define a winning strategy for player 1 in $W(K, L)$ which proves the claim. \\
+	At the beginning of the game, set a variable $i := 0$. In each turn, let $(u, v)$ be the play up until this point. If $u \notin W_i$, play 0. Otherwise, play 1 and increment $i$ by 1.
+	
+\begin{theorem}
+	There is a language $L \subseteq \mathbb{B}^\omega$ such that $\Gamma(L)$ is not determined.
+\end{theorem}
+%TODO F25
 
 
 \end{document}
