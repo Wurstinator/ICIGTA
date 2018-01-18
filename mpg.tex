@@ -1,0 +1,172 @@
+\documentclass{article}
+
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage[utf8]{inputenc}
+\usepackage{geometry}
+\newtheorem{theorem}{Theorem}
+\newtheorem{definition}{Definition}
+
+\begin{document}
+
+\section{Mean Payoff Games}
+\begin{definition}
+	A \textbf{mean payoff game} is a two player-game with the arena $\mathcal{G} = (V_0, V_1, E, r)$, where $(V_0, V_1, E)$ is a game graph and $r : E \rightarrow \mathbb{Z}$. 
+	
+	The value of a finite play is the average over all edges $r_\text{fin}(v_0 \dots v_n) = \frac{1}{n} \cdot \sum\limits_{i=0}^{n-1} r(v_i, v_{i+1})$.  \\
+	
+	The infinite variant has plays $\pi \in V^\omega$. The goal of player 0 is to maximize $r_0(\pi) = \underset{n \rightarrow \infty}{\text{lim inf }} r_\text{fin}(\pi[0,n])$, whereas the goal of player 1 is to minimize $r_1(\pi) = \underset{n \rightarrow \infty}{\text{lim sup }} r_\text{fin}(\pi[0,n])$. \\
+	The best values the players can reach from $v \in V$ are $\text{val}_0(v) := \sup\limits_\sigma \inf\limits_\tau r_0(\pi_{\sigma,\tau,v})$ and $\text{val}_0(v) := \inf\limits_\tau \sup\limits_\sigma r_1(\pi_{\sigma,\tau,v})$.
+	
+	The finite variant $\mathcal{G}_\text{fin}$ has plays $\pi = v_0 \dots v_n$ for $n \leq |V|+1$ that terminate as soon as a vertex is reached the second time, i.e. $v_n = v_i$ for some $i < n$. The value is $r_\text{fin}(v_i \dots v_n)$. \\
+	
+	The finite variant with resets at $u \in V$  ($\mathcal{G}_\text{fin}^u$) has plays $\pi = v_0 \dots v_n$ for $n \leq 2|V| + 1$. The game behaves like the finite variant, with the addition that the \textbf{first} occurrence of $u$ in a $\pi$ resets the game, i.e. $v_1 v_3 u v_1 v_2 u$ is a valid run with score $r_\text{fin}(u v_1 v_2 u)$.
+\end{definition}
+
+\begin{definition}
+	Let $\mathcal{G} = (V_0, V_1, E, r)$ be a mean payoff game. Let $v \in V$ and let $\sigma$ and $\tau$ be strategies of player 0 and 1 respectively. The unique run of $\sigma$ and $\tau$ from $v$ is $\pi_{\sigma,\tau,v} \in V^\omega$ for the infinite variant or $\beta_{\sigma,\tau,v} \in V^*$ for the finite variant.
+\end{definition}
+
+\section{Determinacy}
+\begin{theorem}
+	Let $\mathcal{G} = (V_0, V_1, E, r)$ be a mean payoff game. Then the best value either player can achieve in the finite variant for any $v \in V$ is $\max\limits_\sigma \min\limits_\tau r_\text{fin}(\beta_{\sigma,\tau,v}) = \min\limits_\tau \max\limits_\sigma r_\text{fin}(\beta_{\sigma,\tau,v})$. We call this value $\text{val}(v, \mathcal{G}_\text{fin})$. 
+\end{theorem}
+\begin{proof}
+	The proof is based on the Minmax theorem bei von Neumann. Given a finite tree of all possible plays in the game, one can derive the value at each node from the leaf upwards. Note that these strategies are not positional in general.
+\end{proof}
+
+The same proof can be used to find a unique $\text{val}(v, \mathcal{G}^u_\text{fin})$ for the finite variant with resets,
+
+\begin{definition}
+	Let $\mathcal{G} = (V_0, V_1, E, r)$ be a mean payoff game. Let $\sigma$ be a strategy for player 0/1 in $\mathcal{G}$ or $\mathcal{G}_\text{fin}$. $\sigma$ secures $a \in \mathbb{R}$ for that player if every play according to $\sigma$ has value at least / most $a$.
+\end{definition}
+
+\begin{theorem}
+\label{thm:sec_carry}
+	Let $\mathcal{G} = (V_0, V_1, E, r)$ be a mean payoff game and let $\sigma$ be a strategy for one of the players in $\mathcal{G}_\text{fin}$. We define $\hat{\sigma}(\pi) = \sigma(\pi')$, where $\pi'$ is obtained by removing all loops from $\pi$. If $\sigma$ secures value $a$ in $\mathcal{G}_\text{fin}$ for that player, then $\hat{\sigma}$ secures value $a$ in $\mathcal{G}$ for that player.
+\end{theorem}
+\begin{proof}
+	Let $\pi \in V^\omega$ be a play in $\mathcal{G}$ according to $\hat{\sigma}$. After a finite prefix, $\pi$ consists of loops only (because $V$ is finite). We claim that every one of those loops has a value of at least/most $a$. If that is true, $\pi$ also has a value of at least/most $a$ which is what had to be shown.
+	
+	Let $v_1 \dots v_k v_1$ be a loop in $\pi$, so $\rho v_1 \dots v_k v_1 \sqsubseteq \pi$ for some $\rho$. We can assume that $\rho v_1 \dots v_k$ does not contain any loops. If there would be a loop containing any $v_i$, then that loop would have to be the same as $v_1 \dots v_k v_1$ by definition of $\hat{\sigma}$, so we can adapt $\rho$ accordingly. Any other loop in $\rho$ could simply be removed. \\
+	Thus, $\rho v_1 \dots v_k v_1$ is a play in $\mathcal{G}_\text{fin}$ and moreover it is a play according to $\sigma$. Because $\sigma$ secures value $a$, the loop $v_1 \dots v_k v_1$ must have value at least/most $a$.
+\end{proof}
+
+\begin{theorem}
+\label{thm:inf_determined}
+	Let $\mathcal{G} = (V_0, V_1, E, r)$ be a mean payoff game. Then $\text{val}_0(v) = \text{val}_1(v) = \text{val}(v, \mathcal{G}_\text{fin})$ for all $v \in V$. We call this value $\text{val}(v, \mathcal{G})$.
+\end{theorem}
+\begin{proof}
+	Let $a := \text{val}(v, \mathcal{G}_\text{fin})$, so there are strategies $\sigma$ and $\tau$ for player 0 and 1 respectively that both secure $a$ in $\mathcal{G}_\text{fin}$. By theorem \ref{thm:sec_carry}, the same is true for $\mathcal{G}$, so $\text{val}_1(v) \leq a \leq \text{val}_0(v)$. 
+	
+	From the definition of $\text{val}_0$ and $\text{val}_1$ we also have $\text{val}_0(v) \leq \text{val}_1(v)$. The two inequations imply our goal.
+\end{proof}
+
+\section{Positionality}
+\begin{theorem}
+\label{thm:fin_ufin_eq}
+	For all $u, v \in V$: $\text{val}(v, \mathcal{G}_\text{fin}) = \text{val}(v, \mathcal{G}^u_\text{fin})$.
+\end{theorem}
+\begin{proof}
+	We show that $a := \text{val}(v, \mathcal{G}_\text{fin}) \leq \text{val}(v, \mathcal{G}^u_\text{fin})$. The other bound and equality can be shown symetrically. Let $\sigma$ be an optimal strategy for player 0 in $\mathcal{G}_\text{fin}$. If there are no plays from $v$ according to $\sigma$ that visit $u$, then $\sigma$ secures $a$ for player 0 in $\mathcal{G}^u_\text{fin}$. Otherwise:
+
+	\textbf{Claim 1}: $a \leq \text{val}(u, \mathcal{G}^u_\text{fin})$.
+	
+	By theorem \ref{thm:inf_determined}, we know that $\text{val}(v, \mathcal{G}) = \text{val}(v, \mathcal{G}_\text{fin}) = a$. Let $\tau$ be an arbitrary strategy for player 1 and let $\tau'$ be the strategy that plays from $v$ to $u$ (which is possible by assumption) and then plays according to $\tau$. Note that $\pi_{\hat{\sigma},\tau',v} = v \dots u \pi_{\hat{\sigma},\tau,u}$ and therefore $\text{val}(u, \mathcal{G}_\text{fin}) = \text{val}(u, \mathcal{G}) = \text{val}(v, \mathcal{G}) = a$.
+	
+	It remains to be shown that $\text{val}(u, \mathcal{G}_\text{fin}) \leq \text{val}(u, \mathcal{G}^u_\text{fin})$. This is clear because the ''reset`` of every run happens at the initial vertex. 
+	%TODO does this proof make sense?
+\end{proof}
+
+\begin{theorem}
+	Let $\mathcal{G}$ be a parity game. Both players have positional optimal strategies for $\mathcal{G}_\text{fin}$, i.e. there are strategies $\sigma^*$ and $\tau^*$ for player 0 and 1 respectively such that $\text{val}(v, \mathcal{G}_\text{fin}) = r_\text{fin}(\beta_{\sigma^*,\tau^*,v})$.
+\end{theorem}
+\begin{proof}
+	We perform a proof by induction on $|E|$. If $|E| = |V|$, then there is only one choice at every vertex and positional optimal strategies are easy to define.
+	
+	Otherwise, there is some node $u \in V$ which has at least two outgoing edges. By theorem \ref{thm:fin_ufin_eq}, $\text{val}(v, \mathcal{G}_\text{fin}) = \text{val}(v, \mathcal{G}^u_\text{fin})$ for all $v$. Let $\text{val}(v, \mathcal{G}_\text{fin}) = a$, then there is a strategy $\sigma$ which secures value $a$ in $\mathcal{G}^u_\text{fin}$. 
+	
+	Let $w \in V$ be arbitrary such that there is a play $\rho$ which leads to $\sigma(u) = w$. Note that we can assume this $w$ to be unique, as any history before a first occurrence of $u$ has no effect on the outcome and a second occurrence terminates the run. We then obtain $\mathcal{G}'$ from $\mathcal{G}$ by removing all outgoing edges from $u$ except for $(u, w)$.
+	
+	By induction, there is a positional optimal strategy $\sigma'$ for $\mathcal{G}'_\text{fin}$ which secures value $a' = \text{val}(v, \mathcal{G}'_\text{fin})$ for the player. Using the same strategy $\sigma'$ for $\mathcal{G}_\text{fin}$ must therefore also secure $a'$. It remains to be shown that $a = a'$.
+	
+	By theorem \ref{thm:fin_ufin_eq}, we have $a' = \text{val}(v, \mathcal{G}_\text{fin}^{\prime u})$ and therefore $a' = \text{val}(v, \mathcal{G}_\text{fin}^u) = a$ by choice of $\sigma'$.
+\end{proof}
+
+\begin{theorem}
+	Let $\mathcal{G}$ be a parity game. Both players have positional optimal strategies for $\mathcal{G}$, i.e. there are strategies $\sigma^*$ and $\tau^*$ for player 0 and 1 respectively such that $\text{val}(v, \mathcal{G}) = r_0(\pi_{\sigma^*,\tau^*,v}) = r_1(\pi_{\sigma^*,\tau^*,v})$.
+\end{theorem}
+\begin{proof}
+	Using theorem \ref{thm:sec_carry} and \ref{thm:inf_determined}, we know that $\hat{\sigma^*}$ and $\hat{\tau^*}$ both secure $\text{val}(v, \mathcal{G})$ for their respective players. They are both positional by definition.
+\end{proof}
+
+\section{Algorithm}
+\begin{theorem}
+\label{thm:alg_vals}
+	Let $\mathcal{G}$ be a parity game. For every $v \in V$ the value $\text{val}(v, \mathcal{G})$ can be computed in $\text{poly}(W + |V|)$ time, where $W = \max \{ |x| \mid x \in r(V) \}$.
+\end{theorem}
+\begin{proof}
+\textbf{Claim 1}: For $|V| = n$, the difference between two possible values for a $\text{val}(v)$ is at least $\frac{1}{n(n-1)}$. 
+
+Let $x, y \in \mathbb{R}$ be values of a vertex from any mean payoff game with $|V| = n$. Because of the positional determinacy of the game, the value must be defined by the average of some loop in the arena, so $x = \frac{k_1}{l_1}, y = \frac{k_2}{l_2}$ for some $k_1, k_2 \in \mathbb{Z}$ and $l_1, l_2 \in \mathbb{N}$ with $l_1, l_2 \leq n$. Our claim is: $|\frac{k_1}{l_1} - \frac{k_2}{l_2}| \geq \frac{1}{n(n-1)}$.
+
+If $l_1 = l_2$, then $k_1 \neq k_2$ and $|\frac{k_1}{l_1} - \frac{k_2}{l_2}| = |\frac{k_1 - k_2}{l_1}| \geq \frac{1}{l_1} \geq \frac{1}{n} \geq \frac{1}{n(n-1)}$.
+
+If $l_1 \neq l_2$, then $|\frac{k_1}{l_1} - \frac{k_2}{l_2}| = |\frac{k_1 l_2 - k_2 l_1}{l_1 l_2}| \geq |\frac{k_1 l_2 - k_2 l_1}{n (n-1)}| \geq \frac{1}{n (n-1)}$.
+
+\textbf{Claim 2}: Let $\text{val}^k(v, \mathcal{G})$ be the optimal mean value of plays of length $k$ that can be enforced, i.e. the best score if every run is terminated after $k$ steps. Then $\text{val}^k$ can be computed in $\mathcal{O}(k \cdot |E|)$.
+
+We have $\text{val}^0(v, \mathcal{G}) = 0$ for all $v$. Assuming that $\text{val}^k$ was already defined, we can compute $\text{val}^{k+1}$ in $\mathcal{O}(|E|)$ as follows:
+$$\text{val}^{k+1}(v, \mathcal{G}) = \begin{cases}
+	\max\limits_{(u,v) \in E} \frac{k \cdot \text{val}^k(v, \mathcal{G}) + r(u, v)}{k+1} & \text{if } v \in V_0 \\
+	\min\limits_{(u,v) \in E} \frac{k \cdot \text{val}^k(v, \mathcal{G}) + r(u, v)}{k+1} & \text{if } v \in V_1
+\end{cases}$$
+
+\textbf{Claim 3}: For all $v \in V, k \in \mathbb{N}$, we have $|\text{val}^k(v) - \text{val}(v)| \leq \frac{2nW}{k}$. % no proof
+
+\textbf{Claim 4}: $\text{val}(v, \mathcal{G})$ can be computed in $\text{poly}(W + |V|)$ time.
+
+Let $k = 4n^3W$. Then $|\text{val}^k(v) - \text{val}(v)| \leq \frac{2nW}{4n^3W} = \frac{1}{2 n^2} \leq \frac{1}{2n(n-1)}$, so there is exactly one possible value for $\text{val}(v)$ in the neighborhood of $\text{val}^k(v)$. This can be computed by checking which interval $[(\text{val}^k(v) - \frac{1}{2n(n-1)}) \cdot l, (\text{val}^k(v) + \frac{1}{2n(n-1)}) \cdot l]$ for $0 \leq l \leq n$ contains an integer $i$. Then $\text{val}(v) = \frac{i}{l}$.
+\end{proof}
+
+\begin{theorem}
+	Let $\mathcal{G}$ be a parity game. There is an algorithm to construct the positional optimal strategies $\sigma^*$ and $\tau^*$ in $\text{poly}(W + |V|)$ time, where $W = \max \{ |x| \mid x \in r(V) \}$.
+\end{theorem}
+\begin{proof}
+	We construct the strategy $\sigma$ for the player step by step, i.e. for every $v \in V_0$ we define a successor $\sigma(v)$.
+	
+	If $v$ has exactly one successor, the choice of $\sigma(v)$ is clear. Otherwise, let $u$ be an arbitrary successor of $v$. We define the game $\mathcal{G}'$ by removing the edge $(v, u)$ from $\mathcal{G}$. Using theorem \ref{thm:alg_vals}, we can compute $a := \text{val}(v, \mathcal{G})$ and $b := \text{val}(v, \mathcal{G}')$ in polynomial time.
+	
+	If $a = b$, then the edge $(v, u)$ is not a part of $\sigma^*$, so we can continue the algorithm with $\mathcal{G}'$. If $a \neq b$, then define $\sigma(v) = u$.
+\end{proof}
+
+\section{Connection to Parity Games}
+\begin{theorem}
+	Let $\mathcal{G}$ be a parity game. We can construct a mean payoff game $\mathcal{G}'$ over the same game graph such that $\text{val}(v, \mathcal{G}) \geq 0$ iff player 0 has a winning strategy in $\mathcal{G}'$ from $v$.
+\end{theorem}
+\begin{proof}
+	Let $\mathcal{G} = (V_0, V_1, E, c)$ with $|V| = n$. We define $\mathcal{G}' = (V_0, V_1, E, r)$ with $r(u, v) = (-n)^{c(u)}$. We claim that $\text{val}(v, \mathcal{G}') \geq 0$ iff player 0 has a winning strategy in $\mathcal{G}$ from $v$. Due to symmetry, we only show one direction.
+	
+	Let $\overline{\sigma}$ be a positional winning strategy of player 0 in $\mathcal{G}$ from $v$. Let $\tau^*$ be a positional optimal strategy for player 1 in $\mathcal{G}'$. We have $\text{val}(v, \mathcal{G}') = \text{val}_1(v, \mathcal{G}') = \sup\limits_\sigma r_1(\pi_{\sigma,\tau^*,v}) \geq r_1(\pi_{\overline{\sigma},\tau^*,v})$. It remains to be shown that $r_1(\pi_{\overline{\sigma},\tau^*,v}) \geq 0$.
+	
+	Because $\overline{\sigma}$ and $\tau^*$ are both positional, $\pi_{\overline{\sigma},\tau^*,v} = v_0 \dots v_i (v_{i+1} \dots v_k v_i)^\omega$ is ultimately periodic with $k - i + 1 \leq n$. Then $r_1(\pi_{\overline{\sigma},\tau^*,v}) = r_\text{fin}(v_{i+1} \dots v_k v_i)$. Since $\overline{\sigma}$ is a winning strategy for player 0 in $\mathcal{G}$, the maximal priority in that loop must be even. Let that priority be $p$.
+	
+	$$\text{val}(v, \mathcal{G}') = r_\text{fin}(v_{i+1} \dots v_k v_i) \geq n^p - k \cdot n^{p-1} \geq n^p - (n-1) \cdot n^{p-1} = n^{p-1} > 0$$
+\end{proof}
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
