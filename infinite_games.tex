@@ -1,0 +1,131 @@
+\documentclass{article}
+
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage[utf8]{inputenc}
+\usepackage{geometry}
+\newtheorem{theorem}{Theorem}
+\newtheorem{definition}{Definition}
+
+\begin{document}
+\section{Basics}
+\subsection{List Of Games}
+\begin{itemize}
+	\item Büchi
+	\item Staiger-Wagner
+	\item weak Parity
+	\item Reachability (E-condition)
+	\item Safety (A-condition)
+	\item Muller
+	\item Parity
+	\item Rabin
+	\item Streett
+\end{itemize}
+
+\subsection{List Of Properties}
+\begin{itemize}
+	\item Determined \\
+		For every node $v$, either player has a winning strategy.
+	\item Positionally Determined \\
+		For every node $v$, either player has a positional winning strategy.
+	\item Prefix Independent \\
+		$\forall x \in C^*, \alpha \in C^\omega: \alpha \in \text{Win} \leftrightarrow x \alpha \in \text{Win}$
+\end{itemize}
+
+\subsection{Definitions}
+\begin{definition}
+	A \textbf{game graph / arena} is a tuple $G = (V_0, V_1, E, c)$ where $V_0 \cap V_1 = \emptyset$, $E \subseteq V \times V$ where $V = V_0 \cup V_1$, and $c : V \rightarrow C$ for a finite set of colors $C$.
+	
+	A \textbf{game} is a pair $\mathcal{G} = (G, \text{Win})$ where $G$ is an arena and $\text{Win} \subseteq C^\omega$.
+	
+	A \textbf{strategy} for player $i$ is a function $\sigma : V^* V_i \rightarrow V$ with $(u, v) \in E$ for all $\sigma(xu) = v$. $\sigma$ is a \textbf{winning strategy} from $v \in V$, if all plays from $v$ that are according to $\sigma$ are won by player $i$. $\sigma$ is \textbf{positional} if for all $x, y \in V^*, v \in V$: $\sigma(xv) = \sigma(yv)$.
+\end{definition}
+
+\newpage
+
+\section{Memory \& Reductions}
+\begin{definition}
+	A \textbf{strategy automaton} for player 0 in a game $\mathcal{G}$ is a tuple $\mathcal{A} = (M, C, m_\text{in}, \sigma^u, \sigma^n)$ with $\sigma^n : M \times V_0 \rightarrow V$ and $\sigma^u : M \times C \rightarrow M$. The automaton defines a strategy $\sigma_\mathcal{A}(xv) = \sigma^n(m, v)$ where $m = (\sigma^u)^*(m_\text{in}, x)$.
+\end{definition}
+
+\begin{definition}
+	Let $\mathcal{G}$ and $\mathcal{G}'$ be games. \textbf{$\boldsymbol{\mathcal{G}}$ reduces to $\boldsymbol{\mathcal{G}'}$ with memory $\boldsymbol{m}$} if there is an $f_\text{in} : V \rightarrow V'$ such that a player wins from $v \in V$ iff that player wins from $f_\text{in}(v) \in V'$. For a winning strategy with memory $n$ from $f_\text{in}(v)$, one can compute a winning strategy with memory $n \cdot m$ from $v$.
+\end{definition}
+
+\begin{definition}
+	Let $\mathcal{G} = (V_0, V_1, E, c, \text{Win})$ be a game and let $\mathcal{A} = (Q, C, q_0, \delta, \text{Acc})$ be a finite automaton with $L(\mathcal{A}) = \text{Win}$. The \textbf{product game} is defined as $\mathcal{G} \times \mathcal{A} = (V_0', V_1', E', c', \text{Acc})$ with
+	\begin{itemize}
+		\item $V'_0 = V_0 \times Q$
+		\item $V'_1 = V_1 \times Q$
+		\item $E' = \{ ((u, p), (v, q) \in (V \times Q)^2 \mid (u,v) \in E \text{ and } q = \delta(p, c(u)) \}$
+		\item $c'(v, q) = q$
+	\end{itemize}
+\end{definition}
+
+\begin{theorem}
+	$\mathcal{G}$ reduces to $\mathcal{G} \times \mathcal{A}$ with memory $|Q|$.
+\end{theorem}
+% no proof
+
+\paragraph{Example}
+	Let $\mathcal{A} = (Q, C, q_0, \delta, F)$ be a DFA and let $\mathcal{G} = (G, C^* L(\mathcal{A} C^\omega)$. Then $\mathcal{G}$ is a reachability game. Hence, $\mathcal{G} \times \mathcal{A}$ is determined with memory size $|Q|$.
+
+\newpage
+
+\section{Prefix Dependent Games}
+\subsection{Reachability \& Safety}
+$F \subseteq C$ and $\text{Win} = C^* F C^\omega$ (reachability) or $\text{Win} = (C \setminus F)^\omega$ (safety)
+
+\begin{theorem}
+	Reachability games and safety games are positionally determined. The winning regions and winning strategies can be computed in $\mathcal{O}(|G|)$.
+\end{theorem}
+\ref{} %TODO F2
+
+\subsection{Weak Parity}
+$C \subseteq \mathbb{N}$ and $\text{Win} = \{ \alpha \in C^\omega \mid \max \text{Occ}(\alpha) \text{ is even}\}$.
+
+\begin{theorem}
+	Weak parity games are positionally determined. The winning regions and winning strategies can be computed in $\mathcal{O}(|C| \cdot |G|)$.
+\end{theorem}
+%TODO F4
+
+\subsection{Staiger-Wagner}
+$\mathcal{F} \subseteq 2^C$ and $\text{Win} = \{ \alpha \in C^\omega \mid \text{Occ}(\alpha) \in \mathcal{F} \}$.
+
+\begin{theorem}
+	Staiger-Wagner games can be reduced to weak parity games with memory $2^{|C|}$.
+\end{theorem}
+\begin{proof}
+	Similar to proof from SWA to WDBA.
+\end{proof}
+
+\begin{theorem}
+	For every $n > 0$, there is an arena $G_n$ with $|G_n| \in \mathcal{O}(n)$ and a set $\mathcal{F}_n \subseteq 2^C$ with $|\mathcal{F}_n| \in \mathcal{O}(n)$ such that player 0 has a winning strategy in $(G_n, \mathcal{F}_n)$ but every winning strategy requires memory of size $2^n$.
+\end{theorem}
+%TODO F4
+
+\section{Prefix Independent Games}
+\subsection{Büchi Games}
+$F \subseteq C$ and $\text{Win} = \{ \alpha \in C^\omega \mid \text{Inf}(\alpha) \cap F \neq \emptyset \}$.
+
+\begin{theorem}
+	Büchi games are positionally determined. The winning regions and winning strategies can be computed in polynomial time in $|G|$.
+\end{theorem}
+\ref{} %TODO F5
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

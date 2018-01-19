@@ -65,6 +65,33 @@
 	Given an ABA $\mathcal{A}$, the dual $\tilde{\mathcal{A}}$ is an alternating co-Büchi automaton which accepts $\overline{L(\mathcal{A})}$, with $\tilde{F} = Q \setminus F$ and $\tilde{\delta}$ exchanging true/false and $\land$/$\lor$.
 \end{theorem}
 %TODO F22
+
+\subsection{Simulation Game}
+\begin{definition}
+	Let $\mathcal{A} = (Q, \Sigma, q_0, \Delta, F)$ be an NBA. We define the delayed simulation game $\mathcal{G}_\mathcal{A}(G_\mathcal{A}, \text{Win})$ as follows
+	\begin{itemize}
+		\item $G_\mathcal{A} = (V_0, V_1, E, c)$ 
+		\item $V_0 = \Sigma \times Q \times Q$
+		\item $V_1 = Q \times Q$
+		\item Player 0 moves from $(a, p, q)$ to a $(p, p')$ with $(q, a, p') \in \Delta$
+		\item Player 1 moves from $(q, q')$ to a $(a, p, q')$ with $(q, a, p) \in \Delta$
+		\item $c : V \rightarrow \{-1, 0, 1\}$ with $c(v) = \begin{cases} -1 & \text{if } v \in F \times (Q \setminus F) \\ 1 & \text{if } v \in Q \times F \\ 0 & \text{otherwise} \end{cases}$
+		\item $\alpha \in \text{Win}$ iff after every -1 in $\alpha$, there is a 1 later on.
+	\end{itemize}
+	
+	Write $q \preceq_\text{de} q'$ if player 0 has a winning strategy from $(q, q')$.
+\end{definition}
+
+Idea: Player 1 chooses symbols in $\Sigma$ and transitions on the second state. Player 0 has to answer with transition on the first state which lead to a run of the same acceptance.
+
+\begin{theorem}
+	If $q \preceq_\text{de} q'$ and $q' \preceq_\text{de} q$, then $q$ and $q'$ can be merged in $\mathcal{A}$ without changing the language of the automaton.
+\end{theorem}
+% no proof
+
+\begin{theorem}
+	The delayed simulation game can be reduced to a Büchi game in linear time.
+\end{theorem}
  
 
 \section{Finite Trees}
@@ -144,6 +171,7 @@
 \begin{proof}
 	Transform $\varphi$ into an equivalent PTA. A model can be found by solving the emptiness game.
 \end{proof}
+
 
 \end{document}
 
