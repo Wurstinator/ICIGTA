@@ -110,11 +110,11 @@
 \begin{theorem}[Gale-Stewart]
 	For $L \in \Sigma_1 \cup \Pi_1$, $\Gamma(L)$ is determined.
 \end{theorem}
-\begin{theorem}
+\begin{proof}
 	If $L \in \Sigma_1$, then $L = W \cdot \mathbb{B}^\omega$. A winning strategy for player 0 (if it exists) is the attractor strategy for $W$.
 	
 	If $L = (W \cdot \mathbb{B}^\omega)^\complement \in \Pi_1$, then player 1 can play the attractor strategy for $W$.
-\end{theorem}
+\end{proof}
 
 \begin{theorem}[Martin]
 	For every set $L$ in the Borel hierarchy, $\Gamma(L)$ is determined.
@@ -136,7 +136,26 @@
 \begin{theorem}
 	There is a language $L \subseteq \mathbb{B}^\omega$ such that $\Gamma(L)$ is not determined.
 \end{theorem}
-%TODO F25
+\begin{proof}
+	Let On be the set of ordinal numbers. Let $\mathcal{S}_0$ and $\mathcal{S}_1$ be the set of strategies for player 0 and 1 respectively in a Gale-Stewart game. Then we have $|\mathcal{S}_0| = |\mathcal{S}_1| = |\mathbb{B}^\omega| = 2^{\aleph_0} =: \kappa$. Let $(f_\alpha)_{\alpha < \kappa}$ and $(g_\alpha)_{\alpha < \kappa}$ be an enumeration of $\mathcal{S_0}$ and $\mathcal{S}_1$ respectively. For $f \in \mathcal{S}_0, g \in \mathcal{S}_1$, we write $\langle f, g \rangle \in \mathbb{B}^\omega$ for the unique play according to $f$ and $g$.
+	
+	Our goal is to construct a family of sets $(L_\alpha, M_\alpha)_{\alpha < \kappa} \in \mathbb{B}^\omega \times \mathbb{B}^\omega$ such that for all $\alpha < \kappa$:
+	\begin{enumerate}
+		\item for all $\beta < \alpha$: $L_\beta \subseteq L_\alpha$ and $M_\beta \subseteq M_\alpha$
+		\item $L_\alpha \cap M_\alpha = \emptyset$
+		\item $|L_\alpha| = |M_\alpha| = \alpha$
+		\item for all $\beta < \alpha$ there is an $f \in \mathcal{S}_0$ such that $\langle f, g_\beta \rangle \in L_\alpha$
+		\item for all $\beta < \alpha$ there is an $g \in \mathcal{S}_1$ such that $\langle f_\beta, g \rangle \in M_\alpha$
+	\end{enumerate}
+	
+	If that is done, set $L := \bigcup\limits_{\alpha < \kappa} L_\alpha$. We claim that $\Gamma(L)$ is not determined. Assume player 0 has a winning strategy $f^* \in \mathcal{S}_0$, so $f^* = f_\alpha$ for some $\alpha < \kappa$. By (5), there must be a $g \in \mathcal{S}_1$ such that $\langle f^*, g \rangle \in M_{\alpha+1}$. Because of (1) and (2), $\langle f^*, g \rangle \notin L$, so this play is won by player 1. Hence, $f^*$ cannot be a winning strategy. 
+	
+	\textbf{Claim}: Sets $L_\alpha, M_\alpha$ as described above exist.
+	
+	For $\alpha = 0$, set $L_\alpha = M_\alpha = \emptyset$. Otherwise, let $0 < \alpha < \kappa$ be arbitrary. We find plays $\pi_L, \pi_M \in \mathbb{B}^\omega$ such that $L_\alpha = \bigcup\limits_{\beta < \alpha} L_\beta \cup \{\pi_L\}$ and $M_\alpha = \bigcup\limits_{\beta < \alpha} M_\beta \cup \{\pi_M\}$ satisfy the conditions.
+	
+	Let $P = \bigcup\limits_{\beta < \alpha} (L_\beta \cup M_\beta)$. Let $g \in \mathcal{S}_1$ such that $\pi_L := \langle f_\alpha, g \rangle \notin P$. To see that this is possible, note that $|P| = 2 \alpha < \kappa$ because of (3). Analogously, find an $f \in \mathcal{S}_0$ such that $\pi_M := \langle f, g_\alpha \rangle \notin P \cup \{\pi_L\}$. 
+\end{proof}
 
 
 \end{document}
