@@ -27,6 +27,8 @@
 		For every node $v$, either player has a winning strategy.
 	\item Positionally Determined \\
 		For every node $v$, either player has a positional winning strategy.
+	\item Uniform determined \\
+		There are disjoint sets $W_0 \cup W_1 = V$ and strategies $\sigma_0$ and $\sigma_1$ for player 0 and 1 respectively, such that $\sigma_0$ is winning from all $v \in W_0$ and $\sigma_1$ is winning from all $v \in W_1$.
 	\item Prefix Independent \\
 		$\forall x \in C^*, \alpha \in C^\omega: \alpha \in \text{Win} \leftrightarrow x \alpha \in \text{Win}$
 \end{itemize}
@@ -99,7 +101,7 @@ $\mathcal{F} \subseteq 2^C$ and $\text{Win} = \{ \alpha \in C^\omega \mid \text{
 \end{proof}
 
 \begin{theorem}
-	For every $n > 0$, there is an arena $G_n$ with $|G_n| \in \mathcal{O}(n)$ and a set $\mathcal{F}_n \subseteq 2^C$ with $|\mathcal{F}_n| \in \mathcal{O}(n)$ such that player 0 has a winning strategy in $(G_n, \mathcal{F}_n)$ but every winning strategy requires memory of size $2^n$.
+	For every $n > 0$, there is an arena $G_n$ with $|G_n| \in \mathcal{O}(n)$ and a set $\mathcal{F}_n \subseteq 2^C$ with $|\mathcal{F}_n| \in \mathcal{O}(n)$ such that player 0 has a winning strategy in the Staiger-Wagner game $(G_n, \mathcal{F}_n)$ but every winning strategy requires memory of size $2^n$.
 \end{theorem}
 %TODO F4
 
@@ -108,9 +110,123 @@ $\mathcal{F} \subseteq 2^C$ and $\text{Win} = \{ \alpha \in C^\omega \mid \text{
 $F \subseteq C$ and $\text{Win} = \{ \alpha \in C^\omega \mid \text{Inf}(\alpha) \cap F \neq \emptyset \}$.
 
 \begin{theorem}
-	Büchi games are positionally determined. The winning regions and winning strategies can be computed in polynomial time in $|G|$.
+	Büchi games are uniformly positionally determined. The winning regions and winning strategies can be computed in polynomial time in $|G|$.
 \end{theorem}
 \ref{} %TODO F5
+
+\subsection{Parity Games}
+$C \subseteq \mathbb{N}$ and $\text{Win} = \{ \alpha \in C^\omega \mid \max \text{Inf}(\alpha) \text{ is even}\}$.
+
+\begin{theorem}
+	Parity games are uniformly positionally determined. The winning regions and winning strategies can be computed in non-deterministic polynomial time in $|G|$, or in deterministic time $\mathcal{O}\left(|V| \cdot |E| \cdot |C| \cdot (\frac{|V|}{|C|} + 1)^{2|C|}\right)$.
+\end{theorem}
+\begin{proof}
+	%TODO F7-9 notes
+\end{proof}
+
+\subsection{Muller Games}
+$\mathcal{F} \subseteq 2^C$ and $\text{Win} = \{ \alpha \in C^\omega \mid \text{Inf}(\alpha) \in \mathcal{F} \}$.
+
+\begin{theorem}
+	Muller games can be reduced to parity games with memory $|C| \cdot |C|!$.
+\end{theorem}
+\begin{proof}
+	A Muller automaton can be transformed to a DPA using the LAR construction.
+\end{proof}
+
+\begin{theorem}
+	For every $n > 0$, there is an arena $G_n$ with $|G_n| \in \mathcal{O}(n)$ and a set $\mathcal{F}_n \subseteq 2^C$ such that player 0 has a winning strategy in the Muller game $(G_n, \mathcal{F}_n)$ but every winning strategy requires memory of size $n!$.
+\end{theorem}
+\begin{proof}
+	%TODO F10
+\end{proof}
+
+\begin{theorem}
+	Let $(G, \mathcal{F})$ be a finite Muller game. Player 0 and player 1 have uniform winning strategies from their respective winning regions of size at most $m^0_\mathcal{F}$ / $m^1_\mathcal{F}$. (the automata use $V$ for the update function instead of $C$)
+\end{theorem}
+\begin{proof}
+	%TODO F11
+\end{proof}
+
+\begin{theorem}
+	For every $\mathcal{F} \subseteq 2^C$, there is an arena $G_\mathcal{F}$ such that player 0 wins $(G_\mathcal{F}, \mathcal{F})$ but every winning strategy requires memory at least $m^0_\mathcal{F}$.
+\end{theorem}
+\begin{proof}
+	%TODO F12
+\end{proof}
+
+\begin{theorem}
+	Muller games can be reduced to parity games with memory $l_\mathcal{F}$.
+\end{theorem}
+% no proof
+
+\subsubsection{Split Trees}
+\begin{definition}
+	Let $\mathcal{F} \subseteq 2^C$. We write $\mathcal{F}|_D = \mathcal{F} \cap 2^D$ for all $D \subseteq C$. The \textbf{split tree} of $\mathcal{F}$ is called $\mathcal{S}_\mathcal{F}$ and is defined as follows: 
+	\begin{itemize}
+		\item Nodes in the tree are labeled by $2^C \times \{0,1\}$.
+		\item If $C \in \mathcal{F}$, the root is labeled $(C, 0)$. Otherwise, the root is labeled $(C, 1)$.
+		\item For every $\subseteq$-maximal set $D$ with $D \notin \mathcal{F}$, the root has the subtree $\mathcal{S}_{\mathcal{F}|_D}$ as a child.
+	\end{itemize}
+\end{definition}
+
+\begin{definition}
+	Let $\mathcal{F} \subseteq 2^C$. Let $\mathcal{F}_1, \dots, \mathcal{F}_n \subseteq 2^C$ such that $\mathcal{S}_{\mathcal{F}_1}, \dots, \mathcal{S}_{\mathcal{F}_n}$ are the direct subtrees of the root in $\mathcal{S}_\mathcal{F}$. We define the \textbf{memory number} 
+	$$m_i(\mathcal{S}_\mathcal{F}) = \begin{cases}
+		1 & \text{if } n = 0 \\
+		\max_j m_i(S_{\mathcal{F}_j}) & \text{if the root is } (C, i) \\
+		\sum_j m_i(S_{\mathcal{F}_j}) & \text{if the root is } (C, 1-i) 
+	\end{cases}.$$
+	
+	For a short form, we write $m^i_\mathcal{F} = m_i(\mathcal{S}_\mathcal{F})$.
+	
+	We write $l_\mathcal{F} \in \mathbb{N}$ for the number of leaves in $\mathcal{S}_\mathcal{F}$.
+\end{definition}
+
+\begin{theorem}
+\begin{itemize}
+	\item $m^0_\mathcal{F} = m^1_{\mathcal{F}^\complement}$
+	\item $m^i_\mathcal{F} \leq l_\mathcal{F}$
+	\item $l_\mathcal{F} \leq |C|!$
+\end{itemize}
+\end{theorem}
+% no proof
+
+\subsection{Rabin \& Streett Games}
+$\Omega = \{(E_i, F_i) \mid 1 \leq i \leq n\} \subseteq C \times C$ and \\
+$\text{Win} = \{ \alpha \in C^\omega \mid \exists i: \text{Inf}(\alpha) \cap E_i = \emptyset \land \text{Inf}(\alpha) \cap F_i \neq \emptyset \}$ (Rabin) \\
+$\text{Win} = \{ \alpha \in C^\omega \mid \forall i: \text{Inf}(\alpha) \cap E_i \neq \emptyset \land \text{Inf}(\alpha) \cap F_i = \emptyset \}$ (Streett).
+
+\begin{theorem}
+	Rabin and Streett games are determined. In a Rabin game, player 0 has a uniform positional winning strategy from their winning region. In a Streett game, player 1 has a uniform positional winning strategy from their winning region. 
+	
+	For every $n$, there is a game graph $G_n$ and a condition $\Omega_n$ with $|\Omega_n| = n$ such that the opposite player requires memory $n!$ for a winning strategy from their winning region.
+\end{theorem}
+\begin{proof}
+	%TODO F11 exercise
+\end{proof}
+
+\subsection{Logic Games}
+Let $\mathcal{L}$ be a logic and $\varphi \in \mathcal{L}$. Then $\text{Win}_\varphi = \{ \alpha \in C^\omega \mid \alpha \models \varphi \}$.
+
+\begin{theorem}
+	For $\mathcal{L} = \text{LTL}$, logic games are uniformly positionally determined and the winning strategies can be computed in $2^{2^{|\varphi|}}$.
+\end{theorem}
+\begin{proof}
+	One can compute an NBA for $\varphi$ in exponential time which can then be transformed to a DPA.
+\end{proof}
+
+\begin{theorem}
+	For $\mathcal{L} = \text{S1S}$, logic games are uniformly positionally determined and the winning strategies can be computed in $2 \uparrow |\varphi|$.
+\end{theorem}
+\begin{proof}
+	One can compute an NBA for $\varphi$ in non-elementary time which can then be transformed to a DPA.
+\end{proof}
+
+\subsubsection{Church Synthesis}
+Goal: given a specification $\varphi(\alpha, \beta)$, construct a function/program $f$ such that $f(\alpha) = \beta $ iff $\models~\varphi(\alpha, \beta)$.
+
+Define a game $(G, \text{Win}_\varphi)$ where $G$ defines a game in which player 0 and player 1 alternatingly choose bits 0 or 1. By using the previous results, the game can be solved. A winning strategy for player 0 can be used as a program $f$.
 
 \end{document}
 
