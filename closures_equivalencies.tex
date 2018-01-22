@@ -7,6 +7,8 @@
 \usetikzlibrary{arrows.meta}
 \usetikzlibrary{fit}
 \usetikzlibrary{positioning}
+\usepackage{xr}
+\externaldocument[proof:]{proofs}
 
 \begin{document}
 \section{List Of Models}
@@ -317,20 +319,26 @@ Staiger-Wagner $\Leftrightarrow$ det. weak BA \\
 \subsection{Class Inclusions}
 \begin{itemize}
 	\item Regular Ranked $\subseteq$ Regular Unranked \\
-		\textbf{Proof}: %TODO F5-6
+		\textbf{FCNS}: Let $\Sigma$ be an unranked alphabet. We define $\Gamma_0 = \{\#\}$ and $\Gamma_2 = \Sigma$. Let\linebreak $\overline{t} = t_1 \dots t_n \in T_\Sigma^*$ with $t_1 = a(t'_1 \dots t'_m)$. We define 
+		$$\text{fcns}(\overline{t}) = \begin{cases}
+			\# & \text{if } n = 0 \\
+			a(\text{fcns}(t'_1, \dots, t'_m), \text{fcns}(t_2 \dots t_n)) & \text{else}
+		\end{cases}$$
+		
+		See Theorem \ref{proof:fcns_correct}.
 	\item det. DTD $\subseteq$ DTD $\subseteq$ det. EDTD $\subseteq$ single-type EDTD $\subseteq$ EDTD \\
 		trivial
 	\item EDTD $\subseteq$ Regular tree grammar \\
 		\textbf{Proof}: $N = \Sigma'$, $P_\text{gram} = P \cup \{ a^{(n)} \rightarrow a \mid a, n\}$
 	\item TWA $\subseteq$ NTA \\
-		\textbf{Proof}: \ref{} %TODO F10
+		\textbf{Proof}: Theorem \ref{proof:twa_to_nta}
 \end{itemize}
 
 \subsection{Class Exclusions}
 \begin{itemize}
 	\item $\downarrow$DTA $\not\subseteq$ NTA \\
 		\textbf{Example}: $T = \{ f(a, b), f(b, a) \}$ \\
-		\textbf{Proof}: \ref{} %TODO F2
+		\textbf{Proof}: Assume the $\downarrow$DTA $\mathcal{A} = (Q, \Sigma, q_0, \Delta)$ accepts $T$. Let $(q_0, f, (q_1, q_2)) \in \Delta$, so also $(q_1, a), (q_1, b), (q_2, a), (q_2, b) \in \Delta$. However, that means the tree $f(a, a)$ is accepted by the run $q_0(q_1, q_2)$ which is a contradiction. On the other hand, NTAs can clearly recognize this property.
 	\item DTD $\not\subseteq$ single-type EDTD \\
 		\textbf{Example}: $T = \{ t \in T_{\{a,b\}} \mid \text{there is a path in } t \text{ on which } a \text{ occurs exactly twice}$
 	\item NUTA w/ unique root $\not\subseteq$ NUTA \\
@@ -341,10 +349,17 @@ Staiger-Wagner $\Leftrightarrow$ det. weak BA \\
 		\textbf{Example}: $T_{N \backslash D}$ \\
 			$\Sigma_0 = \{a, b\}$, $\Sigma_2 = \{f\}$ \\
 			$t \in T_{N \backslash D}$ iff $|t|_a = 3 \land \text{lca}(u, v) \sqsubseteq \text{lca}(v, w)$
-		\textbf{Proof}: \ref{} %TODO F10-11
+		\textbf{Proof}: DTWAs cannot recognize this tree language (no proof). TWAs can:
+			\begin{itemize}
+				\item Check whether there are exactly three $a$ and move to the right-most one (DFS).
+				\item While going up, guess a node and go the the left-most ancestor.
+				\item The tree is in $T_{N \backslash D}$ iff there are exactly two leafs labeled $a$ right of that node. (DFS)
+			\end{itemize}
 	\item TWA $\not\subseteq$ NTA \\
 		\textbf{Example}: all paths in the skeleton have even length \\
-		\textbf{Proof}: \ref{} %TODO F11
+		\textbf{Proof}: $\Sigma_0 = \{a, c\}$, $\Sigma_2 = \{b\}$ \\
+			Skeleton of a tree $t$: replace all subtrees that contain exactly one $a$. \\
+			TWAs cannot recognize this tree language (no proof). NTAs can (find ''merge`` points and count the parity)
 \end{itemize}
 
 \subsection{Class Equalities}
@@ -353,55 +368,57 @@ Staiger-Wagner $\Leftrightarrow$ det. weak BA \\
 	\item NTA $\Rightarrow$ DTA \\
 		\textbf{Proof}: Subset construction.
 	\item NTA $\Leftrightarrow$ $\downarrow$NTA \\
-		\textbf{Proof}: \ref{} %TODO F2
+		\textbf{Proof}: Reverse the transitions and initial states $\leftrightarrow$ final states.
 	\item $\downarrow$NTA $\Leftrightarrow$ Regular Tree Grammar \\
-		\textbf{Proof}: \ref{} %TODO F8
+		\textbf{Proof}: Non-terminals correspond to states and transitions $(q, a, q_1, \dots, q_n)$ correspond to rules $A_q \rightarrow a(A_{q_1}, \dots, A_{q_n})$
 	\item MSO $\Leftrightarrow$ NTA \\
-		\textbf{Proof}: \ref{} %TODO F9
+		\textbf{Proof}: same as S2S
 	\item Reg. exp. $\Leftrightarrow$ NTA \\
-		\textbf{Proof}: \ref{} %TODO F9
+		\textbf{Proof}: Theorem \ref{proof:tre_fromto_nta}
 \end{itemize}
 
 \subsubsection{Regular Unranked}
 \begin{itemize}
 	\item NUTA $\Rightarrow$ DUTA \\
-		\textbf{Proof}: %TODO F5
-	\item MSO $\Leftrightarrow$ NUTA \\
-		\textbf{Proof}: %TODO F9
+		\textbf{Proof}: Specialized subset construction. \\
+		$\mathcal{A} = (Q, \Sigma, \Delta, F) \Rightarrow \mathcal{A}' = (2^Q, \Sigma, \Delta', \{P \subseteq Q \mid P \cap F \neq \emptyset\})$ \\
+		$\Delta' = \{(L_{a,P}, a, P) \mid a \in \Sigma, P \subseteq Q\}$ with $L_{a,P} = \bigcap\limits_{p \in P} K_{a,p} \cap \bigcap\limits_{p \notin P} K_{a,p}^\complement$ \\
+		$K_{a,p} = \{ P_1 \dots P_n \in (2^Q)^* \mid \exists p_1 \in P_1, \dots, p_n \in P_n: p_1 \dots p_n \in L_{a,p} \}$.
+	\item MSO $\Leftrightarrow$ NUTA %no proof
 \end{itemize}
 
 \subsubsection{EDTD}
 \begin{itemize}
 	\item NUTA with unique root $\Leftrightarrow$ EDTD (in poly. time) \\
-		\textbf{Proof}: %TODO F7
+		\textbf{Proof}: $\boldsymbol{\Rightarrow}$ Let $q_0, \dots, q_n$ be an enumeration of $Q$. We then set $D = \{ \{ a^{(i)} \mid a \in \Sigma, 0 \leq i \leq n \}, P, a^{q_0})$ where $a$ is the unique root symbol of the automaton. Rules in $P$ guess arbitrary symbols for fitting states.
+		
+		$\boldsymbol{\Leftarrow}$ Analogously, we use $Q = \Sigma \times \{1, \dots, n\}$ where $n$ is the maximal type in $\Sigma'$ and rules mimic the transitions.
 \end{itemize}
 
 \subsection{Closures}
 \subsubsection{Regular Ranked}
 \begin{itemize}
 	\item Regular (ranked) trees are closed under complement. \\
-		\textbf{Proof}: \ref{} %TODO F2
-	\item Regular (ranked) trees are closed under union. \\
-		\textbf{Proof}: \ref{} %TODO F2
-	\item Regular (ranked) trees are closed under intersection. \\
-		\textbf{Proof}: \ref{} %TODO F2
+		\textbf{Proof}: Make $\Delta$ total (add sink state) and set $F' := Q \setminus F$.
+	\item Regular (ranked) trees are closed under union and intersection. \\
+		\textbf{Proof}: Product construction ($F_\cap = F_1 \times F_2$, $F_\cup = (Q_1 \times F_2) \cup (F_1 \times Q_2)$)
 \end{itemize}
 
 \subsubsection{Regular Unranked}
 \begin{itemize}
 	\item Regular unranked trees are closed under complement, union, and intersection. \\
-		\textbf{Proof}: via FCNS 
+		\textbf{Proof}: via FCNS, because ranked trees are closed under these operations
 \end{itemize}
 
 \subsubsection{TWA}
 \begin{itemize}
 	\item TWAs are closed under union. \\
-		\textbf{Proof}: %TODO F10
+		\textbf{Proof}: Non-deterministically choose at the start whether to execute $\mathcal{A}_1$ or $\mathcal{A}_2$.
 	\item TWAs and DTWAs are closed under intersection. \\
-		\textbf{Proof}: %TODO F10
+		\textbf{Proof}: Execute $\mathcal{A}_1$. If it accepts, move to the root and execute $\mathcal{A}_2$.
 	\item Open Problem: Are TWAs closed under complement?
 	\item DTWAs are closed under complement. \\
-		\textbf{Proof}: %TODO F11-12
+		\textbf{Proof}: Theorem \ref{proof:dtwa_complement}
 \end{itemize}
 
 
@@ -410,19 +427,32 @@ Staiger-Wagner $\Leftrightarrow$ det. weak BA \\
 \begin{itemize}
 	\item Membership problem for NTAs is decidable.
 	\item Reachable states of NTAs can be computed in linear time in $|\mathcal{A}|$.
-		%TODO F4
+		\textbf{Algorithm}: 
+		\begin{enumerate}
+			\item Initial reachable states $R = \{ q \in Q \mid \exists a \in \Sigma_0: (a, q) \in \Delta \}$
+			\item For each transition $\tau = \{\overline{q}, a, p\} \in \Delta$, count $\text{in}(\tau) = |\overline{q}|$ and remember $\forall q \in \overline{q}: \tau \in \text{tr}(q)$.
+			\item Grow $R$ by processing each reachable state once: Decrement $\text{in}(\tau)$ by 1; if that value reaches 0, every ingoing state of $\tau$ is reachable and therefore, the outgoing state is.
+		\end{enumerate}
 	\item Emptiness of an NTA can be decided in linear time in $|\mathcal{A}|$. \\
 		\textbf{Algorithm}: $T(\mathcal{A}) = \emptyset$ iff $\text{Reachable}(\mathcal{A}) \cap F = \emptyset$
 	\item Given a DTA $\mathcal{A}$, $\sim_{T(\mathcal{A})}$ can be computed in time $\text{poly}(|Q^m \times \Sigma \times Q|)$ where $m$ is the maximal arity in $\Sigma$. \\
-		\textbf{Algorithm}: %TODO F4
+		\textbf{Algorithm}: 
+		\begin{enumerate}
+			\item Mark all $(q, q')$ with $(q, q') \in (F \times Q \setminus F) \cup (Q \setminus F \times F)$.
+			\item As long as there is still change in the marks, execute step 3:
+			\item If $(p, p')$ is already marked and there are $q_1, \dots, q_{i-1}, q, q', q_{i+1}, \dots, q_n \in Q$ and $a \in \Sigma_n$ such that $p = \delta(q_1, \dots, q, \dots, q_n, a)$ and $p' = \delta(q_1, \dots, q', \dots, q_n, a)$, then mark the pair $(q, q')$. 
+			\item $p \sim_{T(\mathcal{A})} q$ iff $(p, q)$ is not marked.
+		\end{enumerate}
 \end{itemize}
 
 \subsubsection{Regular Unranked}
 \begin{itemize}
 	\item Emptiness / membership / inclusion for NUTAs is decidable in polynomial / polynomial / exponential time. \\
-		\textbf{Algorithm}: %TODO F6
+		\textbf{Algorithm} (Emptiness): Use FCNS transformation. \\
+		\textbf{Algorithm} (Membership): Construct $\mathcal{A}_t$ with $T(\mathcal{A}_t) = \{t\}$ and check $\mathcal{A} \cap \mathcal{A}_t \overset{?}{=} \emptyset$. \\
+		\textbf{Algorithm} (Inclusion): Check $T(\mathcal{A}_1) \cap T(\mathcal{A}_2)^\complement \overset{?}{=} \emptyset$. Complementation is exponential.
 	\item Inclusion for complete DUTAs is decidable in polynomial time. \\
-		\textbf{Algorithm}: %TODO F6
+		\textbf{Algorithm}: Same algorithm as for general NUTAs but complementation can be done in polynomial time.
 \end{itemize}
 
 \subsubsection{Grammars}
@@ -430,7 +460,7 @@ Staiger-Wagner $\Leftrightarrow$ det. weak BA \\
 	\item Emptiness / membership for EDTDs is decidable in polynomial time. \\
 		\textbf{Proof}: EDTD can be converted to NUTA in polynomial time.
 	\item Inclusion for deterministic EDTDs is decidable in polynomial time. \\
-		\textbf{Proof}: %TODO F8
+		\textbf{Proof}: Let $D_1, D_2$ be deterministic EDTDs. Using the previous results and theorem \ref{proof:edtd_complto_nuta}, we can construct NUTAs $\mathcal{A}, \mathcal{B}$ with $T(\mathcal{A}) = T(D_1)$ and $T(\mathcal{B}) = T(D_2)^\complement$ in polynomial time. Then $T(D_1) \subseteq T(D_2)$ iff $T(\mathcal{A}) \cap T(\mathcal{B}) = \emptyset$.
 \end{itemize}
 
 \newpage

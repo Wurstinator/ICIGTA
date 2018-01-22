@@ -1,0 +1,82 @@
+\documentclass{article}
+
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage[utf8]{inputenc}
+\usepackage{geometry}
+\newtheorem{theorem}{Theorem}
+\newtheorem{definition}{Definition}
+\usepackage{xr}
+
+\begin{document}
+
+\begin{theorem}
+\label{twa_to_nta}
+	Let $\mathcal{A} = (Q, \Sigma, q_0, \Delta, F)$ be a TWA. There is an NTA $\mathcal{A}'$ of size exponential in $|Q|$ that recognizes $T(\mathcal{A})$.
+\end{theorem}
+\begin{proof}
+	Let $\sim_{T(\mathcal{A})}$ be the usual equivalence relation, i.e. $t_1 \sim_{T(\mathcal{A})} t_2$ iff $\forall s \in S_\Sigma: s \cdot t_1 \in T(\mathcal{A}) \leftrightarrow s \cdot t_2 \in T(\mathcal{A})$. We define a relation $\sim \subseteq T_\Sigma \times T_\Sigma$ such that $\text{index}(\sim_{T(\mathcal{A})}) \leq \text{index}(\sim) \leq 2^{|Q|^2 \cdot m + 1}$, where $m$ is the maximal rank in $\Sigma$.
+	
+	Let $t_0 \in T_\Sigma$ and $a_m \in \Sigma_m$ be arbitrary. For every $t \in T_\Sigma$ and $1 \leq i \leq m$, we define $t^{(i)} = a_m(t_0, t_0, \dots, t, \dots, t_0)$, meaning the $i$-th subtree below the root is $t$. Further, we define a relation $B_t^i \subseteq Q \times Q$ with $(p, q) \in B_t^i$ iff there is a run segment $\rho$ of $\mathcal{A}$ on $t^{(i)}$, such that the run begins at the root of $t$, never leaves that subtree until the end. Meaning, $\rho = (p, i) (q_1, i u_1) \dots (q_n, i u_n) (q, \varepsilon)$.
+	
+	Finally, let $t_1 \sim t_2$ iff $t_1 \in T(\mathcal{A}) \leftrightarrow t_2 \in T(\mathcal{A})$ and $\forall i: B^i_{t_1} = B^i_{t_2}$.
+	
+	Idea: $(p, q) \in B^i_t$ if $\mathcal{A}$ can enter $t$ as $i$-th child with state $p$ and after some while leaves it again with state $q$.
+	
+	\paragraph{Claim}: Let $t_1 \sim t_2$. Then $t_1 \sim_{T(\mathcal{A})} t_2$.
+	
+	Let $s \in S_\Sigma$. Due to the symmetric definition of $\sim$, it suffices to show that $t_1 \in T(\mathcal{A})$ implies $t_2 \in T(\mathcal{A})$, so let $t_1 \in T(\mathcal{A})$. If $s = \circ$, then $s \cdot t_1 = t_1 \in T(\mathcal{A})$. By definition of $\sim$, this implies $s \cdot t_2 = t_2 \in T(\mathcal{A})$.
+	
+	Otherwise $s \neq \circ$. Let $\rho_1 \rho_2 \rho_3$ be an accepting run of $\mathcal{A}$ on $s \cdot t_1$ such that $\rho_1$ only stays outside of $t_1$ and $\rho_2$ only stays inside of $t_1$. Since $B_{t_1}^i = B_{t_2}^i$, there is a run segment of $\mathcal{A}$ on $t_2$ which enters and exits the tree with the same states as $\rho_2$ does, meaning it can replace $\rho_2$ in the accepting run. Repeating this procedure gives an accepting run of $\mathcal{A}$ on $s \cdot t_2$, so $t_2 \in T(\mathcal{A})$.
+	
+	\paragraph{Notes} on the construction: each state in the NTA corresponds to a list of $Q$-states that $\mathcal{A}$ had when visiting this node, together with the direction from which it was coming. That can be used to check the correctness of a run.
+\end{proof}
+
+\begin{theorem}
+\label{tre_fromto_nta}
+	A language of finite trees $T \subseteq T_\Sigma$ can be recognized by an NTA iff it can be described by a regular tree expression.
+\end{theorem}
+\begin{proof}
+	%TODO TA F9-10
+\end{proof}
+
+\begin{theorem}
+\label{edtd_complto_nuta}
+	Let $D$ be an EDTD. We can construct a NUTA $\mathcal{A}$ with $T(D) = T(\mathcal{A})$ in polynomial time in $|D|$.
+\end{theorem}
+\begin{proof}
+	%TODO TA F8 notes
+\end{proof}
+
+\begin{theorem}
+\label{dtwa_complement}
+	The class of DTWA-recognizable languages is closed under complement.
+\end{theorem}
+\begin{proof}
+	%TODO TA F11-12
+\end{proof}
+
+\begin{theorem}
+\label{fcns_correct}
+	Let $T \subseteq T_\Sigma$. $T$ is regular iff $\text{fcns}(T)$ is regular.
+\end{theorem}
+\begin{proof}
+	%TODO TA F6
+\end{proof}
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
