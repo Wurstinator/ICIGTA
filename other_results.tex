@@ -100,7 +100,7 @@ Idea: Player 1 chooses symbols in $\Sigma$ and transitions on the second state. 
 	$$t[\circ / u] \cdot (t[\circ/v]|_u)^k \cdot t|_v \in T$$
 	where $u = \pi_1 \dots \pi_i$ and $v = \pi_1 \dots \pi_j$.
 \end{theorem}
-%TODO F3
+% no proof
 
 \begin{definition}
 	Let $T \subseteq T_\Sigma$. The \textbf{Myhill-Nerode equivalence} is $\sim_T \subseteq T_\Sigma \times T_\Sigma$ with 
@@ -109,15 +109,28 @@ Idea: Player 1 chooses symbols in $\Sigma$ and transitions on the second state. 
 	The index of $T$ is $\text{Index}(\sim_T) := |T/\sim_T|$.
 \end{definition}
 
+\begin{definition}
+	Let $T \subseteq T_\Sigma$. We define the canonical DTA $\mathcal{A}_T = (Q_T, \Sigma, \delta_T, F_T)$ as
+	\begin{itemize}
+		\item $Q_T = \{ [t]_{\sim_T} \mid t \in T_\Sigma \}$.
+		\item For all $a \in \Sigma_i$: $\delta_T([t_1]_{\sim_T}, \dots, [t_i]_{\sim_T}, a) = [a(t_1, \dots, t_i)]_{\sim_T}$.
+		\item $F_T = \{ [t]_{\sim_T} \mid t \in T \}$.
+	\end{itemize}
+\end{definition}
+
 \begin{theorem}
 	Let $T \subseteq T_\Sigma$. $T$ is regular iff $\text{Index}(\sim_T)$ is finite. If $T$ is regular, $\mathcal{A}_T$ is the minimal DTA.
 \end{theorem}
-%TODO F3
+\begin{proof}
+	via induction on $t$, prove $\delta_T^*(t) = [t]$
+\end{proof}
 
 \begin{theorem}
 	The emptiness problem for NTAs can be reduced to \textsf{HORN-SAT} in linear time.
 \end{theorem}
-%TODO F4
+\begin{proof}
+	Let $\mathcal{A} = (Q, \Sigma, \Delta, F)$ be an NTA. For every $\tau = (q_1, \dots, q_i, a, p) \in \Delta$, let \linebreak $\psi_\tau = (X_{q_1} \land \dots \land X_{q_i} \rightarrow X_q)$. Then we define $\varphi = \bigwedge\limits_{\tau \in \Delta} \psi_\tau \land \bigwedge\limits_{q \in F} X_q \rightarrow 0$. $\varphi$ is satisfiable iff $L(\mathcal{A}) \neq \emptyset$.
+\end{proof}
 
 \subsection{BTTs}
 \begin{theorem}

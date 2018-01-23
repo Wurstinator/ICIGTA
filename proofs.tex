@@ -6,9 +6,11 @@
 \newtheorem{theorem}{Theorem}
 \newtheorem{definition}{Definition}
 \usepackage{xr}
+\usepackage{bm}
 
 \begin{document}
 
+\section{Tree Automata}
 \begin{theorem}
 \label{twa_to_nta}
 	Let $\mathcal{A} = (Q, \Sigma, q_0, \Delta, F)$ be a TWA. There is an NTA $\mathcal{A}'$ of size exponential in $|Q|$ that recognizes $T(\mathcal{A})$.
@@ -31,36 +33,95 @@
 	\paragraph{Notes} on the construction: each state in the NTA corresponds to a list of $Q$-states that $\mathcal{A}$ had when visiting this node, together with the direction from which it was coming. That can be used to check the correctness of a run.
 \end{proof}
 
+\vspace{1cm}
 \begin{theorem}
 \label{tre_fromto_nta}
 	A language of finite trees $T \subseteq T_\Sigma$ can be recognized by an NTA iff it can be described by a regular tree expression.
 \end{theorem}
 \begin{proof}
-	%TODO TA F9-10
+	$\bm{\Rightarrow}$ Let $\mathcal{A} = (Q, \Sigma, \Delta, F)$ be an NTA for $T$. For $R, I \subseteq Q, q \in Q$, we define $T(R, I, q) \subseteq T_{\Sigma \cup C_R}$ (where $C_R = \{c_p \mid p \in R\}$) as the set of all trees on which $\mathcal{A}$ has a run that only uses states in $I$ and ends in $q$. We can inductively define regular expressions for $T(R, I, q)$. Then $T(\mathcal{A}) = \bigcup\limits_{q \in F} T(\emptyset, Q, q)$.
+	
+	For all $R \subseteq Q, q \in Q$, $T(R, \emptyset, q)$ contains only trees of height 0 or 1, so it is a finite union of singular languages.
+	
+	$$T(R, I \cup \{i\}, q) = T(R, I, q) + T(R \cup \{i\}, I, q) \cdot^{c_i} (T(R \cup \{i\}, I, i))^{*_{c_i}} \cdot^{c_i} T(R, I, i)$$ \\
+	
+	$\bm{\Leftarrow}$ Show by induction that a regular expression $r$ can be transformed to a NTA $\mathcal{A}_r$.
+	\begin{itemize}
+		\item If $r = t \in T_{\Sigma \cup C}$, then there is an automaton $\mathcal{A}_t$ with $T(\mathcal{A}_t) = \{t\}$.
+		\item If $r = s + t$, then $\mathcal{A}_r$ is the union automaton of $\mathcal{A}_s$ and $\mathcal{A_t}$.
+		\item If $r = s \cdot^c t$, then $\mathcal{A}_r = (Q_s \cup Q_t, \Sigma \cup C, \Delta_r, F_s)$, where $\Delta_r$ simulates $\mathcal{A}_s$ and $\mathcal{A}_t$ but the final transitions in $\mathcal{A}_t$ are replaced by initial transitions to $\mathcal{A}_s$.
+		\item If $r = s^{+_c}$, let $\mathcal{A}_r = (Q_s, \Sigma \cup C, \Delta_r, F_s)$, where $\Delta_r$ simulates $\mathcal{A}_s$ and allows ``restarts'' when a final state could be reached.
+	\end{itemize}
 \end{proof}
 
+\vspace{1cm}
 \begin{theorem}
 \label{edtd_complto_nuta}
-	Let $D$ be an EDTD. We can construct a NUTA $\mathcal{A}$ with $T(D) = T(\mathcal{A})$ in polynomial time in $|D|$.
+	Let $D$ be an EDTD. We can construct a NUTA $\mathcal{A}$ with $T(D)^\complement = T(\mathcal{A})$ in polynomial time in $|D|$.
 \end{theorem}
 \begin{proof}
-	%TODO TA F8 notes
+	Let $D = (\Sigma', P, S^{(1)})$. For $a^{(i)} \in \Sigma'$, let $a^{(i)} \rightarrow r_{a,i}$ be the according rule in $P$, where $r_{a,i}$ is a regular expression that can be transformed to a DFA in polynomial time. If $b \in \Sigma$ occurs in $r_{a,i}$ then it must have a unique type $j$ (since $D$ is single-typed). We call $b^{(j)}$ the $b$-successor of $a^{(i)}$. If $b$ does not occur in $r_{a,i}$, we say that the $b$-successor is $b^\perp$. Furthermore, we assume $r_{a,\perp} = \varepsilon$ for all $a$.
+	
+	We define a typing function $f : \text{dom}_t \rightarrow \{\perp, 1, \dots, k\}$. We assign $f(\varepsilon) = \begin{cases} 1 & \text{if } \text{val}_t(\varepsilon) = S \\ \perp & \text{else} \end{cases}$. For the other nodes, let $u$ be a node with parent $v$. We call $\text{val}_t(v) = a$ and $\text{val}_t(u) = b$. Then there is a unique $i \in \{\perp, 1, \dots, k\}$ such that $b^{(i)}$ is the $b$-successor of $a^{f(v)}$. We set $f(u) := i$.
+	
+	\textbf{Claim}: $t \in T(D)$ iff $\forall v \in \text{dom}_t: f(v) \neq \perp$ and $a_1^{f(v1)} \dots a_m^{f(vm)} \in L(r_{a,f(v)})$, where $a = \text{val}_t(v)$ and $a_j = \text{val}_t(vj)$. (without proof)
+	
+	Using this claim, we can provide an automaton $\mathcal{A} = (Q, \Sigma, \Delta, F)$ that accepts a tree iff it violates the constraint.
+	
+	\begin{itemize}
+		\item $Q = \Sigma \times \{\perp, 1, \dots, k\} \times \{0, 1\}$, where the last component denotes whether a violation was found.
+		\item $\Delta = \{ (L_{a,i,x}, a, (a, i, x)) \mid a \in \Sigma, i \in \{\perp, 1, \dots, k\}, x \in \{0,1\} \}$ \\
+			Let $\alpha = (a_1, i_1, x_1) \dots (a_m, i_m, x_m) \in Q^m$ and $w := a_1^{(i_1)} \dots a_m^{(i_m)} \in (\Sigma')^m$.
+			\begin{itemize}
+				\item $\text{succ} :\Leftrightarrow$ for all $1 \leq j \leq m$, $a_j^{(i_j)}$ is the $a_j$-successor of $a^{(i)}$.
+				\item $\text{sat}_0 :\Leftrightarrow$ $w \in L(r_{a,i})$ and for all $1 \leq j \leq m$, $x_j = 0$ and $i_j \neq \perp$.
+				\item $\text{sat}_1 :\Leftrightarrow$ $w \notin L(r_{a,i})$ or there is a $1 \leq j \leq m$ such that $x_j = 1$ or $i_j = \perp$.
+			\end{itemize}
+			Then $\alpha \in L_{a,i,x}$ iff $\text{succ}$ and $\text{sat}_x$ hold.
+		\item $F = \{ (S, 1, 1) \} \cup \{ (a, i, x) \mid a \neq S \}$, meaning either a violation was found or the starting symbol was not $S$.
+\end{itemize}	 
 \end{proof}
 
+\vspace{1cm}
 \begin{theorem}
 \label{dtwa_complement}
 	The class of DTWA-recognizable languages is closed under complement.
 \end{theorem}
 \begin{proof}
-	%TODO TA F11-12
+	Let $\mathcal{A} = (Q, \Sigma, q_0, \delta, \{q_f\})$ be a DTWA that only moves to $q_f$ at the root. The \textbf{backwards configuration graph} $\text{BCG}(\mathcal{A}, t)$ is defined as a tree over $Q \times \text{dom}_t$ with root $(q_f, \varepsilon)$. For a node $(q, u)$, the children are all $(p, v)$ such that $(p, v) \rightarrow_\mathcal{A} (q, u)$. We define $\overline{\mathcal{A}}$ in a way that it performs DFS on the BCG of the input tree and accepts iff the node $(q_0, \varepsilon)$ is found.
+	
+	For that, let $\prec \subseteq (Q \times \text{Dir})^2$ be an arbitrary linear order on $Q \times \text{Dir}$. We set $\overline{\mathcal{A}} = (\overline{Q}, \Sigma, q_0, \overline{\delta}, q_f)$ with $\overline{Q} = \{q_0, q_f\} \cup \{ \langle p, (q, d) \rangle \mid p, q \in Q, d \in \text{Dir} \}$. The behavior of $\overline{\delta}$ is described below. Let $\langle q, (q', d) \rangle$ be a state.
+	
+	\paragraph{Case 1}: In the ordering $\prec$, $(\hat{q}, \hat{d})$ is the next largest element after $(q', d)$. (for $q_0$ we also consider this case with the $\prec$-minimal pair.)
+	
+	%TODO
+	
+	\paragraph{Case 2}: $(q', d)$ %TODO
 \end{proof}
 
+\vspace{1cm}
 \begin{theorem}
 \label{fcns_correct}
 	Let $T \subseteq T_\Sigma$. $T$ is regular iff $\text{fcns}(T)$ is regular.
 \end{theorem}
 \begin{proof}
-	%TODO TA F6
+	$\boldsymbol{\Rightarrow}$ Let $\mathcal{A} = (Q, \Sigma, \Delta, F)$ be a NUTA with $T(\mathcal{A}) = T$. Wlog we assume that $\mathcal{A}$ is normalized. For every transition $\tau = (L_{a,q}, a, q) \in \Delta$, let $\mathcal{B}_{a,q} = (P_{a,q}, Q, p^0_{a,q}, \Delta_{a,q}, F_{a,q})$ be a NFA with $L(\mathcal{B}_{a,q}) = L_{a,q}$. We define $\mathcal{A}_\text{fcns} = (Q_\text{fcns}, \Gamma, \Delta_\text{fcns}, F_\text{fcns})$ so that $T(\mathcal{A}_\text{fcns}) = \text{fcns}(T)$.
+	
+	\begin{itemize}
+		\item $Q_\text{fcns} = \{q_f, q_\#\} \cup \bigcup\limits_{a \in \Sigma, q \in Q} P_{a, q}$
+		\item $F_\text{fcns} = \{q_f\}$
+		\item $\Delta_\text{fcns}$:
+		\begin{itemize}
+			\item $(\#, q_\#)$
+			\item For all $p \in \bigcup\limits_{a \in \Sigma, q \in Q} F_{a, q}$: $(\#, p)$
+			\item For all $a \in \Sigma, q \in F$: $(p^0_{a,q}, q_\#, a, q_f)$
+			\item For all $a \in \Sigma, p \in P, p' \in P, q \in Q$ with $(p, q', p') \in \bigcup\limits_{b \in \Sigma, q' \in Q} \Delta_{b, q'}$: $(p^0_{a,q}, p', b, p)$
+		\end{itemize}
+	\end{itemize}
+	
+	Via induction on $t_1 \dots t_n$, one can show that $p \in \Delta^*_\text{fcns}(\text{fcns}(t_1 \dots t_n))$ iff there are $q_1, \dots q_n \in Q$ such that $\forall i: q_i \in \Delta^*(t_i)$ and $q_1 \dots q_n \in L(\mathcal{B}_{a,q} \text{ init } p)$.
+	
+	$\boldsymbol{\Leftarrow}$ Let $\mathcal{A} = (Q, \Sigma, \Delta, F)$ be an NTA with $T(\mathcal{A}) = \text{fcns}(T)$. We define %no proof?
 \end{proof}
 
 \end{document}
