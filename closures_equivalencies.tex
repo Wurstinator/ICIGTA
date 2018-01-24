@@ -20,9 +20,9 @@
 	\item Rabin automaton
 	\item Muller automaton
 	\item Parity automaton
-	\item E automaton
-	\item A automaton
-	\item coBA
+	\item det. E automaton
+	\item det. A automaton
+	\item det. coBA
 	\item weak BA
 	\item Staiger-Wagner automaton
 	\item ABA
@@ -148,28 +148,29 @@
 \subsection{Class Exclusions}
 \begin{itemize}
 	\item E aut. $\not\subseteq$ A aut. \\
-		\textbf{Example}: $(a+b)^* a (a+b)^\omega$ \\
-    	\textbf{Proof}: \ref{} %TODO
+		\textbf{Example}: $b^* a (a+b)^\omega$ \\
+    	\textbf{Proof}: Assume the A automaton $\mathcal{A} = (Q, \Sigma, q_0, \delta, F)$ recognizes $L$, so for every $b^n a b^\omega$, the run $\rho_n$ is accepting. Let $\rho^*(n) = \rho_{n+1}(n)$. This is an accepting run on $b^\omega$, which is a contradiction.
 	\item A aut. $\not\subseteq$ E aut. \\
 		\textbf{Example}: $\{a^\omega\}$ \\
-    	\textbf{Proof}: \ref{} %TODO
+    	\textbf{Proof}: Assume the E automaton $\mathcal{A} = (Q, \Sigma, q_0, \delta, F)$ recognizes $L$, so the run $\rho$ of $\mathcal{A}$ on $a^\omega$ is accepting. That means there is an $n$ s.t. $\rho(n) \in F$. Therefore, $\mathcal{A}$ accepts the word $a^n b^\omega$, which is a contradiction.
 	\item DBA $\not\subseteq$ coBA \\
 		\textbf{Example}: $(a^*b)^\omega$ \\
-    	\textbf{Proof}: \ref{} %TODO
+    	\textbf{Proof}: Assume $\mathcal{A} = (Q, \Sigma, q_0, \delta, F)$ is a coBA recognizing $L$. Let $n = |Q|$, $w = (a^n b)^\omega$, and $\rho$ the run of $\mathcal{A}$ on $w$. From some $m$ on, $\rho$ only visits states in $F$. Consider $(a^n b)^m a^n$. By choice of $n$, there must be $i < j$ such that after $(a^n b)^m a^i$ and $(a^n b)^m a^j$, the automaton is in the same state $q \in F$. Therefore, the run on $(a^n b)^m a^\omega$ is accepting, which is a contradiction.
 	\item coBA $\not\subseteq$ DBA \\
 		\textbf{Example}: $(a+b)^* a^\omega$ \\
-    	\textbf{Proof}: \ref{} %TODO
+    	\textbf{Proof}: Assume $\mathcal{A} = (Q, \Sigma, q_0, \delta, F)$ is a DBA recognizing $L$. We inductively define words $w_n$ with runs $\rho_n$ s.t. $w_n \sqsubseteq w_{n+1}$ and $\rho_n$ visits $F$ at least $n$ times and $|w_n|_b = n$. Then the ``limit'' of those words contains infinitely many $b$ but is accepted by $\mathcal{A}$, which is a contradiction. \\
+    	Let $w_0 = \varepsilon$ and $\rho_0 = q_0$. For $n+1$, consider $w_n a^\omega$ with the run $\rho_n \pi$. Since $w_n a^\omega \in L$, there is a $k$ s.t. $\pi(k) \in F$. Let $w_{n+1} = w_n a^k b$ and $\rho_{n+1}$ accordingly.
 	\item LTL $\not\subseteq$ NBA \\
 		\textbf{Example}: $((a+b) a)^\omega$ \\
-    	\textbf{Proof}: \ref{} %TODO
+    	\textbf{Proof}: Show that $L$ is counting. Then it follows that it is not LTL-definable. Assume that $L$ is non-counting, so there is an $n_0$ according to the definition. Let $n = n_0 + 1$, $u = \varepsilon$, $v = a$, and $\beta = b a^\omega$. Due to symmetry, we can assume that $n_0$ is even, so $u v^n \beta \notin L$ but $u v^{n+1} \beta \in L$.
 \end{itemize}
 
 \subsection{Class Equalities}
 \subsubsection{NBA}
 \begin{itemize}
-	\item NBA $\Rightarrow$ $\omega$-regular \\
+	\item NBA $\Leftrightarrow$ $\omega$-regular \\
     	\textbf{Proof}: \ref{} %TODO F3
-	\item $\omega$-regular $\Rightarrow$ NBA \\
+	\item GBA $\Rightarrow$ NBA \\
     	\textbf{Proof}: \ref{} %TODO F3
     \item NBA $\Rightarrow$ $\exists$S1S \\
     	\textbf{Proof}: \ref{} %TODO F9
@@ -191,6 +192,8 @@
 LTL $\Leftrightarrow$ Non-counting \\
 No proof. Remarks in F8.
 
+A language $L$ is called \textbf{non-counting} if there is an $n_0$ such that for all $n > n_0$, all $u, v \in \Sigma^*$, and all $\beta \in \Sigma^\omega$: $uv^n\beta \in L \leftrightarrow uv^{n+1}\beta \in L$.
+
 \subsubsection{SW}
 Staiger-Wagner $\Leftrightarrow$ det. weak BA \\
 \textbf{Proof}: \ref{} %TODO F18
@@ -199,9 +202,10 @@ Staiger-Wagner $\Leftrightarrow$ det. weak BA \\
 \subsubsection{NBA}
 \begin{itemize}
 	\item Closed under union \\
-    	\textbf{Proof}: \ref{} %TODO F3
+    	\textbf{Proof}: Product automaton with $F = (F_1 \times Q_2) \cup (Q_1 \times F_2)$.
     \item Closed under intersection \\
-    	\textbf{Proof}: \ref{} %TODO F3
+    	\textbf{Proof}: GBA $\mathcal{A} = (Q_1 \times Q_2, \Sigma, (q_0^1, q_0^2), \Delta, (F_1 \times Q_2, Q_1 \times F_2))$ where \\
+    	$\Delta = \{ ((p_1, p_2), a, (q_1, q_2)) \mid (p_1, a, q_1) \in \Delta_1, (p_2, a, q_2) \in \Delta_2 \}$.
     \item Closed under complement \\
     	\textbf{Proof}: \ref{} %TODO F4
 \end{itemize}
@@ -213,12 +217,10 @@ Staiger-Wagner $\Leftrightarrow$ det. weak BA \\
 
 \subsubsection{SW}
 \begin{itemize}
-	\item Closed under union \\
-    	\textbf{Proof}: \ref{} %TODO F18
-    \item Closed under intersection \\
-    	\textbf{Proof}: \ref{} %TODO F18
+	\item Closed under union and intersection \\
+    	\textbf{Proof}: Product automaton with $\mathcal{F}_\cap = \{ F \subseteq Q_1 \times Q_2 \mid \pi_1(F) \in \mathcal{F}_1, \pi_2(F) \in \mathcal{F}_2 \}$ where $\pi_i((x_1, x_2)) = x_1$. 
     \item Closed under complement \\
-    	\textbf{Proof}: \ref{} %TODO F18
+    	\textbf{Proof}: $\overline{\mathcal{F}} = 2^Q \setminus \mathcal{F}$.
 \end{itemize}
 
 \subsection{Characterizations}
