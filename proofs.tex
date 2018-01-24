@@ -10,6 +10,41 @@
 
 \begin{document}
 
+\section{Infinite Computations}
+\begin{theorem}
+\label{nba_complement}
+	NBA-recognizable languages are closed under complement.
+\end{theorem}
+\begin{proof}
+	%TODO F4
+\end{proof}
+
+
+\vspace{1cm}
+\begin{theorem}
+\label{ltl_to_nba}
+
+\end{theorem}
+\begin{proof}
+	%TODO F6-8
+\end{proof}
+
+
+\vspace{1cm}
+\begin{theorem}[Landweber]
+\label{landweber}
+	Let $\mathcal{A} = (Q, \Sigma, q_0, \delta, \mathcal{F})$ be a DMA. 
+	\begin{enumerate}
+		\item $L(\mathcal{A})$ is DBA-recognizable iff $\mathcal{F}$ is closed under super loops.
+		\item $L(\mathcal{A})$ is E-recognizable iff $\mathcal{F}$ is closed under reachable loops.
+	\end{enumerate}
+\end{theorem}
+\begin{proof}
+	%TODO F16-18
+\end{proof}
+
+
+\newpage
 \section{Tree Automata}
 \begin{theorem}
 \label{twa_to_nta}
@@ -79,7 +114,7 @@
 			\end{itemize}
 			Then $\alpha \in L_{a,i,x}$ iff $\text{succ}$ and $\text{sat}_x$ hold.
 		\item $F = \{ (S, 1, 1) \} \cup \{ (a, i, x) \mid a \neq S \}$, meaning either a violation was found or the starting symbol was not $S$.
-\end{itemize}	 
+\end{itemize}
 \end{proof}
 
 \vspace{1cm}

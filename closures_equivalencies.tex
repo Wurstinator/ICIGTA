@@ -9,6 +9,7 @@
 \usetikzlibrary{positioning}
 \usepackage{xr}
 \externaldocument[proof:]{proofs}
+\usepackage{bm}
 
 \begin{document}
 \section{List Of Models}
@@ -139,10 +140,17 @@
     	trivial
     \item coBA $\subseteq$ NBA \\
     	\textbf{Proof}: NBA closed under complement.
-    \item LTL $\subseteq$ NBA \\
-    	\textbf{Proof}: \ref{} %TODO 6
-    \item LTL $\subseteq$ ABA \\
-    	\textbf{Proof}: \ref{} %TODO 21-22
+    \item LTL $\subseteq$ NBA (exponential size transformation) \\
+    	\textbf{Proof}: Theorem \ref{proof:ltl_to_nba}
+    \item LTL $\subseteq$ ABA (linear size transformation) \\
+    	\textbf{Proof}: Similar to theorem \ref{proof:ltl_to_nba}. $\mathcal{A}_\varphi = (\text{cl}(\varphi), \mathbb{B}^n, \varphi, \delta, F)$ with $F = \{ \psi \in \text{cl}(\varphi) \mid \psi = G \vartheta \}$ and $\delta$ is defined as follows:
+    	\begin{itemize}
+    		\item $\delta(p_i, a)$ and $\delta(\neg p_i, a)$ are $\text{tt}$ or $\text{ff}$ depending on the $i$-th component of $a$.
+    		\item $\delta(\psi_1 \oplus \psi_2, a) = \delta(\psi_1, a) \oplus \delta(\psi_2, a)$ for $\oplus \in \{\land, \lor\}$.
+    		\item $\delta(X \psi, a) = \psi$.
+    		\item $\delta(G \psi, a) = \delta(\psi, a) \land G \psi$.
+    		\item $\delta(\psi_1 U \psi_2, a) = (\delta(\psi_1, a) \land \psi_1 U \psi_2) \lor \delta(\psi_2, a)$.
+    	\end{itemize}
 \end{itemize}
 
 \subsection{Class Exclusions}
@@ -196,7 +204,7 @@ A language $L$ is called \textbf{non-counting} if there is an $n_0$ such that fo
 
 \subsubsection{SW}
 Staiger-Wagner $\Leftrightarrow$ det. weak BA \\
-\textbf{Proof}: \ref{} %TODO F18
+\textbf{Proof}: \ref{} %TODO F18 other-theorem
 
 \subsection{Closures}
 \subsubsection{NBA}
@@ -207,11 +215,13 @@ Staiger-Wagner $\Leftrightarrow$ det. weak BA \\
     	\textbf{Proof}: GBA $\mathcal{A} = (Q_1 \times Q_2, \Sigma, (q_0^1, q_0^2), \Delta, (F_1 \times Q_2, Q_1 \times F_2))$ where \\
     	$\Delta = \{ ((p_1, p_2), a, (q_1, q_2)) \mid (p_1, a, q_1) \in \Delta_1, (p_2, a, q_2) \in \Delta_2 \}$.
     \item Closed under complement \\
-    	\textbf{Proof}: \ref{} %TODO F4
+    	\textbf{Proof}: Theorem \ref{proof:nba_complement}.
 \end{itemize}
 
 \subsubsection{DBA}
 \begin{itemize}
+	\item Closed under union and intersection \\
+		\textbf{Proof}: Same construction as for NBA.
 	\item Not closed under complement (inf. many $a$ $\leftrightarrow$ fin. many $a$)
 \end{itemize}
 
@@ -228,33 +238,46 @@ Staiger-Wagner $\Leftrightarrow$ det. weak BA \\
 	\item Parity conditions are directly convertible to Rabin chain conditions and vice-versa. \\
 		\textbf{Proof}: Assign priorities in ascending order; $E_k \rightarrow 0$, $F_k \setminus E_k \rightarrow 1$, $E_{k-1} \setminus F_k \rightarrow 2$ \dots
 	\item $U$ is $\omega$-regular iff $U$ is a Boolean combination of DBA-languages \\
-		\textbf{Proof}: NBAs are closed under Boolean operations. %TODO other direction
+		\textbf{Proof}: $\bm{\Leftarrow}$ NBAs are closed under Boolean operations.
+		
+		$\bm{\Rightarrow}$ Let $\mathcal{A}$ be a DRA for $U$. It suffices to consider $\Omega = \{(E, F)\}$ as any other language is a finite union of these conditions. Let $\mathcal{A}_E$ and $\mathcal{A}_F$ be the modifications of $\mathcal{A}$ with conditions $\{(E, Q)\}$ and $\{\emptyset, F\}$ respectively. Then $L(\mathcal{A}_E)^\complement$ and $L(\mathcal{A}_F)$ are DBA-recognizable.
 	\item $U$ is DBA-recog. iff $U = \text{lim}(L)$ for some regular $L \subseteq \Sigma^*$. \\
-		\textbf{Proof}: \ref{} %TODO F2
+		\textbf{Proof}: Use the DBA as a DFA or vice-versa.
 	\item $U$ is E-recog. iff $U = L \cdot \Sigma^*$ for some regular $L \subseteq \Sigma^*$. \\
-		\textbf{Proof}: \ref{} %TODO F16
+		\textbf{Proof}: $\bm{\Rightarrow}$ Let $\mathcal{A}$ be an E-automaton for $U$. For every $q \in F, a \in \Sigma$, add a transition $(q, a, q)$. The resulting automaton as an NFA accepts $L$ with $U = L \cdot \Sigma^*$.
+		
+		$\bm{\Leftarrow}$ Let $\mathcal{A}$ be a DFA for $L$. The same automaton as an E-automaton recognizes $L \cdot \Sigma^*$.
 	\item Landweber's theorem \\
-		\textbf{Proof}: \ref{} %TODO F16-F18
+		\textbf{Proof}: Theorem \ref{proof:landweber}
 	\item DBA $\cap$ coBA $\Rightarrow$ SW \\
-		\textbf{Proof}: \ref{} %TODO F18
+		\textbf{Proof}: \ref{} %TODO F18 notes
+	\item SW $\Leftrightarrow$ Boolean combination of E-recognizable languages. \\
+		\textbf{Proof}: $\bm{\Leftarrow}$ SWAs are closed under Boolean operations.
+		
+		$\bm{\Rightarrow}$ Let $\mathcal{A} = (Q, \Sigma, q_0, \delta, \mathcal{F})$ be the SWA and let $\mathcal{A}_q = (Q, \Sigma, q_0, \delta, \{q\})$. For every $q \in Q$, the language $L(\mathcal{A}_q)$ is E-recognizable. For every $F \subseteq Q$, let $L_F = \bigcap\limits_{q \in F} L(A_q) \cap \bigcap\limits_{q \notin F} L(A_q)^\complement$, which is a Boolean combination of E-recognizable languages. Then $L(\mathcal{A}) = \bigcup \{ L_F \mid F \in \mathcal{F} \}$.
 \end{itemize}
 
 \subsection{Duality}
 \begin{itemize}
 	\item $U$ is A-recog. iff $\Sigma^\omega \setminus U$ is E-recog. \\
-		\textbf{Proof}: \ref{} %TODO F16
+		\textbf{Proof}: same automaton, $\overline{F} = Q \setminus F$
 	\item $U$ is coBA-recog. iff $\Sigma^\omega \setminus U$ is DBA-recog. \\
-		\textbf{Proof}: \ref{} %TODO F16
+		\textbf{Proof}: same automaton, $\overline{F} = Q \setminus F$
 \end{itemize}
 
 \subsection{Problems / Complexity}
 \begin{itemize}
 	\item Emptiness problem for NBAs is decidable in poly. time. \\
-    	\textbf{Proof}: \ref{} %TODO F4
-    \item Emptiness problem for ABAs is PSPACE-complete. \\
-    	No proof. Remarks in F23.
+    	\textbf{Algorithm}: 
+    	\begin{enumerate}
+    		\item Compute all states that are reachable from $q_0$. ($\mathcal{O}(|Q| + |\Delta|)$).
+    		\item For each of these reachable states that is also accepting, check if there is a path to itself. ($\mathcal{O}(|F| \cdot (|Q| + |\Delta|))$).
+    		\item If any state like that was found, the language is not empty.
+    	\end{enumerate}
+    \item Emptiness problem for ABAs is PSPACE-complete. 
+    	% No proof. Remarks in F23.
     \item Membership problem for ABAs is decidable in poly. time. \\
-    	%TODO F23;  infinite games?
+    	\textbf{Proof}: Model the problem as a Büchi game. In each turn, starting at a node $v \in Q$, player 1 chooses an $a \in \Sigma$. Then, according to the Boolean operators of $\delta(v, a)$, the players choose a next state. If player 0 wins, the choices of player 1 model an element of the ABA language.
 \end{itemize}
 
 
