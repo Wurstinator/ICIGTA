@@ -136,17 +136,23 @@ Idea: Player 1 chooses symbols in $\Sigma$ and transitions on the second state. 
 \begin{theorem}
 	The equivalence problem for BTTs is undecidable.
 \end{theorem}
-%TODO F13
+\begin{proof}
+	Follows from the equivalence problem of rational word transducer.
+\end{proof}
 
 \begin{theorem}
 	The emptiness problem for BTTs is decidable in polynomial time.
 \end{theorem}
-%TODO F13
+\begin{proof}
+	One can construct in polynomial time a $\uparrow$NTA that recognizes the domain of a given BTT. The emptiness problem of BTTs then is equivalent to the emptiness problem of $\uparrow$NTAs.
+\end{proof}
 
 \begin{theorem}
 	The type-checking problem (given regular $T, T'$, is $\mathcal{A}(T) \subseteq T'$?) is decidable.
 \end{theorem}
-%TODO F13
+\begin{proof}
+	$\mathcal{A}(T) \subseteq T'$ iff $\mathcal{A}^{-1}((T')^\complement) \cap T = \emptyset$. If $T'$ is regular then so is $\mathcal{A}^{-1}((T')^\complement) \cap T$ and this can be decided.
+\end{proof}
 
 \begin{theorem}
 	If $T$ is regular, then $\mathcal{A}^{-1}(T)$ is regular. \\
@@ -157,12 +163,33 @@ Idea: Player 1 chooses symbols in $\Sigma$ and transitions on the second state. 
 \begin{theorem}
 	There are BTT-definable relations $R_1, R_2$ such that $R_1 \circ R_2$ is not BTT-definable.
 \end{theorem}
-%TODO F13
+\begin{proof}
+	Let $\Sigma = \{f,g,h,c\}$ and for both $i \in \{1,2\}$: $\mathcal{A}_i = (\{q,q_f\}, \Sigma, \Sigma, \Delta_i, \{q_f\})$ where 
+	\begin{itemize}
+		\item $\Delta_1$:
+		\begin{itemize}
+			\item $c \rightarrow q(c)$
+			\item $g(q(x_1)) \rightarrow q(g(x_1))$
+			\item $q(x_1) \rightarrow q_f(f(x_1))$
+		\end{itemize}
+		\item $\Delta_2$:
+		\begin{itemize}
+			\item $c \rightarrow q(c)$
+			\item $g(q(x_1)) \rightarrow q(g(x_1))$
+			\item $g(q(x_1)) \rightarrow q(h(x_1))$
+			\item $f(q(x_1), q(x_2)) \rightarrow q_f(f(x_1, x_2))$
+		\end{itemize}
+	\end{itemize}
+	
+	$\mathcal{A}_1$ converts a tree $t \in T_\{c,g\}$ to $f(t, t)$.
+	$\mathcal{A}_2$ replaces an arbitrary number of $g$s by $h$s.
+	$R_1 \circ R_2$ defines the set of trees $f(t_1, t_2)$ where $t_1$ and $t_2$ are of equal height.
+\end{proof}
 
 \begin{theorem}
 	If $\mathcal{A}_1$ is linear \textbf{or} $\mathcal{A}_2$ is deterministic Then $R(\mathcal{A}_1) \circ R(\mathcal{A}_2)$ is BTT-definable.
 \end{theorem}
-%TODO F13
+%no proof
 
 
 \section{Infinite Trees}
