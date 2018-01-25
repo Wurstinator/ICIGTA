@@ -44,6 +44,89 @@
 \end{proof}
 
 
+\vspace{1cm}
+\begin{theorem}
+\label{mso_nba}
+	NBAs, S1S, S1S\textsubscript{0}, and $\exists$S1S have the same expressive power.
+\end{theorem}
+\begin{proof}
+	\begin{description}
+	\item[$\bm{\text{NBA} \Rightarrow \exists \text{S1S}}$] Let $\mathcal{A} = (Q, \mathbb{B}^n, 1, \Delta, F)$ be the NBA with $Q = \{1, \dots, m\}$. We encode a run of $\mathcal{A}$ on a word with a formula. 
+	
+	$$\varphi_\mathcal{A}(X_1, \dots, X_n) = \exists Y_1 \dots \exists Y_m \text{Part}(\overline{Y}) \land Y_1(0) \land \text{Trans}(\overline{X}, \overline{Y}) \land \text{Fin}(\overline{Y}) $$
+	$$ \text{Part}(Y_1, \dots, Y_m) = \forall x \left( \bigvee\limits_{i=1}^m Y_i x \land \bigwedge\limits_{i=1}^m \bigwedge\limits_{j \neq i} \neg Y_i x \lor \neg Y_j x \right) $$
+	$$ \text{Trans}(\overline{X}, \overline{Y}) = \forall x \bigvee\limits_{\tau \in \Delta} \psi_\tau(x, \overline{X}, \overline{Y}) $$
+	$$ \psi_{(p, a, q)}(x, X_1, \dots, X_n, Y_1, \dots, Y_m) = Y_p x \land Y q (x+1) \land X_a x $$
+	$$ \text{Fin}(Y_1, \dots, Y_m) = \forall x \exists y \left( x < y \land \bigvee\limits_{q \in F} Y_q y \right) $$
+	
+	\item[$\bm{\exists \text{S1S} \Rightarrow \text{S1S}}$] trivial
+	
+	\item[$\bm{\text{S1S} \Rightarrow \text{S1S}_0}$] Let $\varphi \in \text{S1S}$. We define an equivalent $\varphi' \in \text{S1S}_0$ inductively.
+	
+	\begin{itemize}
+		\item Boolean operators stay the same.
+		\item $\exists x \psi(x) \mapsto \exists X_x (\text{Sing}(X_x) \land \psi'(X_x))$
+		\item $Xx \mapsto X_x \subseteq X$
+		\item $x+1 = y \mapsto \text{Succ}(X_x, X_y)$
+	\end{itemize}
+	
+	\item[$\bm{\text{S1S}_0 \Rightarrow \text{NBA}}$] $\exists$, $\lor$, $\neg$ correspond to projection, union, and complement of automata respectively. Therefore it suffices to give NBAs for the three base formulas.
+	
+	\begin{itemize}
+		\item $X_1 \subseteq X_2$: $Q = F = \{q_0\}$, $\Delta = \{(q_0, a, q_0) \mid a \neq (1 \; 0)\}$.
+		\item $\text{Sing}(X)$: $Q = \{q_0, q_f\}$, $F = \{q_f\}$, $\Delta = \{(q_0, 0, q_0), (q_f, 0, q_f), (q_0, 1, q_f)\}$.
+		\item $\text{Succ}(X_1, X_2)$: $Q = \{q_0, q_1, q_2\}$, $F = \{q_2\}$, \\
+		$\Delta = \{ (q_0, (0 \; 0), q_0), (q_2, (0 \; 0), q_2), (q_0, (1 \; 0), q_1), (q_1, (0 \; 1), q_2)\}$.
+	\end{itemize}
+	
+	The complexity of this construction is $2 \uparrow \uparrow |\varphi|$.
+	\end{description}
+\end{proof}
+
+
+\vspace{1cm}
+\begin{theorem}[McNaughton]
+\label{nba_dma}
+	A language is NBA-recognizable iff it is DMA-recognizable.
+\end{theorem}
+\begin{proof}
+	$\bm{\Leftarrow}$ NBA with $L(\mathcal{A}) = \bigcup\limits_{F \in \mathcal{F}} \left( \bigcap\limits_{q \in F} L(\mathcal{A}_q) \cap \bigcap\limits_{q \notin F} \overline{L(\mathcal{A}_q)} \right)$ where $\mathcal{A}_q$ is $\mathcal{A}$ starting in $q$.
+	
+    $\bm{\Rightarrow}$ %TODO F12-13 notes
+\end{proof}
+
+
+\vspace{1cm}
+\begin{theorem}
+\label{muller_to_parity}
+	For each Muller automaton, one can construct an equivalent parity automaton. The construction preserves determinism.
+\end{theorem}
+\begin{proof}
+	%TODO F14-15 notes?
+\end{proof}
+
+
+\vspace{1cm}
+\begin{theorem}
+\label{aba_to_nba}
+	For each ABA, one can construct an equivalent NBA with states at most $3^{|Q|}$.
+\end{theorem}
+\begin{proof}
+	Let $\mathcal{A} = (Q, \Sigma, q_0, \delta, F)$ be an ABA. We define $\mathcal{A}' = (\{0,1,2\}^Q, \Sigma, f_0, \Delta, \{0,2\}^Q)$ with $f_0(q) = \begin{cases} 1 & \text{if } q = q_0 \\ 0 & \text{else} \end{cases}$ and $\Delta$ as described below. 
+	
+	A state is a function $f : Q \rightarrow \{0, 1, 2\}$. Consider a run-tree of $\mathcal{A}$ on some word and all states that are ``active'' on one level in the tree. $f(q)$ is 0 for all states which are not active and 1 or 2 for all others. A state is assigned to 1 by default, which just means that it is active in some path. It is assigned 2 if ``recently'' on all paths it is active on, a final state in $F$ was seen. Recently means that it occurred since the last time that an entire level in the run tree was made up of final states.
+	
+	Formally, we have $(f, a, g) \in \Delta$ for all $g : Q \rightarrow \{0, 1, 2\}$ which satisfy the following:
+	\begin{itemize}
+		\item The active states need to be passed on, i.e. for all $q \in Q$: if $f(q) \in \{1,2\}$ then there must be an $X_q \subseteq Q$ with $X_q \models \delta(q, a)$ such that $g(X_q) \subseteq \{1,2\}$.
+		\item A state is assigned 2 if it is final, i.e. $g(q) = 2$ if $q \in F$.
+		\item Otherwise, a 1 overwrites a 2 for succession, i.e. for all $p \in P$, if there is a $q$ with $f(q) = 1$ and $p \in X_q$, then also $g(p) = 1$.
+		\item If all states are marked with a 2, $\mathcal{A}'$ reached a final state. We reset the values to $g(p) = 2$ iff $p \in F$.
+	\end{itemize}
+\end{proof}
+
+
+
 \newpage
 \section{Tree Automata}
 \begin{theorem}

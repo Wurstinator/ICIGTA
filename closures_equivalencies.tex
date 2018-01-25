@@ -177,23 +177,19 @@
 \subsubsection{NBA}
 \begin{itemize}
 	\item NBA $\Leftrightarrow$ $\omega$-regular \\
-    	\textbf{Proof}: \ref{} %TODO F3
+    	\textbf{Proof}: $\bm{\Leftarrow}$ All three operations used in regular expressions $(\cup, \cdot, ^\omega)$ correspond to easy NBA constructions.
+    	
+    	$\bm{\Rightarrow}$ Let $\mathcal{A} = (Q, \Sigma, q_0, \Delta, F)$ be an NBA. For every final state $q \in F$, we consider the finite words $U_q$ which lead from $q_0$ to $q$, and the finite words $V_q$ which lead from $q$ back to $q$ itself. Then $L(\mathcal{A})$ is the union of $U_q \cdot V_q^\omega$ for all final states $q$.
 	\item GBA $\Rightarrow$ NBA \\
-    	\textbf{Proof}: \ref{} %TODO F3
-    \item NBA $\Rightarrow$ $\exists$S1S \\
-    	\textbf{Proof}: \ref{} %TODO F9
-    \item S1S $\Rightarrow$ S1S\textsubscript{0} \\
-    	\textbf{Proof}: \ref{} %TODO F9
-    \item S1S\textsubscript{0} $\Rightarrow$ NBA \\
-    	\textbf{Proof}: \ref{} %TODO F10
-    \item Det. Muller $\Rightarrow$ NBA \\
-    	\textbf{Proof}: NBA with $L(\mathcal{A}) = \bigcup\limits_{F \in \mathcal{F}} \left( \bigcap\limits_{q \in F} L(\mathcal{A}_q) \cap \bigcap\limits_{q \notin F} \overline{L(\mathcal{A}_q)} \right)$ where $\mathcal{A}_q$ is $\mathcal{A}$ starting in $q$.
-    \item NBA $\Rightarrow$ det. Muller \\
-    	\textbf{Proof}: \ref{} %TODO F12
+    	\textbf{Proof}: Let $\mathcal{A} = (Q, \Sigma, q_0, \Delta, (F_1, \dots, F_k))$ be a GBA. An equivalent NBA is $\mathcal{A}' = (Q \times \{1, \dots, k\}, \Sigma, (q_0, 1), \Delta', F_k \times \{k\})$. The transitions $\Delta'$ contain all those from $\Delta$ and allow to switch from $(q, i)$ to $(q, i+1)$ if $q \in F_i$.
+    \item NBA $\Leftrightarrow$ S1S \\
+    	\textbf{Proof}: Theorem \ref{proof:mso_nba}.
+    \item Det. Muller $\Leftrightarrow$ NBA \\
+    	\textbf{Proof}: Theorem \ref{proof:nba_dma}.
    	\item (det.) Muller $\Rightarrow$ (det.) Parity \\
-   		\textbf{Proof}: \ref{} %TODO F14
+   		\textbf{Proof}: Theorem \ref{proof:muller_to_parity}.
    	\item ABA $\Rightarrow$ NBA \\
-   		\textbf{Proof}: \ref{} %TODO F23
+   		\textbf{Proof}: Theorem \ref{proof:aba_to_nba}.
 \end{itemize}
 
 \subsubsection{LTL}
