@@ -14,7 +14,9 @@
 \begin{theorem}
 	Every non-empty $\omega$-regular language contains an ultimately periodic word.
 \end{theorem}
-%TODO F4
+\begin{proof}
+	Let $U$ be $\omega$-regular, so there is a regular expression $r = \bigcup_{i=1}^n U_i \cdot V_i^\omega$ for it. Since $U \neq \emptyset$, $n$ must be larger than 0. Let $u \in U_1$ and $v \in V_1$ be arbitrary. Then $u v^\omega \in U$.
+\end{proof}
 
 
 \begin{theorem}
@@ -43,7 +45,11 @@
 \begin{theorem}
 	Subset-construction does not suffice to determinize NBAs.
 \end{theorem}
-%TODO F12
+\begin{proof}
+	Example: Let $\mathcal{A} = (Q, \{a\}, q_0, \Delta, F)$ be an NBA with $Q = \{q_0, q_1\}$, $F = \{q_1\}$, and $\Delta = \{(q_0, a, q_0), (q_0, a, q_1)\}$. Then $L(\mathcal{A}) = \emptyset$.
+	
+	The subset construction yields $\mathcal{A}' = \{ \{ \{q_0\}, \{q_0, q_1\} \}, \{a\}, \{q_0\}, \Delta, \{ P \subseteq Q \mid P \cap F \neq \emptyset\})$ with $\Delta = \{ (\{q_0\}, a \{q_0, q_1\}), (\{ q_0, q_1 \}, a, \{ q_0, q_1\} ) \}$. Therefore, the word $a^\omega$ has an accepting run $\{q_0\} \{q_0, q_1\}^\omega$.
+\end{proof}
 
 \begin{theorem}
 	For every $n$, there is $L_n \subseteq \Sigma^\omega$ s.t. there is an NBA that recognizes $L_n$ with $n+2$ states, but every det. Rabin automaton that recognizes $L_n$ has at least $n!$ states.
@@ -51,20 +57,94 @@
 %TODO F14 (union lemma?)
 
 \begin{theorem}
+	Given an ABA $\mathcal{A}$, the dual $\tilde{\mathcal{A}}$ is an alternating co-Büchi automaton which accepts $L(\mathcal{A})^\complement$, with $\tilde{F} = Q \setminus F$ and $\tilde{\delta}$ exchanging true/false and $\land$/$\lor$.
+\end{theorem}
+%TODO F22 notes
+
+
+\subsection{Minimization}
+\begin{theorem}
 	There is a DBA-recog. language which does not have a unique minimal DBA. \\
 	DBAs minimized with the DFA minimization algorithm can be arbitrarily bad compared to a minimal DBA.
 \end{theorem}
-%TODO F18
+\begin{proof}
+	The language $(a^* b)^\omega$ has two non-isomorphic DBAs.
+	
+	For every $n>0$, consider $L_n = \{a^n\}$. The minimal NFA for $L_n$ has $n+1$ states but $\text{lim}(L_n) = \{a^\omega\}$ can be recognized by a DBA with a single state.
+\end{proof}
+
 
 \begin{theorem}
-	Weak DBAs can be minimized uniquely in polynomial time.
+	Let $U \subseteq \Sigma^\omega$ be regular and $\sim_U$ be the Myhill-Nerode equivalence relation. Every DBA for $U$ has at least $\text{index}(\sim_U)$ many states.
 \end{theorem}
-%TODO F19
+\begin{proof}
+	%TODO F18 notes
+\end{proof}
+
 
 \begin{theorem}
-	Given an ABA $\mathcal{A}$, the dual $\tilde{\mathcal{A}}$ is an alternating co-Büchi automaton which accepts $L(\mathcal{A})^\complement$, with $\tilde{F} = Q \setminus F$ and $\tilde{\delta}$ exchanging true/false and $\land$/$\lor$.
+	For every $n$, there is a $U_n \subseteq \Sigma^\omega$ such that $\text{index}(\sim_{U_n}) = 1$ but every DBA for $U_n$ has at least $n$ states.
 \end{theorem}
-%TODO F22
+\begin{proof}
+	Let $U_n = \{\alpha \mid a^n b \text{ appears infinitely often as a substring in } \alpha \}$. The language is prefix independent, so $\text{index}(\sim_{U_n}) = 1$. However, a DBA for $U_n$ clearly requires $n+1$ states.
+\end{proof}
+
+
+\begin{theorem}
+	The problem $\textsc{DBAMin} = \{ (\mathcal{A}, k) \mid \mathcal{A} \text{ DBA}, k \in \mathbb{N}, \text{There is a } k \text{-state DBA for } L(\mathcal{A}) \}$ is NP-complete.
+\end{theorem}
+% no proof
+
+
+\begin{definition}
+	For $U \subseteq \Sigma^\omega$, we define the canonical automaton $\mathcal{A}_U = (Q_U, \Sigma, q_0^U, \delta_U, F_U)$ with 
+	\begin{itemize}
+		\item $Q_U = \{ [u]_{\sim_U} \mid u \in \Sigma^* \}$
+		\item $q_0^U = [\varepsilon]_{\sim_U}$
+		\item $\delta_U([u]_{\sim_U}, a) = [ua]_{\sim_U}$
+		\item $F_U = \{ [u]_{\sim_U} \mid \exists v \in \Sigma^+: u \sim_U uv \text{ and } uv^\omega \in U\}$ 
+	\end{itemize}
+\end{definition}
+
+
+\begin{theorem}
+	Let $U$ be WDBA-recognizable. Then $L(\mathcal{A}_U) = U$.
+\end{theorem}
+\begin{proof}
+	%TODO F20 notes
+\end{proof}
+
+
+\begin{definition}
+	Let $\mathcal{A} = (Q, \Sigma, q_0, \Delta, F)$ be an NBA. A \textbf{looping state} is a state in $Q$ from which there is a non-empty path that ends in that same state.
+	
+	We define the \textbf{acceptance height} $\text{ah} : Q \rightarrow \mathbb{N}$ as follows: Let $q \in Q$. If all looping states that are reachable from $q$ are accepting, then $\text{ah}(q) := 0$. Otherwise, let $n$ be the maximal acceptance height of a state that is reachable from $q$ but not in the same SCC. If $q$ is non-loopinig, set $\text{ah}(q) := n$. Otherwise, 
+	
+	$$ \text{ah}(q) := \begin{cases}
+		2 \cdot \lfloor \frac{n-1}{2} \rfloor + 2  & \text{if } q \in F \\
+		2 \cdot \lfloor \frac{n}{2} \rfloor + 1 & \text{if } q \notin F
+	\end{cases} $$
+	
+	$\mathcal{A}$ is in \textbf{normal form} if $F = \{ q \in Q \mid \text{ah}(q) \text{ is even}\}$.
+\end{definition}
+
+
+\begin{theorem}
+	Let $\mathcal{A}$ be a weak DBA. One can compute an equivalent weak DBA in normal form in linear time.
+\end{theorem}
+\begin{proof}
+	SCCs can be computed in linear time. Given the SCCs, the inductive definition of ah can be computed in linear time.
+\end{proof}
+
+
+\begin{theorem}
+	Let $\mathcal{A}$ be a weak DBA in normal form. Minimizing $\mathcal{A}$ as a DFA also results in a minimal weak DBA.
+\end{theorem}
+\begin{proof}
+	%TODO F20 notes?
+\end{proof}
+
+
 
 \subsection{Simulation Game}
 \begin{definition}

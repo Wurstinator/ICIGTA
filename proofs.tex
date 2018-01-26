@@ -16,7 +16,21 @@
 	NBA-recognizable languages are closed under complement.
 \end{theorem}
 \begin{proof}
-	%TODO F4
+	Let $\mathcal{A} = (Q, \Sigma, q_0, \Delta, F)$ be an NBA. We define the transition profile of a word $w \in \Sigma^*$ as a finite directed graph $\text{t}(w) = (Q, E, E_F)$ with $E = \{ (p, q) \in Q \times Q \mid \mathcal{A} : p \overset{w}{\rightarrow} q \}$ and $E_F = \{ (p, q) \in Q \times Q \mid \mathcal{A} : p \underset{F}{\overset{w}{\rightarrow}} q \}$. Then we define $\text{TP} = \{ \text{t}(w) \mid w \in \Sigma^* \}$ and the transition profile automaton $\text{TPA}_F = (\text{TP}, \Sigma, \text{t}(\varepsilon), \delta_\text{TPA}, F)$ with $\delta_\text{TPA}(\text{t}(u), a) = \text{t}(ua)$.
+	
+	For $t \in \text{TP}$, let $U_t = \{ u \in \Sigma^+ \mid \text{t}(u) = t\}$. These sets are regular, as they are accepted by the NFA $\text{TPA}_{\{t\}}$.
+	
+	Let $\overline{t} = t_0 t_1 \dots \in \text{TP}^\omega$ be an infinite sequence of transition profiles. We call $\overline{t}$ accepting if there are $q_1 \dots \in Q^\omega$ such that every $t_i$ has an edge $(q_i, q_{i+1})$ and infinitely many of these edges are labeled by $F$. Let $\text{NTP} = \{ (t_0, t_1) \in \text{TP} \times \text{TP} \mid t_0 t_1^\omega \text{ is non-accepting} \}$.
+	
+	\paragraph{Claim}: $L(\mathcal{A})^\complement = \bigcup\limits_{(t_0, t_1) \in \text{NTP}} U_{t_0} U_{t_1}^\omega$. Then one can construct an NBA for $L(\mathcal{A})^\complement$.
+	
+	For every $\alpha \in \Sigma^\omega$, let $\alpha = u_0 u_1 \cdots \in (\Sigma^*)^\omega$ be a factorization of $\alpha$ into finite words and let $\overline{t} = \text{t}(u_0) \text{t}(u_1) \dots$. Then $\overline{t}$ is accepting iff $\alpha \in L(\mathcal{A})$.
+	
+	In particular, this is true for $\text{t}(u_1) = \text{t}(u_2) = \dots$, so it remains to be shown that every word $\alpha$ has such a factorization.
+	
+	\textbf{Ramsey's Theorem}: Let $C$ be a finite set, $X$ with $|X| = \aleph_0$, $E = \{ (x, y) \in X \times X \mid x \neq y\}$, and $f : E \rightarrow C$. Then there is an infinite $Y \subseteq X$ such that $|f(E \cap (Y \times Y))| = 1$. \\
+	
+	For a $\alpha \in \Sigma^\omega$, let $X = \mathbb{N}$ and $C = \text{TP}$. For $i < j$ we set $f(j, i) = f(i, j) = \text{t}(\alpha[i, j])$. Using Ramsey's theorem,  there is an infinite $Y \subseteq \mathbb{N}$ such that $f(E \cap (Y \times Y)) = \{t\}$. Let $Y = \{i_j \mid j > 0 \}$ such that $i_j < i_{j+1}$ and $i_0 := 0$. We define $u_j = \alpha[i_j, i_{j+1}]$. Then $\alpha = u_0 u_1 u_2 \dots$ and $\text{t}(u_1) = \text{t}(u_2) = \dots$.
 \end{proof}
 
 
@@ -40,7 +54,7 @@
 	\end{enumerate}
 \end{theorem}
 \begin{proof}
-	%TODO F16-18
+	%TODO F16-18 notes
 \end{proof}
 
 
