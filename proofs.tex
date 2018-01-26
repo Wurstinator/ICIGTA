@@ -36,11 +36,33 @@
 
 \vspace{1cm}
 \begin{theorem}
-\label{ltl_to_nba}
-
+\label{ltl_to_gba}
+	For every $\varphi \in \text{LTL}$, one can construct an equivalent GBA with $\mathcal{O}(2^{|\varphi|})$ states.
 \end{theorem}
 \begin{proof}
-	%TODO F6-8
+	Let $\text{cl}(\varphi) \subseteq \text{LTL}$ be the set of all sub-formulas in $\varphi$ (including $\varphi$ itself). We define a $\varphi$-expansion of a word $\alpha \in (\mathbb{B}^n)^\omega$ as a function $\beta : \mathbb{N} \times \text{cl}(\varphi) \rightarrow \mathbb{B}$ as below. The GBA then is $\mathcal{A} = (Q, \mathbb{B}^n, q_0, \Delta, F)$.
+	\begin{itemize}
+		\item $Q = \{q_0\} \cup 2^\text{cl}(\varphi)$
+		\item $F = (F_\psi)_{\psi \in \text{Ucl}}$ where $\text{Ucl} = \{ \psi \in \text{cl}(\varphi) \mid \psi = \psi_1 U \psi_2 \}$
+		\item $\Delta : q_0 \overset{a}{\rightarrow} \Phi$ with $\varphi \in \Phi$ according to $\varphi$-expansion rules
+		\item $\Delta : \Phi \overset{a}{\rightarrow} \Psi$ according to $\varphi$-expansion rules
+	\end{itemize}
+	
+	$\beta$ is a $\varphi$-extension of $\alpha$ if it satisfies the following local conditions
+	\begin{itemize}
+		\item $\beta(i, p_j) = a_j$ where $\alpha(i) = (a_1, \dots, a_n)$.
+		\item $\beta(i, \neg \psi) = 1$ iff $\beta(i, \psi) = 0$.
+		\item $\beta(i, \psi \land \vartheta) = 1$ iff $\beta(i, \psi) = \beta(i, \vartheta) = 1$.
+		\item $\beta(i, \psi \lor \vartheta) = 1$ iff $\beta(i, \psi) = 1$ or $\beta(i, \vartheta) = 1$.
+		\item $\beta(i, X \psi) = 1$ iff $\beta(i+1, \psi) = 1$.
+		\item $\beta(i, \psi U \vartheta) = 1$ iff $\beta(i, \vartheta) = 1$ or $\left[  \beta(i, \psi_1) = 1 \text{ and } \beta(i+1, \psi U \vartheta) = 1  \right]$
+	\end{itemize}
+	
+	and the following global condition
+	
+	$$ \forall i \quad \beta(i, \psi U \vartheta) = 1 \;\rightarrow\; \exists k \geq i \; \beta(k, \vartheta) = 1 $$
+	
+	The local conditions are checked in the transitions of $\Delta$. The global transition is checked by the acceptance sets $F_\psi$.
 \end{proof}
 
 
@@ -116,7 +138,17 @@
 	For each Muller automaton, one can construct an equivalent parity automaton. The construction preserves determinism.
 \end{theorem}
 \begin{proof}
-	%TODO F14-15 notes?
+	Let $\mathcal{A} = (Q, \Sigma, q_0, \Delta, \mathcal{F})$ be a Muller automaton with $Q = \{q_0, \dots, q_{n-1}\}$. We define the LAR automaton $\mathcal{A}_\text{LAR} = (\text{LAR}(Q), \Sigma, [q_0 q_1 \dots q_{n-1}, 1], \Delta_\text{LAR}, c_\text{LAR})$ as follows:
+	\begin{itemize}
+		\item $\text{LAR}(Q)$ contains an ordering of $Q$ and a so called hit-marker: $[p_1 \dots p_n, h]$ with $1 \leq h \leq n$. This means that the most recently seen state was $p_1$ which was at position $h$ in the list before.
+		\item $c_\text{LAR}([p_1 \dots p_n, h]) := \begin{cases}
+			2h & \text{if } P \in \mathcal{F} \\
+			2h-1 & \text{if } P \notin \mathcal{F}
+		\end{cases}$ where $P = \{p_1, \dots, p_h\}$.
+		\item $\Delta_\text{LAR} : [p_1 \dots p_n, h] \overset{a}{\rightarrow} \text{up}([p_1 \dots p_n, h], p')$ for all $(p_1, a, p') \in \Delta$, where $\text{up}([p_1 \dots p_n, h], p') = [p' p_1 \dots p_{i-1} p_{i+1} \dots p_n, i]$.
+	\end{itemize}
+	
+	\paragraph{Claim}: Let $\rho \in Q^\omega$ be a run of $\mathcal{A}$ on some word $\alpha$ and let $\rho' \in (\text{LAR}(Q))^\omega$ be the corresponding run of $\mathcal{A}_\text{LAR}$. Then in $\rho'$, the hit marker $h$ is greater than $|\text{Inf}(\rho)|$ only finitely often; and the hit segment $\{p_1, \dots, p_h\}$ equals $\text{Inf}(\rho)$ infinitely often.
 \end{proof}
 
 
