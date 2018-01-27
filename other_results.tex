@@ -3,6 +3,7 @@
 \usepackage{amsmath, amssymb, amsthm}
 \usepackage[utf8]{inputenc}
 \usepackage{geometry}
+\usepackage{bm}
 
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{definition}{Definition}
@@ -11,6 +12,7 @@
 
 \section{Infinite Words}
 
+\vspace{.5cm}
 \begin{theorem}
 	Every non-empty $\omega$-regular language contains an ultimately periodic word.
 \end{theorem}
@@ -19,6 +21,7 @@
 \end{proof}
 
 
+\vspace{.5cm}
 \begin{theorem}
 	For a Kripke structure $\mathcal{K}$ with initial state $s$ and $\varphi \in \text{LTL}$, the model checking problem $L(\mathcal{K}, s) \subseteq L(\varphi)?$ is PSPACE-complete.
 \end{theorem}
@@ -28,6 +31,7 @@
 	\textbf{PSPACE-hard} Encode a poly.-length Turing tape as a Kripke structure and its correct behavior in LTL.
 \end{proof}
 
+\vspace{.5cm}
 \begin{theorem}[Büchi]
 	The MSO theory of $(\mathbb{N}, +1, <, 0)$ is decidable.
 \end{theorem}
@@ -35,6 +39,7 @@
 	Corresponds to S1S formula. Can be checked with NBA emptiness test.
 \end{proof}
 
+\vspace{.5cm}
 \begin{theorem}
 	The FO theory of $(\mathbb{R}, +, <, 0)$ is decidable.
 \end{theorem}
@@ -42,6 +47,7 @@
 	Encode real numbers $x$ by triples of sets $(X_s, X_i, X_f)$ with the number's sign ($X_s = \emptyset$ or $\{0\}$), the positive decimal digits in binary encoding, and the positive fractional digits in binary encoding. Then an FO sentence can be transformed to an equi-satisfiable MSO sentence over $(\mathbb{N}, +1, <, 0)$.
 \end{proof}
 
+\vspace{.5cm}
 \begin{theorem}
 	Subset-construction does not suffice to determinize NBAs.
 \end{theorem}
@@ -51,15 +57,66 @@
 	The subset construction yields $\mathcal{A}' = \{ \{ \{q_0\}, \{q_0, q_1\} \}, \{a\}, \{q_0\}, \Delta, \{ P \subseteq Q \mid P \cap F \neq \emptyset\})$ with $\Delta = \{ (\{q_0\}, a \{q_0, q_1\}), (\{ q_0, q_1 \}, a, \{ q_0, q_1\} ) \}$. Therefore, the word $a^\omega$ has an accepting run $\{q_0\} \{q_0, q_1\}^\omega$.
 \end{proof}
 
+
+\vspace{.5cm}
+\begin{theorem}
+\label{union_lemma}
+	Let $\mathcal{A}$ be a Rabin automaton and let $\rho_1, \rho_2, \rho$ be runs of $\mathcal{A}$. If $\text{Inf}(\rho_1) \cup \text{Inf}(\rho_2) = \text{Inf}(\rho)$ and $\rho_1$ and $\rho_2$ are both non-accepting, then $\rho$ is also non-accepting.
+\end{theorem}
+\begin{proof}
+	Let $\Omega = \{ (E_i, F_i) \mid 1 \leq i \leq m \}$. Let $I_1 = \text{Inf}(\rho_1)$, $I_2 = \text{Inf}(\rho_2)$, and $I = \text{Inf}(\rho)$. Assume $\rho$ is accepting, so there is an $1 \leq i \leq m$ s.t. $I \cap E_i = \emptyset$ and $I \cap F_i \neq \emptyset$. That means $I \cap E_i = (I_1 \cup I_2) \cap E_i = \emptyset$, so $I_1 \cap E_i = I_2 \cap E_i = \emptyset$. Since $\rho_1$ and $\rho_2$ are non-accepting, that means $I_1 \cap F_i = I_2 \cap F_i = \emptyset$ and therefore $I \cap F_i = \emptyset$, which is a contradiction.
+\end{proof}
+
+
+\vspace{.5cm}
 \begin{theorem}
 	For every $n$, there is $L_n \subseteq \Sigma^\omega$ s.t. there is an NBA that recognizes $L_n$ with $n+2$ states, but every det. Rabin automaton that recognizes $L_n$ has at least $n!$ states.
 \end{theorem}
-%TODO F14 (union lemma?)
+\begin{proof}
+	We define the NBA $\mathcal{A}_n = (Q, \Sigma_n, q_0, \Delta, F)$ with
+	\begin{itemize}
+		\item $\Sigma_n = \{\#, 1, \dots, n\}$
+		\item $Q = \{q_0, q_f, q_1, \dots, q_n\}$
+		\item $F = \{q_f\}$
+		\item $\Delta$:
+		\begin{itemize}
+			\item For all $1 \leq i \leq n$, for all $a \in \Sigma_n$: $q_i \overset{a}{\rightarrow} q_i$ and $q_0 \overset{a}{\rightarrow} q_i$
+			\item For all $1 \leq i \leq n$: $q_i \overset{i}{\rightarrow} q_f$ and $q_f \overset{i}{\rightarrow} q_i$
+		\end{itemize}
+	\end{itemize} % lec 14 
+	
+	Then $\alpha \in L(\mathcal{A}_n)$ iff there are $a_1, \dots, a_k \in \{1, \dots, n\}$ such that the words $a_1 a_2, a_2 a_3, \dots, a_k a_1$ occur infinitely often in $\alpha$.
+	
+	Let $\mathcal{A}' = (Q', \Sigma_n, q_0', \delta, \Omega)$ be a DRA for $L(\mathcal{A}_n)$. We want to show that $\mathcal{B}$ has at least $n!$ states. A permutation word is a word $(i_1 \dots i_n \#)^\omega$ with $\{i_1, \dots, i_n\} = \{1, \dots, n\}$; let $\text{PW}$ be the set of permutation words. Let $\alpha, \beta \in \text{PM}$ with $\alpha \neq \beta$ and let $\rho_\alpha, \rho_\beta$ the respective runs of $\mathcal{B}$. We claim that $\text{Inf}(\rho_\alpha) \cap \text{Inf}(\rho_\beta) = \emptyset$. If that is true, then $|Q'| \geq |\text{PM}| = n!$.
+	
+	\paragraph{Claim}: $\text{Inf}(\rho_\alpha) \cap \text{Inf}(\rho_\beta) = \emptyset$
+	
+	Let $\alpha = (\overline{i} \#)^\omega$ and $\beta = (\overline{j} \#)^\omega$ with $\overline{i} = i_1 \dots i_n$ and $\overline{j} = j_1 \dots j_n$. Assume there is a $q \in \text{Inf}(\rho_\alpha) \cap \text{Inf}(\rho_\beta)$. We extract the following segments from the two runs:
+	\begin{itemize}
+		\item $\rho_1$ from $\rho_\alpha$ with $\rho_1: q_0 \overset{w}{\rightarrow} q$ for some $w \in \Sigma_n^*$.
+		\item $\rho_2$ from $\rho_\alpha$ with $\rho_2: q \overset{w}{\rightarrow} q$ for some $w \in \Sigma_n^* \overline{i} \Sigma_n^*$.
+		\item $\rho_3$ from $\rho_\beta$ with $\rho_3: q \overset{w}{\rightarrow} q$ for some $w \in \Sigma_n^* \overline{j} \Sigma_n^*$.
+		\item $\pi := \rho_1 (\rho_2 \rho_3)^\omega$
+	\end{itemize}
+	Then $\pi$ is a run of $\mathcal{A}'$ on a word $\gamma$ with $\text{Inf}(\pi) = \text{Inf}(\rho_\alpha) \cup \text{Inf}(\rho_\beta)$. Since $\overline{i} \neq \overline{j}$, there is a minimal $k$ with $i_k \neq j_k$. By this choice, there must also be $l, l'$ such that $i_k = j_l$ and $j_k = i_{l'}$. Therefore, the following pairs all occur infinitely often in $\gamma$: 
+	
+	$$ i_k i_{k+1}, i_{k+1} i_{k+2}, \dots, i_{l'-1} \underset{=j_k}{i_{l'}}, j_k j_{k+1}, \dots, j_{l-1} \underset{=i_k}{j_l} $$
+	
+	As shown before, that means $\gamma \in L(\mathcal{A}_n)$, so $\pi$ is an accepting run. This contradicts the Union Lemma (theorem \ref{union_lemma}).
+\end{proof}
 
+
+\vspace{.5cm}
 \begin{theorem}
 	Given an ABA $\mathcal{A}$, the dual $\tilde{\mathcal{A}}$ is an alternating co-Büchi automaton which accepts $L(\mathcal{A})^\complement$, with $\tilde{F} = Q \setminus F$ and $\tilde{\delta}$ exchanging true/false and $\land$/$\lor$.
 \end{theorem}
-%TODO F22 notes
+\begin{proof}
+	We claim that $L(\mathcal{A})^\complement = L(\tilde{\mathcal{A}})$.
+	
+	\paragraph{$\bm{\subseteq}$} Let $\alpha \notin L(\mathcal{A})$, so for every run tree $t$ of $\mathcal{A}$ on $\alpha$, there is a path $\pi_t$ which is rejecting. One can show that the combination of all these paths is an accepting run of $\tilde{\mathcal{A}}$.
+	
+	\paragraph{$\bm{\supseteq}$} Let $\alpha \in L(\mathcal{A})$, so there is an accepting run tree $t$. Let $\tilde{t}$ be a run tree of $\tilde{\mathcal{A}}$ on $\alpha$. One can show (by induction on the path length) that there is a path in $t$ that is also a path in $\tilde{t}$. Since that path is accepting in $t$, it must be rejecting in $\tilde{t}$.
+\end{proof}
 
 
 \subsection{Minimization}
@@ -74,14 +131,16 @@
 \end{proof}
 
 
+\vspace{.5cm}
 \begin{theorem}
 	Let $U \subseteq \Sigma^\omega$ be regular and $\sim_U$ be the Myhill-Nerode equivalence relation. Every DBA for $U$ has at least $\text{index}(\sim_U)$ many states.
 \end{theorem}
 \begin{proof}
-	%TODO F18 notes
+	Assume $\mathcal{A} = (Q, \Sigma, q_0, \delta, F)$ is a DBA for $U$ with $|Q| < \text{index}(\sim_U)$. That means there are $u, v \in \Sigma^*$ with $u \not\sim_U v$ but $\delta^*(q_0, u) = \delta^*(q_0, v)$. By definition of the automaton, that means $u \sim_U v$, which is a contradiction.
 \end{proof}
 
 
+\vspace{.5cm}
 \begin{theorem}
 	For every $n$, there is a $U_n \subseteq \Sigma^\omega$ such that $\text{index}(\sim_{U_n}) = 1$ but every DBA for $U_n$ has at least $n$ states.
 \end{theorem}
@@ -90,12 +149,14 @@
 \end{proof}
 
 
+\vspace{.5cm}
 \begin{theorem}
 	The problem $\textsc{DBAMin} = \{ (\mathcal{A}, k) \mid \mathcal{A} \text{ DBA}, k \in \mathbb{N}, \text{There is a } k \text{-state DBA for } L(\mathcal{A}) \}$ is NP-complete.
 \end{theorem}
 % no proof
 
 
+\vspace{.5cm}
 \begin{definition}
 	For $U \subseteq \Sigma^\omega$, we define the canonical automaton $\mathcal{A}_U = (Q_U, \Sigma, q_0^U, \delta_U, F_U)$ with 
 	\begin{itemize}
@@ -107,14 +168,36 @@
 \end{definition}
 
 
+\vspace{.5cm}
 \begin{theorem}
-	Let $U$ be WDBA-recognizable. Then $L(\mathcal{A}_U) = U$.
+	Let $U$ be WDBA-recognizable. Then $\mathcal{A}$ is a WDBA and $L(\mathcal{A}_U) = U$.
 \end{theorem}
 \begin{proof}
-	%TODO F20 notes
+	We show the statement in two steps.
+
+	\paragraph{Claim}: $\mathcal{A}_U$ is a WDBA.
+	
+	Let $[u]_{\sim_U}, [v]_{\sim_U} \in Q_U$ be two states in the same SCC and $[u]_{\sim_U} \in F_U$.
+	 We need to show that $[v]_{\sim_U} \in F_U$ as well. Since the two states are in the same SCC, let $\mathcal{A}_U : [u]_{\sim_U} \overset{y}{\rightarrow} [v]_{\sim_U} \overset{z}{\rightarrow} [u]_{\sim_U}$. We have $u(yz)^\omega \in U$. %TODO F20 notes why??
+	 
+	 Hence, $uy(zy)^\omega \in U$. By definition we know $[uy]_{\sim_U} = [u']_{\sim_U}$, so $u'(zy)^\omega in U$ which means that $[u']_{\sim_U} \in F_U$.
+	 
+	 \paragraph{Claim}: $L(\mathcal{A}_U) = U$.
+	 
+	 Let $uv^\omega$ be an ultimately periodic word. By the pigeon hole principle, there are $m, n > 0$ such that $uv^m \sim_U uv^mv^n$. 
+	 
+	 \begin{align*}
+	 	& u v^\omega \in U \\
+	 	\Leftrightarrow & u v^m (v^n)^\omega \in U \\
+	 	\Leftrightarrow & [u v^m]_{\sim_U} \in F_U \\
+	 	\overset{uv^m \sim_U uv^mv^n}{\Leftrightarrow} & u v^m (v^n)^\omega \in L(\mathcal{A}_U) \\
+	 	\Leftrightarrow uv^\omega \in L(\mathcal{A}_U)
+	 \end{align*}
+	 
+	 Now consider $X = (U \cup L(\mathcal{A}_U)) \setminus (U \cap L(\mathcal{A}_U)$. If the two languages are equal, then $X$ must be empty. As we have shown above, $U$ and $L(\mathcal{A}_U)$ contain the same ultimately periodic words, so $X$ does not contain any. It is also constructed by Boolean operations on regular languages, so $X$ must be regular. That means that $X = \emptyset$.
 \end{proof}
 
-
+\vspace{.5cm}
 \begin{definition}
 	Let $\mathcal{A} = (Q, \Sigma, q_0, \Delta, F)$ be an NBA. A \textbf{looping state} is a state in $Q$ from which there is a non-empty path that ends in that same state.
 	
@@ -129,6 +212,7 @@
 \end{definition}
 
 
+\vspace{.5cm}
 \begin{theorem}
 	Let $\mathcal{A}$ be a weak DBA. One can compute an equivalent weak DBA in normal form in linear time.
 \end{theorem}
@@ -137,12 +221,11 @@
 \end{proof}
 
 
+\vspace{.5cm}
 \begin{theorem}
 	Let $\mathcal{A}$ be a weak DBA in normal form. Minimizing $\mathcal{A}$ as a DFA also results in a minimal weak DBA.
 \end{theorem}
-\begin{proof}
-	%TODO F20 notes?
-\end{proof}
+% no proof
 
 
 
@@ -164,16 +247,19 @@
 
 Idea: Player 1 chooses symbols in $\Sigma$ and transitions on the second state. Player 0 has to answer with transition on the first state which lead to a run of the same acceptance.
 
+\vspace{.5cm}
 \begin{theorem}
 	If $q \preceq_\text{de} q'$ and $q' \preceq_\text{de} q$, then $q$ and $q'$ can be merged in $\mathcal{A}$ without changing the language of the automaton.
 \end{theorem}
 % no proof
 
+\vspace{.5cm}
 \begin{theorem}
 	The delayed simulation game can be reduced to a Büchi game in linear time.
 \end{theorem}
  
 
+\newpage 
 \section{Finite Trees}
 \begin{theorem}[Pumping Principle]
 	Let $T \subseteq T_\Sigma$ be a regular ranked tree language. There is a $n \in \mathbb{N}$ such that for all trees $t \in T$, all $m > n$, and all paths $\pi_1 \dots \pi_m$, there are $1 \leq i < j \leq m$ such that for all $k \in \mathbb{N}$:
