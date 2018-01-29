@@ -364,12 +364,16 @@ Idea: Player 1 chooses symbols in $\Sigma$ and transitions on the second state. 
 	$$t^*_{[x,y]} : \{0,1\}^* \rightarrow \Sigma, z \mapsto \begin{cases} t(z) & \text{if } xy \not\sqsubseteq z \\ xz' & \text{if } \exists n>0: z = xy^nz' \text{ with } y \not\sqsubseteq z' \end{cases}.$$
 	Let $\mathcal{A}$ be a BTA, $t \in T(\mathcal{A})$, $\rho$ an accepting run of $\mathcal{A}$ on $t$, and $x, y, y' \in \{0,1\}^*$ s.t. $\rho(x) = \rho(xy)$, $y' \sqsubset y$, and $\rho(xy') \in F$. Then $t^*_{[x,y]} \in T(\mathcal{A})$.
 \end{theorem}
-%TODO F14
+\begin{proof}
+	$\rho^*_{[x,y]}$ is an accepting run of $\mathcal{A}$ on $t^*_{[x,y]}$.
+\end{proof}
 
 \begin{theorem}
 	Every non-empty regular tree language contains a regular tree.
 \end{theorem}
-%TODO F18
+\begin{proof}
+	Let $\mathcal{A}$ be a PTA for $T = T(\mathcal{A}) \neq \emptyset$ and let $\mathcal{G}_\mathcal{A}$ be the emptiness game for $\mathcal{A}$. Since $T$ is not empty, player Automaton has a positional winning strategy $\sigma : Q \rightarrow \Sigma$. For $\sigma(q) = (q, a, q_0, q_1)$, we define $\delta_\sigma(q, 0) = q_0$, $\delta_\sigma(q, 1) = q_1$, and $f_\sigma(q) = a$. Then $t \in T$ where $t$ is the regular tree defined by $\mathcal{B} = (Q, \{0,1\}, q_0, \delta_\sigma, f_\sigma)$.
+\end{proof}
 
 \begin{theorem}[Rabin's Tree Theorem]
 	The MSO theory of $\underline{T_2}$ is decidable for formulas $\varphi(X_1, \dots, X_n)$ and a model $X_1, \dots X_n \subseteq \{0,1\}^*$ is computable.

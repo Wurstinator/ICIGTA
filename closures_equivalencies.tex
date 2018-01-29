@@ -515,13 +515,13 @@ $\bm{\Leftarrow}$ Let $\mathcal{A} = (Q, \Sigma, q_0, \delta, F)$ be a DWBA. We 
 \begin{itemize}
 	\item BTA $\not\subseteq$ Regular tree \\
 		\textbf{Example}: $T_\text{fin} = \{ t \in T_{\{a,b\}} \mid \text{every infinite path has only fin. many } b \}$ \\
-		\textbf{Proof}: %TODO F14
+		\textbf{Proof}: Assume $\mathcal{A}$ is a BTA that recognizes $T_\text{fin}$. Let $t(u) = \begin{cases} b & \text{if } u \in (1^*0)^{\leq n} \\ a & \text{else} \end{cases}$ and let $\rho$ be an accepting run of $\mathcal{A}$ on $t$. We can find nodes $u_0, \dots, u_n$ s.t. $u_{i+1} \in u_i 0 1^*$ and $\rho(u_i) \in F$. There must be $l < k$ with $\rho(u_l) = \rho(u_k)$. For $x = u_l$ and $xy = u_k$, we have $t^*_{[x,y]} \in T_\text{fin}$ by BTA pumping. However, $t^*_{[x,y]}|_{xy^\omega}$ contains infinitely many $b$.
 	\item DMTA $\not\subseteq$ BTA \\
 		\textbf{Example}: $T_\text{fin}^\complement = \{ t \in T_{\{a,b\}} \mid \text{there is a path with inf. many } b \}$ \\
 		\textbf{Proof}: BTA-recognizable (see below) but not a path tree language.
-	\item WMSO $\not\subseteq BTA$ \\
-		\textbf{Example}: $\{ t \in T_{\{a,b\}} \mid \text{every infinite path has infinitely many } b \}$ \\
-		\textbf{Proof}: %TODO F19
+	\item WMSO $\not\subseteq$ BTA \\
+		\textbf{Example}: $T_\text{fin}^\complement$ \\
+		\textbf{Proof}: $T_\text{fin}$ is not BTA-recognizable so it is not WMSO-definable by the characterization below.
 \end{itemize}
 
 \subsection{Class Equalities}
@@ -533,25 +533,30 @@ $\bm{\Leftarrow}$ Let $\mathcal{A} = (Q, \Sigma, q_0, \delta, F)$ be a DWBA. We 
 		\textbf{Proof}: TA $\mathcal{A}$, DPA $\mathcal{A}'$ over alphabet $Q$ that defines Acc. Define PTA with state space $Q \times P$. \\
 		$(q, a, q_1, q_2) \in \Delta \Rightarrow ((q,p), a, (q_1, \delta(p, q)), (q_2, \delta(p, q))) \in \Delta'$
 	\item PTA $\Leftrightarrow$ MSO (S2S)
-		\textbf{Proof}: \ref{} %TODO F18
+		\textbf{Proof}: \\
+		$\bm{\Rightarrow}$ Encoding of an accepting run via MSO. The acceptance clause is $\forall Z (\text{Path}(Z) \rightarrow \bigvee \{ \psi_m(Z) \mid m \text{ is an even color} \}$ where $\psi_m(Z)$ encodes that $m = \max c(Z)$.
+		
+		$\bm{\Leftarrow}$ Via S2S\textsubscript{0} with atomic formulas $X \subseteq Y$, $\text{Sing}(X)$, $\text{Succ}_0(X, Y)$, and $\text{Succ}_1(X, Y)$.
 \end{itemize}
 
 \subsection{Closures}
 \subsubsection{Regular Trees}
 \begin{itemize}
-	\item The class of regular tree languages is closed under union and intersection. \\
-		\textbf{Proof}: \ref{} %TODO F15
+	\item The class of regular tree languages is closed under intersection. \\
+		\textbf{Proof}: Use MTAs with $Q_\cap = Q_1 \times Q_2$ and $\{(p_1, q_1), \dots, (p_k, q_k)\} \in \mathcal{F}_\cap$ iff $\{p_1, \dots, p_n\} \in \mathcal{F}_1$ and $\{q_1, \dots, q_n\} \in \mathcal{F}_2$.
+	\item The class of regular tree languages is closed under union. \\
+		\textbf{Proof}: Guess which automaton to execute at the start.
 	\item The class of regular tree languages is closed under projection. \\
-		\textbf{Proof}: \ref{} %TODO F15
-	\item PTAs are closed under complement ($2^{\mathcal{O}(kn \cdot \log(kn))}$ states for $|Q| = n$, $|\text{img}(c)| = k$)
-		\textbf{Proof}: \ref{} %TODO F16-17
+		\textbf{Proof}: Replace $\tau = (q_1, q_2, a, q)$ by $(q_1, q_2, h(a), q)$.
+	\item PTAs are closed under complement ($2^{\mathcal{O}(kn \cdot \log(kn))}$ states for $|Q| = n$, $|\text{img}(c)| = k$) \\
+		\textbf{Proof}: Theorem \ref{proof:pta_complement}.
 \end{itemize}
 
 \subsubsection{BTA}
 \begin{itemize}
 	\item BTAs are not closed under complement. \\
 		\textbf{Proof}: $T_\text{fin}^\complement = \{ t \in T_{\{a,b\}} \mid \text{there is a path with inf. many } b \}$ \\
-		$T_\text{fin}^\complement$ is BTA-recognizable but its complement is not. %TODO F14
+		$T_\text{fin}^\complement$ is BTA-recognizable but its complement is not. See above for proof that $T_\text{fin}$ is not BTA-recognizable. An automaton for the complement guesses a path at each intersection and verifies that that path has infinitely many $b$.
 \end{itemize}
 
 \subsubsection{DMTA}
@@ -575,7 +580,11 @@ $\bm{\Leftarrow}$ Let $\mathcal{A} = (Q, \Sigma, q_0, \delta, F)$ be a DWBA. We 
 	\item The membership problem for regular tree languages is decidable. \\
 		\textbf{Proof}: via membership game as in complementation
 	\item The emptiness problem for regular tree languages is decidable. \\
-		\textbf{Proof}: \ref{} %TODO F17
+		\textbf{Proof}: Let $\mathcal{A}$ be a tree automaton. We define the emptiness game $\mathcal{G}_\mathcal{A}$ for $\mathcal{A}$: From a position $q \in Q$, player Automaton picks a transition $(q, a, q_1, q_2) \in \Delta$. From a position $(q, a, q_1, q_2) \in \Delta$, player Pathfinder picks either $q_1$ or $q_2$. Player Automaton wins the game iff the state sequence is in $\text{Acc}_\mathcal{A}$.
+		
+		If player Automaton wins with strategy $\sigma$, then one can define $\delta : \mathbb{B}^* \rightarrow \Delta$ as the tree of transitions that they would take at each position. From these transitions, a $\Sigma$-tree and an accepting run of $\mathcal{A}$ can be generated.
+		
+		If $\mathcal{A}$ is not empty, an example tree and an accepting run can be used to define a winning strategy for player Automaton.
 \end{itemize}
 
 
