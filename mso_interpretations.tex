@@ -23,7 +23,15 @@
 \label{thm:transf_dec}
 	Let $\mathfrak{A}$ be a structure and let $\mathcal{I}$ be an MSO interpretation of $\mathfrak{A}$. If $\text{MTh}_2(\mathfrak{A})$ is decidable, then $\text{MTh}_2(\mathcal{I}(\mathfrak{A}))$ is decidable.
 \end{theorem}
-%TODO IG F19-20
+\begin{proof}
+	Define a computable transformation $\psi \mapsto \hat{\psi}$ such that $\mathcal{I}(\mathfrak{A}) \models \psi$ iff $\mathfrak{A} \models \hat{\psi}$.
+	
+	\begin{itemize}
+		\item $R_i \overline{x} \mapsto \varphi_{R_i}(\overline{x})$
+		\item $\land$, $\lor$, $\neg$ are kept.
+		\item $\exists x \psi(x) \mapsto \exists x (\varphi_\text{dom}(x) \land \hat{\psi}(x))$
+	\end{itemize}
+\end{proof}
 
 \section{Transferring (Un)Decidability}
 \begin{theorem}
@@ -34,12 +42,19 @@
 \begin{theorem}
 	$\text{MTh}_2((\mathbb{Q}, \leq))$ is decidable.
 \end{theorem}
-%TODO F19
+\begin{proof}
+	We define an MSO interpretation $\mathcal{I} = (\varphi_\text{dom}, \varphi_\leq)$.
+	
+	$$ \varphi_\text{dom}(x) = \exists y x = S_1 y $$
+	$$ \varphi_\leq(x, y) = (x = y \lor x <_\text{lexi} y) $$
+\end{proof}
 
 \begin{theorem}
 	Let $G_2 = (\mathbb{N} \times \mathbb{N}, (0, 0), s_h, s_v)$ with $s_h(x, y) = (x+1, y)$ and $s_v(x, y) = (x, y+1)$. Then $\text{MTh}_2(G_2)$ is undecidable.
 \end{theorem}
-%TODO F20
+\begin{proof}
+	Encode Turing tapes by rows in $G_2$ and encode succeeding Turing configurations by different rows. Then the Halting problem can be reduced to the decidability of $\text{MTh}_2(G_2)$.
+\end{proof}
 
 \begin{theorem}
 	Let $(\underline{T_2}, \text{el})$ be the extension of $\underline{T_2}$ with $\text{el} = \{(u, v) \in \{0,1\}^* \times \{0,1\}^* \mid |u| = |v|\}$. Then $\text{MTh}_2((\underline{T_2}, \text{el}))$ is undecidable.
