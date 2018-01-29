@@ -75,8 +75,22 @@
 		\item $L(\mathcal{A})$ is E-recognizable iff $\mathcal{F}$ is closed under reachable loops.
 	\end{enumerate}
 \end{theorem}
-\begin{proof}
-	%TODO F16-18 notes
+\begin{proof} .
+	\paragraph{Claim}: $L(\mathcal{A})$ is DBA-recognizable $\Rightarrow$ $\mathcal{F}$ is closed under super loops.
+	
+	$L(\mathcal{A}) = \text{lim}(K)$ for some regular $K$. Let $S \subseteq S'$ be two loops with $S \in \mathcal{F}$. Let $q \in S$ and $q_0 \overset{u}{\rightarrow} q \overset{v}{\underset{S}{\rightarrow}} q \overset{w}{\underset{S'}{\rightarrow}} q$. We can find $i_1, i_2, \dots$ such that all words $u v^{i_1} w v^{i_2} w \dots$ have prefixes in $K$. Hence, the union of these words is accepted by $\mathcal{A}$, so $S' \in \mathcal{F}$.
+	
+	\paragraph{Claim}: $\mathcal{F}$ is closed under super loops $\Rightarrow$ $L(\mathcal{A})$ is DBA-recognizable.
+	
+	A DBA for the language uses states $Q \times 2^Q$. It uses the first component to simulare $\mathcal{A}$ and the second to collect visited states. As soon as the second component is in $\mathcal{F}$, it is reset to $\emptyset$. The final states are $Q \times \{\emptyset\}$.
+	
+	\paragraph{Claim}: $L(\mathcal{A})$ is E-recognizable $\Rightarrow$ $\mathcal{F}$ is closed under reachable loops. 
+	
+	$L(\mathcal{A}) = K \cdot \Sigma^\omega$ for some regular $K$. Let $q_0 \overset{u}{\rightarrow} q \overset{v}{\underset{\in \mathcal{F}}{\rightarrow}} q$. Then there must be a $w \sqsubset uv^\omega$ with $w \in K$ and $w \sqsubseteq uv^n$. Then any loop that is reachable from $q$ must be accepting.
+	
+	\paragraph{Claim}: $\mathcal{F}$ is closed under reachable loops $\Rightarrow$ $L(\mathcal{A})$ is E-recognizable. 
+	
+	One can simply use the DMA as an E automaton with $F = \bigcup \mathcal{F}$.
 \end{proof}
 
 
@@ -121,6 +135,40 @@
 
 
 \vspace{1cm}
+\begin{definition}
+	Let $\mathcal{A} = (Q, \Sigma, q_0, \Delta, F)$ be an NBA and $\alpha \in \Sigma^\omega$. The run tree $T(\mathcal{A}, \alpha)$ is a tree defined as follows:
+	\begin{itemize}
+		\item Nodes are labelled by $Q$.
+		\item The root is labelled $q_0$.
+		\item For a node $v$ with label $q$, let $P = \{ p \in Q \mid (q, \alpha(|v|), p) \in \Delta \}$. Then $v$ has a child labeled $p$ for every $p \in P$.
+	\end{itemize}
+	
+	The left-right run tree $T_\text{LR}(\mathcal{A}, \alpha)$ is a binary tree defined as follows:
+	\begin{itemize}
+		\item Nodes are labelled by $2^Q$.
+		\item The root is labelled $\{q_0\}$.
+		\item For a node $v$ with label $P$, let $P' = \{ p' \in Q \mid \exists p \in P: (p, \alpha(|v|), p') \in \Delta \}$. Then $v$ has a left child labelled $P \cap F$ and a right child labelled $P \setminus F$.
+	\end{itemize}
+	
+	The reduced LR run tree $R(\mathcal{A}, \alpha)$ is a binary tree defined as follows:
+	\begin{enumerate}
+		\item Let $T = T_\text{LR}(\mathcal{A}, \alpha)$.
+		\item For all nodes $v, v'$ in $T$ with labels $P, P'$ such that $v$ occurs on the same level left of $v'$: label $v'$ by $P' \setminus P$.
+		\item Remove all nodes labeled $\emptyset$ from $T$.
+	\end{enumerate}
+	
+	The marked reduced LR run tree $M(\mathcal{A}, \alpha)$ is a binary tree defiend as follows:
+	\begin{itemize}
+		\item The structure is the same as $R(\mathcal{A}, \alpha)$, only the labels differ. Nodes are labeled by $2^Q \times \text{Tok} \times \{\text{red}, \text{yellow}, \text{green}\} \times \{1, \dots, |Q|\}$ where $\text{Tok} = \{t_1, \dots, t_{|Q|}\}$ and the last component corresponds to the age of the token.
+		\item The root is labeled $\{t_1, \text{yellow}, 1\}$. Let $v_1, \dots, v_k$ be nodes of layer $n$ with labels $l_1, \dots, l_k$ and let $s_1, \dots, s_k$ be the sets of their successors. The labels of layer $n+1$ are defined as follows:
+		\begin{enumerate}
+			\item For $i \in \{1, \dots, k\}$, let $s_1 \cup \dots \cup s_i = \{u_1, \dots, u_j\}$ in order from left to right. Let $u$ be the right-most node of these successors. Move the token from $l_i$ to $u$; color it yellow if $u \in s_i$ and green otherwise. If there are multiple tokens assigned to $u$, keep only the oldest one.
+			\item Let $T$ be the set of tokens that are placed on a node on level $n+1$ and let $T'$ be the other tokens. Shift the ages of tokens in $T$ so that they are all older than tokens in $T'$. Then move all tokens in $T'$ to arbitrary empty nodes on this level and color them red.
+		\end{enumerate}
+	\end{itemize}
+\end{definition}
+
+\vspace{0.25cm}
 \begin{theorem}[McNaughton]
 \label{nba_dma}
 	A language is NBA-recognizable iff it is DMA-recognizable.
@@ -128,7 +176,32 @@
 \begin{proof}
 	$\bm{\Leftarrow}$ NBA with $L(\mathcal{A}) = \bigcup\limits_{F \in \mathcal{F}} \left( \bigcap\limits_{q \in F} L(\mathcal{A}_q) \cap \bigcap\limits_{q \notin F} \overline{L(\mathcal{A}_q)} \right)$ where $\mathcal{A}_q$ is $\mathcal{A}$ starting in $q$.
 	
-    $\bm{\Rightarrow}$ %TODO F12-13 notes
+    $\bm{\Rightarrow}$ Let $\mathcal{A}$ be an NBA and $\alpha \in \Sigma^\omega$. We prove the following claims: \\
+    \textbf{Claim 1}: In $M(\mathcal{A}, \alpha)$, there is a token that is green infinitely often and red only finitely often $\Leftrightarrow$ $R(\mathcal{A}, \alpha)$ has a path that branches left infinitely often. \\
+    \textbf{Claim 2}: $R(\mathcal{A}, \alpha)$ has a path that branches left infinitely often $\Leftrightarrow$ $\mathcal{A}$ accepts $\alpha$.
+    
+    If these claims are true, then a Muller automaton with state space $(|Q|+1)^Q \times T^\text{Tok}$ where $T = (|Q|+1) \times |Q| \times \{r,g,y\}$ can check the correct construction from level to level in the tree. The condition for a correct token is easily formulated as a Rabin condition. The size of this automaton is $2^{\mathcal{O}(|Q| \times \log |Q|)}$.
+    
+    \paragraph{Claim 1} Let $l \in \mathbb{N}$ be a depth in the tree at which point:
+    \begin{itemize}
+    	\item all infinite paths have seperated
+    	\item all infinite paths that only branch left finitely often only branch right below $l$
+    	\item all tokens that are colored red only finitely often are only colored yellow or green below $l$
+    \end{itemize}
+    
+    Let $v_1, \dots, v_m$ be the nodes on level $l$ in order from left to right.
+    
+    $\bm{\Rightarrow}$ Let $t \in \text{Tok}$ be a token that becomes green infinitely often and red only finitely often and let $v_i$ be the node that $t$ is placed on. By choice of $l$, $t$ never becomes red so there must be an infinite path $\pi$ that starts at some $v_j$ left of $v_i$ ($j \leq i$). If we choose $j$ maximal, then $t$ reaches $\pi$ at some point; because the infinite paths are all seperated, $\pi$ is unique. $\pi$ is an infinitely left branching path; otherwise it would only branch right and therefore, $t$ would only be yellow from this point on.
+    
+    $\bm{\Leftarrow}$ Let $v_i$ be a node at which a path $\pi$ starts that branches left infinitely often. If there is another infinite path $\pi'$ that starts right of $\pi$, let $v_j$ be the node that it passes through; otherwise let $j := m+1$. Let $t$ be the oldest token on $v_1, \dots, v_{j-1}$. $t$ never moves left of $\pi$ until it is overwritten by an older token.
+    
+    If $j = m+1$ it is clear that an overwrite can never happen. Otherwise, all older tokens right of $\pi$ are ``blocked'' by $\pi'$ and therefore also never overwrite $t$. Hence, $t$ never becomes red below $l$. It remains to be shown that it becomes green infinitely often. Note that $t$ at some point must reach $\pi$ since it is the only infinite path in the movement zone of $t$. $\pi$ branches left infinitely often which proves the claim.
+    
+    \paragraph{Claim 2} $\bm{\Rightarrow}$ Let $\pi = Q_0 Q_1 \dots$ be a path in $R(\mathcal{A}, \alpha)$ that branches left infinitely often. We construct a run $q_0 q_1 \dots$ with $q_i \in Q_i$. That run must be accepting of $\mathcal{A}$ on $\alpha$.
+    
+    Consider the tree $T$ constructed from $T(\mathcal{A}, \alpha)$ in which on every level $i$, all nodes $q \notin Q_i$ are removed. This tree is finitely branching (as $T(\mathcal{A}, \alpha)$ was already finitely branching) but still infinite because $\pi$ is infinite. By König's lemma, there is an infinite path in $T$ with the desired constraint.
+    
+    $\bm{\Leftarrow}$ Let $\rho$ be an accepting run of $\mathcal{A}$ on $\alpha$. Consider $R'$ constructed from $R(\mathcal{A}, \alpha)$ in which on every level $i$, all nodes to the right of $\rho(i)$ are removed. The remaining nodes which contain $\rho$ form an infinite run $\pi$. Since $\rho$ is accepting, $\pi$ branches left infinitely often.
 \end{proof}
 
 

@@ -200,7 +200,9 @@ A language $L$ is called \textbf{non-counting} if there is an $n_0$ such that fo
 
 \subsubsection{SW}
 Staiger-Wagner $\Leftrightarrow$ det. weak BA \\
-\textbf{Proof}: \ref{} %TODO F18 other-theorem
+\textbf{Proof}: $\bm{\Rightarrow}$ Every SWA-recognizable language is also DBA- and coBA-recognizable (see above) and therefore DWBA-recognizable (see below).
+
+$\bm{\Leftarrow}$ Let $\mathcal{A} = (Q, \Sigma, q_0, \delta, F)$ be a DWBA. We define $\preceq \subseteq Q \times Q$ with $p \preceq q$ iff $q$ is reachable from $p$. Let $\mathcal{F} = \{ P \subseteq Q \mid \max_\preceq P \subseteq F \}$. Then the SWA $\mathcal{A}' = (Q, \Sigma, q_0, \delta, \mathcal{F})$ recognizes $L(\mathcal{A})$.
 
 \subsection{Closures}
 \subsubsection{NBA}
@@ -245,8 +247,8 @@ Staiger-Wagner $\Leftrightarrow$ det. weak BA \\
 		$\bm{\Leftarrow}$ Let $\mathcal{A}$ be a DFA for $L$. The same automaton as an E-automaton recognizes $L \cdot \Sigma^*$.
 	\item Landweber's theorem \\
 		\textbf{Proof}: Theorem \ref{proof:landweber}
-	\item DBA $\cap$ coBA $\Rightarrow$ SW \\
-		\textbf{Proof}: \ref{} %TODO F18 notes
+	\item DBA $\cap$ coBA $\Rightarrow$ DBWA \\
+		\textbf{Proof}: Let $U$ be DBA-recognizable and coBA-recognizable and let $\mathcal{A} = (Q, \Sigma, q_0, \delta, \mathcal{F})$ be a DMA for $U$. Then $\mathcal{F}$ must be closed under super loops and under sub loops by Landweber's theorem. Therefore, $\mathcal{A}$ can also be considered as a DBWA with $F = \bigcup \mathcal{F}$.
 	\item SW $\Leftrightarrow$ Boolean combination of E-recognizable languages. \\
 		\textbf{Proof}: $\bm{\Leftarrow}$ SWAs are closed under Boolean operations.
 		
