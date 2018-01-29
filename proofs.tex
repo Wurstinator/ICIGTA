@@ -370,8 +370,10 @@
 \label{pta_complement}
 	PTA-recognizable tree languages are closed under complement.
 \end{theorem}
-\begin{proof}
-	%TODO 16-18 notes
+\begin{proof} Let $\mathcal{A}$ be a PTA. Consider trees over $\Sigma \times \Gamma$ (for $\Gamma = \mathbb{B}^\Delta$) which correspond to $\Sigma$-trees combined with a strategy for Pathfinder in the membership game $\mathcal{G}_{\mathcal{A},t}$.
+	\paragraph{Step 1}: Construct a parity automaton $\mathcal{B}$ that checks whether a word over $\Sigma \times \Gamma \times \mathbb{B}$ represents a valid path in such a tree that is ``won'' by player Automaton. %TODO
+	
+	\paragraph{Step 2}: 
 \end{proof}
 
 \end{document}
