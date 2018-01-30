@@ -69,7 +69,7 @@
 % no proof
 
 \paragraph{Example}
-	Let $\mathcal{A} = (Q, C, q_0, \delta, F)$ be a DFA and let $\mathcal{G} = (G, C^* L(\mathcal{A} C^\omega)$. Then $\mathcal{G}$ is a reachability game. Hence, $\mathcal{G} \times \mathcal{A}$ is determined with memory size $|Q|$.
+	Let $\mathcal{A} = (Q, C, q_0, \delta, F)$ be a DFA and let $\mathcal{G} = (G, C^* L(\mathcal{A}) C^\omega)$. Then $\mathcal{G}$ is a reachability game. Hence, $\mathcal{G} \times \mathcal{A}$ is determined with memory size $|Q|$.
 
 \newpage
 
@@ -80,7 +80,22 @@ $F \subseteq C$ and $\text{Win} = C^* F C^\omega$ (reachability) or $\text{Win} 
 \begin{theorem}
 	Reachability games and safety games are positionally determined. The winning regions and winning strategies can be computed in $\mathcal{O}(|G|)$.
 \end{theorem}
-\ref{} %TODO F2
+\begin{proof}
+	Let $\mathcal{G} = (G, F)$ be a reachability or safety game. The \textbf{attractor} for player 0 is defined as follows:
+	\begin{itemize}
+		\item $\text{Pre}_0(X) = \{ v \in V_0 \mid \exists x \in X: (v, x) \in E \} \cup \{ v \in V_1 \mid \neg \exists x \in X^\complement: (v, x) \in E \}$ \\
+			The set of vertices from which player 0 can force a direct move to a vertex in $X$.
+		\item $\text{Attr}_0^0(X) = X$ \\
+			$\text{Attr}_0^{i+1}(X) = \text{Attr}_0^i(X) \cup \text{Pre}_0(\text{Attr}_0^i(X))$ \\
+			The set of vertices from which player 0 can force to reach $X$ in at most $i$ steps.
+		\item $\text{Attr}_0(X) = \bigcup_{i \in \mathbb{N}} \text{Attr}_0^i$ \\
+			The set of vertices from which player 0 can force a play to reach $X$.
+	\end{itemize}
+	
+	Then $W_0 = \text{Attr}_0(F)$ for reachability games and $W_0 = V \setminus \text{Attr}_1(F^\complement)$ for safety games. The winning strategy for player 0 is to play from each $\text{Attr}^i_0$ to $\text{Attr}^{i-1}_0$ until $F$ is reached. The strategy for player 1 is to play to arbitrary nodes not in $W_0$.
+	
+	A simple algorithm can compute the attractor in $\mathcal{O}(|G|^2)$ but linear time is also possible.
+\end{proof}
 
 \subsection{Weak Parity}
 $C \subseteq \mathbb{N}$ and $\text{Win} = \{ \alpha \in C^\omega \mid \max \text{Occ}(\alpha) \text{ is even}\}$.
@@ -88,7 +103,14 @@ $C \subseteq \mathbb{N}$ and $\text{Win} = \{ \alpha \in C^\omega \mid \max \tex
 \begin{theorem}
 	Weak parity games are positionally determined. The winning regions and winning strategies can be computed in $\mathcal{O}(|C| \cdot |G|)$.
 \end{theorem}
-%TODO F4
+\begin{proof}
+	If the arena is empty, then $W_0 = W_1 = \emptyset$. Otherwise let $k = \max c(V)$. Due to symmetry we can assume that $k$ is even. Let $A_k = \text{Attr}_0(c^{-1}(k))$. Compute the winning regions $(W_0, W_1)$ in the game with vertices $A_k$ removed. Then the winning regions in $\mathcal{G}$ are $(W_0 \cup A_k, W_1)$.
+	
+	The winning strategy for player 0 in $A_k$ is to move to that set and then play arbitrarily. From all other nodes, the induction strategy suffices.
+	
+	In each iteration, one color is removed and one attractor is computed, which results in the described runtime.
+\end{proof}
+%TODO F4 notes
 
 \subsection{Staiger-Wagner}
 $\mathcal{F} \subseteq 2^C$ and $\text{Win} = \{ \alpha \in C^\omega \mid \text{Occ}(\alpha) \in \mathcal{F} \}$.
@@ -97,13 +119,18 @@ $\mathcal{F} \subseteq 2^C$ and $\text{Win} = \{ \alpha \in C^\omega \mid \text{
 	Staiger-Wagner games can be reduced to weak parity games with memory $2^{|C|}$.
 \end{theorem}
 \begin{proof}
-	Similar to proof from SWA to WDBA.
+	Build a weak parity automaton with $2^{|C|}$ states that accepts $\text{Win}$ with SW condition $\mathcal{F} \subseteq 2^C$. For that, the PA collects a set of all seen colors as its state. For such a state $P \subseteq C$, the assigned color is $c(P) = \begin{cases} 2 \cdot |P| & \text{if } P \in \mathcal{F} \\ 2 \cdot |P| - 1 & \text{else} \end{cases}$.
 \end{proof}
 
+\vspace{0.5cm}
 \begin{theorem}
 	For every $n > 0$, there is an arena $G_n$ with $|G_n| \in \mathcal{O}(n)$ and a set $\mathcal{F}_n \subseteq 2^C$ with $|\mathcal{F}_n| \in \mathcal{O}(n)$ such that player 0 has a winning strategy in the Staiger-Wagner game $(G_n, \mathcal{F}_n)$ but every winning strategy requires memory of size $2^n$.
 \end{theorem}
-%TODO F4
+\begin{proof}
+	The game uses colors $C_n = \{1, \dots, n, 1', \dots, n', 0\}$ and consists of two phases. First, player 1 selects for each $1 \leq i \leq n$ either $i$ or $i'$. This requires $3n$ vertices. In the second phase, player 0 has the same choices to make as player 1 before. After this, the last vertex is colored $0$ and loops to itself. This gives a total of $3n+1$ vertices. Player 0 wins iff all colors $C_n$ are seen.
+	
+	Player 0 has to memorize all $2^n$ possible choices that player 1 could make to answer accordingly. Otherwise there would be two different strategies from player 1 that lead to the same memory state of player 0, meaning that one leads to a losing play for player 0.
+\end{proof}
 
 \section{Prefix Independent Games}
 \subsection{Büchi Games}
@@ -112,7 +139,35 @@ $F \subseteq C$ and $\text{Win} = \{ \alpha \in C^\omega \mid \text{Inf}(\alpha)
 \begin{theorem}
 	Büchi games are uniformly positionally determined. The winning regions and winning strategies can be computed in polynomial time in $|G|$.
 \end{theorem}
-\ref{} %TODO F5
+\begin{proof}
+	Define the set recurrence set for player 0 as follows:
+	\begin{itemize}
+		\item $\text{Recur}^0_0(X) = X$ \\
+			$\text{Recur}^{i+1}_0(X) = R \setminus \text{Pre}_1(V \setminus \text{Attr}_0(R))$ where $R = \text{Recur}^i_0(X)$ \\
+			The set of vertices in $X$ from which player 0 can force at leasts $i$ other vists to $X$.
+		\item $\text{Recur}_0(X) := \bigcap_{i \in \mathbb{N}} \text{Recur}^i_0(X)$ \\
+			The set of vertices in $X$ from which player 0 can force infinitely many other visits to $X$.
+	\end{itemize}
+	
+	We write $F_i = \text{Recur}^i_0(F)$ for all $i$ and $F_\infty = \text{Recur}_0(F)$. Then $W_0 = \text{Attr}_0(F_\infty)$.
+	
+	 The winning strategy for player 0 is to attract towards $F_\infty$ over and over again. The winning strategy for player 1 is as follows: if the play reaches a node in $V \setminus \text{Attr}_0(F_\infty)$ then that node is in some $V \setminus \text{Attr}_0(F_i)$. The strategy avoids $F_i$. If $F$ is reached at some point, then player 1 can force the next move to go into $V \setminus \text{Attr}_0(F_j)$ for some $j < i$. Hence, $F$ is visited only finitely often.
+	 %TODO notes F5
+	
+	Note that in each step of $\text{Recur}$, at least one state in $F$ is removed and one attractor is computed, giving runtime $\mathcal{O}(|F| \cdot |G|)$.
+\end{proof}
+\begin{proof}
+	An alternative proof does not compute the explicit sets $\text{Recur}^i_0(F)$ but rather computes $\mu(v) := \max \{i \mid v \in \text{Recur}^i_0(F)\}$. For that, define the bounded addition $\oplus$ on $D = \{0, \dots, |F|, \top\}$ as 
+	$$x \oplus y = \begin{cases} x+y & \text{if } x \neq \top, y \neq \top, x+y \leq |F| \\ \top & \text{else} \end{cases}.$$
+	
+	Let $f : V \rightarrow \mathbb{N}, v \mapsto \begin{cases} 1 & \text{if } v \in F \\ 0 & \text{else} \end{cases}$ and define the functor $M : V^D \rightarrow V^D$ as
+	$$ (M(g))(v) = \begin{cases}
+		\max g(vE) \oplus f(v) & \text{if } v \in V_0 \\
+		\min g(vE) \oplus f(v) & \text{if } v \in V_1
+	\end{cases}. $$
+	
+	Then let $\mu_0 = f$ and $\mu_{i+1} = M(\mu_i)$. The desired function is the fixed point of this sequence, $\mu = \mu_k = \mu_{k+1}$. The winning region for player 0 is $W_0 = \mu^{-1}(\top)$. The winning strategy is to play from $v$ to that node $u$ which caused $\mu(v) = \top$.
+\end{proof}
 
 \subsection{Parity Games}
 $C \subseteq \mathbb{N}$ and $\text{Win} = \{ \alpha \in C^\omega \mid \max \text{Inf}(\alpha) \text{ is even}\}$.
