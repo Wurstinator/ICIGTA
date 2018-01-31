@@ -366,14 +366,45 @@
 
 \newpage
 \section{Infinite Games (Trees)}
+\begin{definition}
+	Let $\mathcal{A} = (Q, \Sigma, q_0, \Delta, \text{Acc})$ be a tree automaton and $t : \mathbb{B}^* \rightarrow \Sigma$. The membership game $\mathcal{G}_{\mathcal{A},t}$ checks whether $t$ is accepted by $\mathcal{A}$. 
+	
+	Starting from $(\varepsilon, q_0)$, player 0 (called Automaton) chooses for $(u, q)$ a transition $(q, t(u), q_1, q_2) \in \Delta$. Then player 1 (called Pathfinder) chooses either $i = 0$ or $i = 1$ and moves to position $(ui, q_i)$. A play $(\varepsilon, q_0) (\varepsilon, \tau_0) (u_1, q_1) (u_1, \tau_1) \dots$ is accepting iff $q_0 q_1 \dots \in \text{Acc}$.
+	
+	We assume that $\text{Acc}$ is a parity condition in general.
+\end{definition}
+
+\begin{theorem}
+	$t \in T(\mathcal{A})$ iff Automaton wins $\mathcal{G}_{\mathcal{A},t}$
+\end{theorem}
+\begin{proof}
+	If $\mathcal{A}$ is PTA, then $\mathcal{G}_{\mathcal{A},t}$ is a parity game and therefore positionally determined, i.e. winning strategies for player Automaton can be seen as $\sigma : \mathbb{B}^* \times Q \rightarrow \Delta$. Winning strategies can be transformed to accepting runs and vice-versa. 
+\end{proof}
+
+\vspace{0.25cm}
 \begin{theorem}
 \label{pta_complement}
 	PTA-recognizable tree languages are closed under complement.
 \end{theorem}
-\begin{proof} Let $\mathcal{A}$ be a PTA. Consider trees over $\Sigma \times \Gamma$ (for $\Gamma = \mathbb{B}^\Delta$) which correspond to $\Sigma$-trees combined with a strategy for Pathfinder in the membership game $\mathcal{G}_{\mathcal{A},t}$.
-	\paragraph{Step 1}: Construct a parity automaton $\mathcal{B}$ that checks whether a word over $\Sigma \times \Gamma \times \mathbb{B}$ represents a valid path in such a tree that is ``won'' by player Automaton. %TODO
+\begin{proof} Let $\mathcal{A}$ be a PTA. For a tree $t$, we consider the strategy extension $t^\smallfrown s$ where $s$ is a tree over $\Gamma = \mathbb{B}^\Delta$ which corresponds to a strategy of Pathfinder. The node is implicitly given in the tree and the state will be captured by an automaton. This gives a tree over $\Sigma \times \Gamma$.
+
+	Now consider words over $\Sigma \times \Gamma \times \mathbb{B}$ which describe a path in such a tree $t^\smallfrown s$.
+
+	\paragraph{Step 1}: Construct a parity automaton $\mathcal{B}$ that checks whether a word over $\Sigma \times \Gamma \times \mathbb{B}$ represents a valid path in such a tree that can be won by player Automaton against the given Pathfinder strategy.
 	
-	\paragraph{Step 2}: 
+	$\mathcal{B}$ uses state set $Q$. From a state $q \in Q$ with symbol $(a, h, i)$, the automaton guesses a transition $\tau = (q, a, q_1, q_2)$ with $h(\tau) = i$ and moves to $q_i$.
+	
+	\paragraph{Step 2}: Construct a deterministic parity automaton $\mathcal{A}_\text{strat}^\text{path}$ that checks whether a word over $\Sigma \times \Gamma \times \mathbb{B}$ represents a valid path in a tree that is won by player Pathfinder with the given strategy.
+	
+	This can be done by determinizing and complementing $\mathcal{B}$.
+	
+	\paragraph{Step 3}: Construct a deterministic PTA $\mathcal{A}_\text{strat}$ that checks whether the given strategy is winning for Pathfinder in $\mathcal{G}_{\mathcal{A},t}$.
+	
+	Define $\delta_\text{strat}(q, (a, h)) = (\delta_\text{strat}^\text{path}(q, (a, h, 0)), \delta_\text{strat}^\text{path}(q, (a, h, 1)))$.
+	
+	\paragraph{Step 4}: Construct a PTA $\mathcal{A}^\complement$ that checks whether there exists a winning strategy for Pathfinder in $\mathcal{G}_{\mathcal{A},t}$.
+	
+	Use projection to define $(q, a, q_1, q_2) \in \Delta$ iff there is an $h \in \Gamma$ with $\delta_\text{strat}(q, (a, h)) = (q_1, q_2)$.
 \end{proof}
 
 \end{document}
