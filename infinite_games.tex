@@ -66,7 +66,7 @@
 \begin{theorem}
 	$\mathcal{G}$ reduces to $\mathcal{G} \times \mathcal{A}$ with memory $|Q|$.
 \end{theorem}
-% no proof
+%TODO notes
 
 \paragraph{Example}
 	Let $\mathcal{A} = (Q, C, q_0, \delta, F)$ be a DFA and let $\mathcal{G} = (G, C^* L(\mathcal{A}) C^\omega)$. Then $\mathcal{G}$ is a reachability game. Hence, $\mathcal{G} \times \mathcal{A}$ is determined with memory size $|Q|$.
@@ -110,7 +110,7 @@ $C \subseteq \mathbb{N}$ and $\text{Win} = \{ \alpha \in C^\omega \mid \max \tex
 	
 	In each iteration, one color is removed and one attractor is computed, which results in the described runtime.
 \end{proof}
-%TODO F4 notes
+
 
 \subsection{Staiger-Wagner}
 $\mathcal{F} \subseteq 2^C$ and $\text{Win} = \{ \alpha \in C^\omega \mid \text{Occ}(\alpha) \in \mathcal{F} \}$.
@@ -152,7 +152,6 @@ $F \subseteq C$ and $\text{Win} = \{ \alpha \in C^\omega \mid \text{Inf}(\alpha)
 	We write $F_i = \text{Recur}^i_0(F)$ for all $i$ and $F_\infty = \text{Recur}_0(F)$. Then $W_0 = \text{Attr}_0(F_\infty)$.
 	
 	 The winning strategy for player 0 is to attract towards $F_\infty$ over and over again. The winning strategy for player 1 is as follows: if the play reaches a node in $V \setminus \text{Attr}_0(F_\infty)$ then that node is in some $V \setminus \text{Attr}_0(F_i)$. The strategy avoids $F_i$. If $F$ is reached at some point, then player 1 can force the next move to go into $V \setminus \text{Attr}_0(F_j)$ for some $j < i$. Hence, $F$ is visited only finitely often.
-	 %TODO notes F5
 	
 	Note that in each step of $\text{Recur}$, at least one state in $F$ is removed and one attractor is computed, giving runtime $\mathcal{O}(|F| \cdot |G|)$.
 \end{proof}
