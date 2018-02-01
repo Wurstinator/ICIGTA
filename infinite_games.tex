@@ -172,10 +172,51 @@ $F \subseteq C$ and $\text{Win} = \{ \alpha \in C^\omega \mid \text{Inf}(\alpha)
 $C \subseteq \mathbb{N}$ and $\text{Win} = \{ \alpha \in C^\omega \mid \max \text{Inf}(\alpha) \text{ is even}\}$.
 
 \begin{theorem}
-	Parity games are uniformly positionally determined. The winning regions and winning strategies can be computed in non-deterministic polynomial time in $|G|$, or in deterministic time $\mathcal{O}\left(|V| \cdot |E| \cdot |C| \cdot (\frac{|V|}{|C|} + 1)^{2|C|}\right)$.
+	Parity games are uniformly positionally determined.
 \end{theorem}
 \begin{proof}
-	%TODO F7-9 notes
+	Let $U := \{ v \in V \mid \text{Player 1 has a positional winning strategy from } v \}$ and let $k = \max C$. Wlog we assume that $k$ is even.
+	
+	\paragraph{Claim}: Player 1 has a uniform positional strategy that is winning from $U$.
+	
+	For all $u \in U$, let $\sigma_u$ be a positional winning strategy from $u$. Let $\prec$ be an arbitrary well-ordering of $U$. We define the positional strategy $\sigma$ as follows and claim that it is winning from all nodes in $U$:
+	
+	For $v \in U \cap V_1$, let $R := \{ u \in U \mid \text{Player 0 can reach } v \text{ from } u \text{ against } \sigma_u \}$ be the set of nodes in $U$ from which a winning play can reach $v$. We set $\sigma(v) = \sigma_u(v)$ for $u = \min_\prec R$. After finitely many steps, each play will end up using only one fixed $\sigma_u$, meaning that it is winning for player 1.
+	
+	\paragraph{Claim}: Player 0 has a uniform positional strategy that is winning from $V \setminus U$.
+	
+	Consider $A_k := \text{Attr}_0(c^{-1}(k) \setminus U)$ and $G' = G \upharpoonright_{V \setminus (U \cup A_k)}$. The sub-graph $G'$ only uses colors up to $k-1$, so we can obtain the winning regions $W'_0, W'_1$ of $G'$ with strategies $\sigma'_0, \sigma'_1$ by induction. 
+
+	Let $R \subseteq V \setminus W'_1$ be the nodes that player 0 can reach from $W'_1$ against $\sigma'_1$. We have $R \cap W'_0 = \emptyset$ because otherwise there would be a winning strategy for player 0 in some parts of $W'_1$. Further, we have $R \cap A_k = \emptyset$ because otherwise player 0 could force to attract to $A_k$ from some parts in $W'_1$, meaning that those nodes would not be part of $G'$ in the first place. Therefore $R \subseteq U$. This however means that $\sigma'_1$ is a positional winning strategy in $G$ from $W'_1$, so $W'_1 \subseteq U$ by definition. Since also $W'_1 \subseteq V' \subseteq U^\complement$, we have $W'_1 = \emptyset$.
+	
+	We can now define a positional winning strategy for player 0. From $W'_0$ it suffices to play like $\sigma'_0$. From $A_k \setminus c^{-1}(k)$, the attractor strategy is played. From a node $v \in c^{-1}(k) \setminus U$, player 0 moves to any node in $U^\complement$. There must be such a node, otherwise $v$ would be in $U$ itself.
+\end{proof}
+
+\begin{theorem}
+	 In parity games, the winning regions and winning strategies can be computed in non-deterministic polynomial time in $|G|$, or in deterministic time $\mathcal{O}\left(|V| \cdot |E| \cdot |C| \cdot (\frac{|V|}{|C|} + 1)^{2|C|}\right)$.
+\end{theorem}
+\begin{proof}
+	The problem is in NP and co-NP. One can guess a strategy for player 0 or 1 and then verify that it is winning/losing in polynomial time.
+	
+	Let $\sigma : V_0 \rightarrow V$ be a positional strategy for player 0. The following procedure checks whether $\sigma$ is winning in $\mathcal{G}$ from a node $v_0$. Consider the graph $G'$ which restricts edges from vertices in $V_0$ to those used by $\sigma$. Compute the strongly connected components that contain loops and are reachable from $v_0$. If the maximal priority in the SCCs is odd, then $\sigma$ is not a winning strategy. Otherwise, remove all nodes with that priority and repeat the procedure.
+\end{proof}
+\begin{proof}
+	%TODO F8
+\end{proof}
+\begin{proof}
+	A final algorithm uses a similar approach uses \textbf{small progress measures}. Let $C = \{0, \dots, 2k\}$ and $D \subseteq \{ 0, \dots, |V| \}^k$ be a domain of vectors such that component $0 \leq i < k$ ranges from $0$ to $|c^{-1}(2i+1)|$ and let $D_\perp = D \cup \{\perp\}$. We define bounded addition $\oplus$ of an element from $D_\perp$ with a color $p$ as follows:
+	
+	For $\perp$, we have $\perp \oplus p = \perp$. Otherwise, let $(a_1, \dots, a_k) \in D$. Let $(b_1, \dots, b_k)$ be such that: $b_j = 0$ for all $j < \lfloor \frac{p}{2} \rfloor$. The rest of the vector corresponds to addition by 1 with carry-over if a component exceeds its value. If $b_k$ is within its bounds, let $\overline{a} \oplus p = \overline{b}$; otherwise we set $\overline{a} \oplus p = \perp$.
+	
+	Define the functor $M : V^{D_\perp} \rightarrow V^{D_\perp}$ as
+	$$ (M(g))(v) = \begin{cases}
+		\min g(vE) \oplus c(v) & \text{if } v \in V_0 \\
+		\max g(vE) \oplus c(v) & \text{if } v \in V_1
+	\end{cases}. $$
+	
+	Let $\mu_0(v) = \overline{0} \oplus c(v)$ and $\mu_{i+1} = M(\mu_i)$. The desired function is the fixed point of this sequence, $\mu = \mu_k = \mu_{k+1}$. The winning region for player 1 is $W_0 = \mu^{-1}(\perp)$. 
+	
+	Required time is $\mathcal{O}\left(|E| \cdot |V| \cdot |C| \cdot (\frac{|V|}{|C|} + 1)^{|C|}\right)$.
 \end{proof}
 
 \subsection{Muller Games}
