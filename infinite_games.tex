@@ -97,6 +97,7 @@ $F \subseteq C$ and $\text{Win} = C^* F C^\omega$ (reachability) or $\text{Win} 
 	A simple algorithm can compute the attractor in $\mathcal{O}(|G|^2)$ but linear time is also possible.
 \end{proof}
 
+\vspace{1.5cm}
 \subsection{Weak Parity}
 $C \subseteq \mathbb{N}$ and $\text{Win} = \{ \alpha \in C^\omega \mid \max \text{Occ}(\alpha) \text{ is even}\}$.
 
@@ -112,6 +113,7 @@ $C \subseteq \mathbb{N}$ and $\text{Win} = \{ \alpha \in C^\omega \mid \max \tex
 \end{proof}
 
 
+\vspace{1.5cm}
 \subsection{Staiger-Wagner}
 $\mathcal{F} \subseteq 2^C$ and $\text{Win} = \{ \alpha \in C^\omega \mid \text{Occ}(\alpha) \in \mathcal{F} \}$.
 
@@ -132,6 +134,7 @@ $\mathcal{F} \subseteq 2^C$ and $\text{Win} = \{ \alpha \in C^\omega \mid \text{
 	Player 0 has to memorize all $2^n$ possible choices that player 1 could make to answer accordingly. Otherwise there would be two different strategies from player 1 that lead to the same memory state of player 0, meaning that one leads to a losing play for player 0.
 \end{proof}
 
+\vspace{1.5cm}
 \section{Prefix Independent Games}
 \subsection{Büchi Games}
 $F \subseteq C$ and $\text{Win} = \{ \alpha \in C^\omega \mid \text{Inf}(\alpha) \cap F \neq \emptyset \}$.
@@ -168,6 +171,7 @@ $F \subseteq C$ and $\text{Win} = \{ \alpha \in C^\omega \mid \text{Inf}(\alpha)
 	Then let $\mu_0 = f$ and $\mu_{i+1} = M(\mu_i)$. The desired function is the fixed point of this sequence, $\mu = \mu_k = \mu_{k+1}$. The winning region for player 0 is $W_0 = \mu^{-1}(\top)$. The winning strategy is to play from $v$ to that node $u$ which caused $\mu(v) = \top$.
 \end{proof}
 
+\vspace{1.5cm}
 \subsection{Parity Games}
 $C \subseteq \mathbb{N}$ and $\text{Win} = \{ \alpha \in C^\omega \mid \max \text{Inf}(\alpha) \text{ is even}\}$.
 
@@ -192,6 +196,7 @@ $C \subseteq \mathbb{N}$ and $\text{Win} = \{ \alpha \in C^\omega \mid \max \tex
 	We can now define a positional winning strategy for player 0. From $W'_0$ it suffices to play like $\sigma'_0$. From $A_k \setminus c^{-1}(k)$, the attractor strategy is played. From a node $v \in c^{-1}(k) \setminus U$, player 0 moves to any node in $U^\complement$. There must be such a node, otherwise $v$ would be in $U$ itself.
 \end{proof}
 
+\vspace{0.5cm}
 \begin{theorem}
 	 In parity games, the winning regions and winning strategies can be computed in non-deterministic polynomial time in $|G|$, or in deterministic time $\mathcal{O}\left(|V| \cdot |E| \cdot |C| \cdot (\frac{|V|}{|C|} + 1)^{2|C|}\right)$.
 \end{theorem}
@@ -201,7 +206,16 @@ $C \subseteq \mathbb{N}$ and $\text{Win} = \{ \alpha \in C^\omega \mid \max \tex
 	Let $\sigma : V_0 \rightarrow V$ be a positional strategy for player 0. The following procedure checks whether $\sigma$ is winning in $\mathcal{G}$ from a node $v_0$. Consider the graph $G'$ which restricts edges from vertices in $V_0$ to those used by $\sigma$. Compute the strongly connected components that contain loops and are reachable from $v_0$. If the maximal priority in the SCCs is odd, then $\sigma$ is not a winning strategy. Otherwise, remove all nodes with that priority and repeat the procedure.
 \end{proof}
 \begin{proof}
-	%TODO F8
+	An inductive algorithm works as follows. 
+	\begin{enumerate}
+		\item Set $i = 0$, $F^0_k = F$, and $G_i = G$.
+		\item Let $A^i = \text{Attr}_0(F^i_k)$ in $G$.
+		\item Let $(W^i_0, W^i_1)$ be the winning regions in $G_i \setminus A^i$ by induction.
+		\item Let $B_i = \text{Attr}_1(W^i_1)$ in $G$.
+		\item Let $G_{i+1} := G_i \setminus B_i$ and $F^{i+1}_k = F^i_k \setminus B_i$.
+		\item Increment $i$ and go to step 2.
+	\end{enumerate}
+	Let $i = \infty$ be the index at which there is no more change. Then $W_0 = W^\infty_0 \cup A^\infty$. The winning strategy for player 0 is to play like the induction strategy in $W^\infty_0$ if possible and otherwise move to $F_k$ and stay in $W_0$. The winning strategy for player 1 is to move towards the $W^i_1$ with minimal $i$.
 \end{proof}
 \begin{proof}
 	A final algorithm uses a similar approach uses \textbf{small progress measures}. Let $C = \{0, \dots, 2k\}$ and $D \subseteq \{ 0, \dots, |V| \}^k$ be a domain of vectors such that component $0 \leq i < k$ ranges from $0$ to $|c^{-1}(2i+1)|$ and let $D_\perp = D \cup \{\perp\}$. We define bounded addition $\oplus$ of an element from $D_\perp$ with a color $p$ as follows:
@@ -219,6 +233,7 @@ $C \subseteq \mathbb{N}$ and $\text{Win} = \{ \alpha \in C^\omega \mid \max \tex
 	Required time is $\mathcal{O}\left(|E| \cdot |V| \cdot |C| \cdot (\frac{|V|}{|C|} + 1)^{|C|}\right)$.
 \end{proof}
 
+\vspace{1.5cm}
 \subsection{Muller Games}
 $\mathcal{F} \subseteq 2^C$ and $\text{Win} = \{ \alpha \in C^\omega \mid \text{Inf}(\alpha) \in \mathcal{F} \}$.
 
@@ -229,13 +244,23 @@ $\mathcal{F} \subseteq 2^C$ and $\text{Win} = \{ \alpha \in C^\omega \mid \text{
 	A Muller automaton can be transformed to a DPA using the LAR construction.
 \end{proof}
 
+\vspace{0.5cm}
 \begin{theorem}
 	For every $n > 0$, there is an arena $G_n$ with $|G_n| \in \mathcal{O}(n)$ and a set $\mathcal{F}_n \subseteq 2^C$ such that player 0 has a winning strategy in the Muller game $(G_n, \mathcal{F}_n)$ but every winning strategy requires memory of size $n!$.
 \end{theorem}
 \begin{proof}
-	%TODO F10
+	The game works as follows: the two players take turns in alternation. Player 1 picks a node from $X = \{x_1, \dots, x_n\}$. After that, player 0 picks a node from $Y = \{y_1, \dots, y_n\}$. A play $\pi$ with $\text{Inf}(\pi) = F$ is winning for player 0 iff $|X \cap F| = \max \{ i \mid y_i \in F \}$. In other words, player 0 has to decide exactly how many different values player 1 chooses infinitely often.
+	
+	Player 0 has a uniform winning strategy from every node. Using a LAR memory automaton, for a LAR state $[x_{i_1}, \dots, x_{i_n}, h]$, player 0 picks $y_h$. Now let $\mathcal{M} = (M, C, m_0, \sigma^u, \sigma^n)$ be an arbitrary memory automaton that defines a winning strategy for player 0. It remains to be shown that $|M| \geq n!$. We prove that $M$ has an SCC with at least $n!$ states from which no other SCC is reachable.
+	
+	If $n = 1$, this is trivial. For $n > 1$, we can assume that $m_0$ is in such a final SCC since Muller games are prefix independent. Moreover we can simply assume that $\mathcal{M}$ only consists of a single SCC. For every $i$, there must be a state $m_i \in M$ such that from $m_i$, if player 1 never plays $x_i$, player 0 never plays $y_n$. If this would not be the case, then player 1 could use at most $n-1$ different colors to force player 0 to play $y_n$ infinitely often, making $\sigma_\mathcal{M}$ a non-winning strategy. 
+	
+	For all $i$, let $\mathcal{M}_i = (M_i, C, m_i, \sigma^u \upharpoonright_{M_i}, \sigma^n \upharpoonright_{M_i})$ with $M_i = M \setminus \{x_i, y_n\}$. This memory automaton defines a winning strategy for player 0 win the game $\mathcal{G}_n^i$, which is obtained from $\mathcal{G}_n$ by removing $x_i$ and $y_n$. This game is isomorphic to $\mathcal{G}_{n-1}$, so $\mathcal{M}_i$ has a final SCC of size at least $(n-1)!$. We call this SCC $S_i \subseteq M_i \subseteq M$. Hence, $|M| \geq |\bigcup_{i=0}^n S_i|$. If we can show that all $S_i$ are disjoint, then $|M| \geq \bigcup_{i=0}^n |S_i| = n \cdot (n-1)! = n!$.
+	
+	Assume that there are $i, j$ and $m$ such that $m \in S_i \cap S_j$. We can then define a strategy $\sigma$ for player 1that wins against $\mathcal{M}$, leading to a contradiction. Player 1 first plays so that the memory automaton reaches $m$. $S_i$ is a final SCC in $\mathcal{M}_i$, so player 1 can play all nodes $X \setminus \{x_i\}$ followed by a word in $(X \setminus \{x_i\})^*$ such that the memory automaton reaches $m$ again. After that, player 1 can play $X \setminus \{x_j\}$ and reach $m$ again. Repeating these two runs makes player 1 reach all nodes in $X$ infinitely often. However, player 0 never picks $y_n$ by definition of $S_i$ and $S_j$.
 \end{proof}
 
+\vspace{0.5cm}
 \begin{theorem}
 	Let $(G, \mathcal{F})$ be a finite Muller game. Player 0 and player 1 have uniform winning strategies from their respective winning regions of size at most $m^0_\mathcal{F}$ / $m^1_\mathcal{F}$. (the automata use $V$ for the update function instead of $C$)
 \end{theorem}
@@ -243,6 +268,7 @@ $\mathcal{F} \subseteq 2^C$ and $\text{Win} = \{ \alpha \in C^\omega \mid \text{
 	%TODO F11
 \end{proof}
 
+\vspace{0.5cm}
 \begin{theorem}
 	For every $\mathcal{F} \subseteq 2^C$, there is an arena $G_\mathcal{F}$ such that player 0 wins $(G_\mathcal{F}, \mathcal{F})$ but every winning strategy requires memory at least $m^0_\mathcal{F}$.
 \end{theorem}
@@ -250,6 +276,7 @@ $\mathcal{F} \subseteq 2^C$ and $\text{Win} = \{ \alpha \in C^\omega \mid \text{
 	%TODO F12
 \end{proof}
 
+\vspace{0.5cm}
 \begin{theorem}
 	Muller games can be reduced to parity games with memory $l_\mathcal{F}$.
 \end{theorem}
@@ -269,8 +296,8 @@ $\mathcal{F} \subseteq 2^C$ and $\text{Win} = \{ \alpha \in C^\omega \mid \text{
 	Let $\mathcal{F} \subseteq 2^C$. Let $\mathcal{F}_1, \dots, \mathcal{F}_n \subseteq 2^C$ such that $\mathcal{S}_{\mathcal{F}_1}, \dots, \mathcal{S}_{\mathcal{F}_n}$ are the direct subtrees of the root in $\mathcal{S}_\mathcal{F}$. We define the \textbf{memory number} 
 	$$m_i(\mathcal{S}_\mathcal{F}) = \begin{cases}
 		1 & \text{if } n = 0 \\
-		\max_j m_i(S_{\mathcal{F}_j}) & \text{if the root is } (C, i) \\
-		\sum_j m_i(S_{\mathcal{F}_j}) & \text{if the root is } (C, 1-i) 
+		\max_j m_i(S_{\mathcal{F}_j}) & \text{if the root is } (C, 1-i) \\
+		\sum_j m_i(S_{\mathcal{F}_j}) & \text{if the root is } (C, i) 
 	\end{cases}.$$
 	
 	For a short form, we write $m^i_\mathcal{F} = m_i(\mathcal{S}_\mathcal{F})$.
@@ -287,10 +314,11 @@ $\mathcal{F} \subseteq 2^C$ and $\text{Win} = \{ \alpha \in C^\omega \mid \text{
 \end{theorem}
 % no proof
 
+\vspace{1.5cm}
 \subsection{Rabin \& Streett Games}
 $\Omega = \{(E_i, F_i) \mid 1 \leq i \leq n\} \subseteq C \times C$ and \\
 $\text{Win} = \{ \alpha \in C^\omega \mid \exists i: \text{Inf}(\alpha) \cap E_i = \emptyset \land \text{Inf}(\alpha) \cap F_i \neq \emptyset \}$ (Rabin) \\
-$\text{Win} = \{ \alpha \in C^\omega \mid \forall i: \text{Inf}(\alpha) \cap E_i \neq \emptyset \land \text{Inf}(\alpha) \cap F_i = \emptyset \}$ (Streett).
+$\text{Win} = \{ \alpha \in C^\omega \mid \forall i: \text{Inf}(\alpha) \cap E_i \neq \emptyset \lor \text{Inf}(\alpha) \cap F_i = \emptyset \}$ (Streett).
 
 \begin{theorem}
 	Rabin and Streett games are determined. In a Rabin game, player 0 has a uniform positional winning strategy from their winning region. In a Streett game, player 1 has a uniform positional winning strategy from their winning region. 
@@ -298,9 +326,10 @@ $\text{Win} = \{ \alpha \in C^\omega \mid \forall i: \text{Inf}(\alpha) \cap E_i
 	For every $n$, there is a game graph $G_n$ and a condition $\Omega_n$ with $|\Omega_n| = n$ such that the opposite player requires memory $n!$ for a winning strategy from their winning region.
 \end{theorem}
 \begin{proof}
-	%TODO F11 exercise
+	Assume that $E_i \cap F_i = \emptyset$ for all $i$ and also that $E_i \neq \emptyset$. Consider the split tree $\mathcal{S}_\Omega$ of a Rabin-Streett game $(G, \Omega)$. The root is $(C, 1)$ with children $(C \setminus E_i, 0)$ for all $i$, each of which have as child the subtree $\mathcal{S}_{\Omega \setminus \{(E_i, F_i)\}}$. By induction, the memory number of these is $m_{\Omega \setminus \{(E_i, F_i)\}}^0 = 1$ and $m_{\Omega \setminus \{(E_i, F_i)\}}^1 = (n-1)!$. This gives $m^0_\Omega = 1$ and $m^1_\Omega = n!$.
 \end{proof}
 
+\vspace{1.5cm}
 \subsection{Logic Games}
 Let $\mathcal{L}$ be a logic and $\varphi \in \mathcal{L}$. Then $\text{Win}_\varphi = \{ \alpha \in C^\omega \mid \alpha \models \varphi \}$.
 
