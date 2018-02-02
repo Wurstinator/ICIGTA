@@ -5,6 +5,7 @@
 \usepackage{geometry}
 \newtheorem{theorem}{Theorem}
 \newtheorem{definition}{Definition}
+\usepackage{tikz}
 
 \begin{document}
 \section{Basics}
@@ -265,7 +266,15 @@ $\mathcal{F} \subseteq 2^C$ and $\text{Win} = \{ \alpha \in C^\omega \mid \text{
 	Let $(G, \mathcal{F})$ be a finite Muller game. Player 0 and player 1 have uniform winning strategies from their respective winning regions of size at most $m^0_\mathcal{F}$ / $m^1_\mathcal{F}$. (the automata use $V$ for the update function instead of $C$)
 \end{theorem}
 \begin{proof}
-	%TODO F11
+	Due to symmetry we can assume that $C \in \mathcal{F}$. Let $\mathcal{S}_{\mathcal{F}_1}, \dots, \mathcal{S}_{\mathcal{F}_n}$ with color sets $D_1, \dots, D_n$ be the direct subtrees of $\mathcal{S}_\mathcal{F}$. Let $U_i = c^{-1}(C \setminus D_i)$ and $\mathcal{G}_i = (G \setminus \text{Attr}_0(U_i), \mathcal{F}_i)$. Using induction on the size of the arena gives us winning regions $W_0^i, W_1^i$ in $\mathcal{G}_i$ with winning strategies $\sigma_0^i, \sigma_1^i$.
+	
+	First, consider the case that $W_1^i = \emptyset$ for all $i$. Then player 0 wins on the entire graph. Player 0 keeps track of one fixed $i$ at all times. On $W_0^i$, they can simply play by $\sigma^i_0$. On $\text{Attr}_0(U_i)$, they attract $U_i$, after which they move their state to the next $i$. 
+	
+	An infinite play of this strategy either stays in some $W_0^i$ from some point on or visits every $U_i$ infinitely often. In the latter case, the infinity set $I \subseteq C$ is not a subset of any $D_i$, meaning that $I \in \mathcal{F}$. Since the strategy needs to include all winning strategies $\sigma_0^i$, the memory is the summed size.
+	
+	For the second case, let $J = \{ j \in \{1, \dots, n\} \mid W^j_1 \neq \emptyset \}$ and define $\hat{\mathcal{G}} = (G \setminus \text{Attr}_1(\mathcal{W}), \mathcal{F})$ with $\mathcal{W} = \bigcup_{j \in J} W^1_j$. The game $\hat{\mathcal{G}}$ can be solved with the previous case, giving winning regions $\hat{W_0}, \hat{W_1}$ with strategies $\hat{\sigma_0}, \hat{\sigma_1}$. Player 0 can win on $\hat{W_0}$ with $\hat{\sigma_0}$. On the rest of the graph, player 1 wins.
+	
+	In $\hat{W_1}$, player 1 can play according to $\hat{\sigma_1}$. On $\text{Attr}_1(\mathcal{W})$, player 1 attracts to some $W^1_j$ from which he plays $\sigma^1_j$ to win. Since player 1 only uses a positional attractor strategy until they reach $\hat{W_1}$ or some $W^1_j$, the memory required for this strategy is the maximal memory in $\hat{\sigma_1}$ and all $\sigma^1_j$.
 \end{proof}
 
 \vspace{0.5cm}
@@ -273,7 +282,25 @@ $\mathcal{F} \subseteq 2^C$ and $\text{Win} = \{ \alpha \in C^\omega \mid \text{
 	For every $\mathcal{F} \subseteq 2^C$, there is an arena $G_\mathcal{F}$ such that player 0 wins $(G_\mathcal{F}, \mathcal{F})$ but every winning strategy requires memory at least $m^0_\mathcal{F}$.
 \end{theorem}
 \begin{proof}
-	%TODO F12
+	Due to symmetry we can assume that $C \in \mathcal{F}$.	We define the game $G_\mathcal{F}$ in which player 0 requires $m^0_\mathcal{F}$ memory to win. Let $\mathcal{S}'$ be constructed from $\mathcal{S}_\mathcal{F}$ by keeping only one child with the highest $m_0$ for all 1-nodes. This means that $\mathcal{S}'$ has exactly $m^0_\mathcal{F}$ many leaves; let those leaves be called $x_1, \dots, x_{m^0_\mathcal{F}}$ in arbitrary order. Further, let $Y = \{y_1, \dots, y_l\}$ be the set of non-leaf 0-nodes.
+	
+	The game works as follows: player 0 picks any leaf $x_i$, followed by player 1 picking a $y_j$ that is an ancestor of $x_i$. Let $y_k$ be the next node in $Y$ from $y_j$ to $x_i$. Player 1 again then chooses a color in $C_{y_j}$ and color in $C_{y_j} \setminus C_{y_k}$. After this, the turn begins anew. Player 0 wins iff $\text{Inf}(\pi) \in \mathcal{F}$.
+	
+	\paragraph{Claim}: Player 0 wins the game $G_\mathcal{F}$.
+	
+	We first describe the strategy $\sigma$ for player 0 and show that it is winning afterwards. Let $x_i$, $y_j$, and $y_k$ be the variables of the last turn and let $S_{y_j} = \{z_0, \dots, z_h\} \subseteq Y$ be the set of grand-children of $y_j$ (then $y_k = z_a$ for some $a$). Player 0 then picks $z_b$ for $b = a+1 \text{ mod } h+1$.
+	
+	Let $\pi = t_0 t_1 \dots$ be a $\sigma$-play let $I \subseteq C$ be the set of infinitely occurring colors in $\pi$. From some point on, there is a node $y_{\max}$ such that the rest of the play remains in the subtree below that node and $y_{\max}$ itself is picked infinitely often by player 1. Let $\{z_1, \dots, z_h\}$ be the grand-children of $y_{\max}$. Since $\pi$ is a $\sigma$-play, for each $z_i$ there is a leaf below that node that is picked infinitely often by player 0. Therefore, $I \cap C_{z_i} \neq \emptyset$ and $I \cap C_{y_{\max}} \setminus C_{z_i} \neq \emptyset$ for all $i$, because of the two choices of player 1. That also means $I \not\subseteq C_{z_i}$ for all $i$.
+	
+	Finally, because the infinite play remains in the subtree of $y_{\max}$, we have $I \subseteq C_{y_{\max}}$. By definition of the split tree, we can deduce that $\pi$ is winning for player 0 (because $y_{\max}$ is a 0-node).
+	
+	\paragraph{Claim}: Winning strategies require at least $m^0_\mathcal{F}$ memory.
+	
+	Let $\mathcal{M}$ be a strategy automaton for player 0 with $|M| < m^0_\mathcal{F}$. Since there are $m^0_\mathcal{F}$ leaves in $\mathcal{S}'$, there is an $i$ such that player 0 never chooses $x_i$. Let $C_1 D_1 C_2 D_2 \dots C_n D_n (C_{n+1})$ (with $C_1 = C$) be the labels of the nodes on the path from the root to $x_i$. For every $x_j \neq x_i$, let $m(j) \in \{1, \dots, n\}$ be the index in that sequence of the lowest common ancestor of $x_i$ and $x_j$.
+	
+	The strategy $\tau$ for player 1 that we use works as follows: player 1 keeps track of a vector $\overline{d} = (d_1, \dots, d_n) \in D_1 \times \dots \times D_n$. Let $x_j$ be the choice of player 0 in a turn. First, player 1 picks the node labeled by $C_{m(j)}$. The first color pick $c \in C_{m(j)}$ will be $d_{m(j)} \in D_{m(j)} \subseteq C_{m(j)}$. Afterwards, the vector $\overline{d}$ is updated at component $m(j)$ to use the next element in $D_{m(j)}$ in some circular order. Let $E \subseteq C$ be the color label of the child of $C_{m(j)}$ towards $x_j$. The second color picked $c' \in C_{m(j)} \setminus E$ is an arbitrary color in the set $(C_{m(j)} \setminus E) \cap D_{m(j)}$. Together, these two choices imply that $\{c,c'\} \subseteq D_{m(j)}$.
+	
+	Let $\pi$ be the $\sigma_\mathcal{M}$-$\tau$-play with $I$ as the set of infinitely occurring colors. Let $1 \leq k \leq n$ be minimal such that player 1 chooses $C_k$ infinitely often in $\pi$. As we saw before, this means that $I \subseteq D_k$. Further, the strategy $\tau$ ensures that all successors of $D_k$ are picked infinitely often. Hence, $I = D_k \notin \mathcal{F}$.
 \end{proof}
 
 \vspace{0.5cm}
